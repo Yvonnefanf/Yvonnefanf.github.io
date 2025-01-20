@@ -3,8 +3,8 @@
 table#tlayout {
     border: none;
     border-collapse: separate;
-    background: rgba(255,255,255,0.6);
-		width: 100%;
+    background: rgba(255,255,255,0.4);
+	width: 80%;
 }
 
 body {
@@ -73,7 +73,7 @@ pre, tt {
 
 a, a > tt {
 	/* color: #652cec; */
-	color:#7d57ba;
+	color:#765ba0;
 	text-decoration: none;
 	font-weight: 400;
 }
@@ -84,12 +84,12 @@ a:hover {
 
 #layout-menu a.current:link, #layout-menu a.current:visited {
 	/* color: #652cec; */
-	color:#7d57ba;
+	color:#765ba0;
 	border-bottom: 1px gray solid;
 }
 #layout-menu a:link, #layout-menu a:visited, #layout-menu a:hover {
 	/* color: #6b36c2; */
-	color:#7d57ba;
+	color:#765ba0;
 	text-decoration: none;
 }
 #layout-menu a:hover {
@@ -138,7 +138,7 @@ strong {
 
 h1, h2, h3 {
 	/* color: #6b36c2; */
-	color: #7d57ba;
+	color: #765ba0;
 	margin-top: 0.7em;
 	margin-bottom: 0.3em;
 	padding-bottom: 0.2em;
