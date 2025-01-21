@@ -16,6 +16,8 @@
         // gtag('config', 'UA-117975635-1');
         gtag('config', 'G-SEKGEKG88D');
     </script>
+    <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
+
     <meta name="generator" content="jemdoc, see http://jemdoc.jaboc.net/" />
     <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
     <link rel="stylesheet" href="jemdoc.css" type="text/css" />
@@ -24,6 +26,8 @@
 
 <body
     style="font-family: A Love of Thunder; font-size:20px;width: 100%; background-color: rgba(255, 255, 255, 0.9); background-image: url('./imgs/bg1.jpg');">
+    <div id="particles-js"></div>
+
     <table summary="Table for page layout." id="tlayout" style="height: calc(100vh); margin: 0 10%">
         <tr valign="top">
             <td id="layout-content">
@@ -188,12 +192,65 @@
 
     </table>
 
+
+    
+
 </body>
 
 </html>
 <script>
-
-
+    particlesJS("particles-js", {
+        "particles": {
+            "number": {
+                "value": 100, /* 粒子数量 */
+                "density": {
+                    "enable": true,
+                    "value_area": 800
+                }
+            },
+            "color": {
+                "value": "#ffffff" /* 粒子颜色 */
+            },
+            "shape": {
+                "type": "circle", /* 粒子形状 */
+                "stroke": {
+                    "width": 0,
+                    "color": "#000000"
+                }
+            },
+            "opacity": {
+                "value": 0.3,
+                "random": false
+            },
+            "size": {
+                "value": 3,
+                "random": true
+            },
+            "line_linked": {
+                "enable": false 
+            },
+            "move": {
+                "enable": true,
+                "speed": 1, /* 粒子下落速度 */
+                "direction": "bottom", /* 粒子运动方向 */
+                "random": false,
+                "straight": false, /* 粒子直线下落 */
+                "out_mode": "out",
+                "bounce": false
+            }
+        },
+        "interactivity": {
+            "events": {
+                "onhover": {
+                    "enable": false
+                },
+                "onclick": {
+                    "enable": false
+                }
+            }
+        },
+        "retina_detect": true
+    });
 </script>
 <style>
     @font-face {
