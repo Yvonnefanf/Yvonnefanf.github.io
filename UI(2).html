@@ -162,6 +162,9 @@
   
       font-weight: 500;
     }
+    .gray-bg {
+      background-color: #ededed !important;
+    }
   </style>
 </head>
 <body>
@@ -259,7 +262,7 @@
       </tr>
     </thead>
     <tbody>
-      <tr v-for="row in tableRows" :key="row.attribute">
+      <tr v-for="(row, idx) in tableRows" :key="row.attribute" :class="{'gray-bg': idx >= tableRows.length - 2}">
         <td>{{ row.attribute }}</td>
         <td class="comp1-header right-align"><span>
           {{ row.comp1.featureAdj[0] }}
