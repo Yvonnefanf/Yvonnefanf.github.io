@@ -46,6 +46,9 @@
       background-color: #fef6e4;
       transition: max-width 0.4s cubic-bezier(0.4,0,0.2,1), opacity 0.4s cubic-bezier(0.4,0,0.2,1), padding 0.4s cubic-bezier(0.4,0,0.2,1), border-width 0.4s cubic-bezier(0.4,0,0.2,1);
     }
+    .highlight-yellow {
+      background-color: #fef6e4;
+    }
     .sub-header {
       background-color: #f0f0f0;
       font-weight: normal;
@@ -267,28 +270,28 @@
         <td class="comp1-header right-align"><span>
           {{ row.comp1.featureAdj[0] }}
         </td>
-        <td class="comp1-header right-align"><span>
+        <td class="comp1-header right-align highlight-yellow" :class="{'gray-bg': idx >= tableRows.length - 2}" ><span>
           {{ row.comp1.featureAdj[1] }}
         </td>
         <template v-if="Array.isArray(row.comp1.value)">
           <td class="comp1-header right-align">{{ row.comp1.value[0] }}</td>
           <td class="comp1-header right-align">{{ row.comp1.value[1] }}</td>
         </template>
-        <td v-else class="comp1-header right-align" colspan="2">{{ row.comp1.value }}</td>
+        <td v-else class="comp1-header right-align highlight-yellow" :class="{'gray-bg': idx >= tableRows.length - 2}" colspan="2">{{ row.comp1.value }}</td>
         <td v-for="(detail, i) in row.comp1.details" :key="'c1d'+i" class="comp1 right-align" 
           :class="{hidden: !comp1Open}"
           :style="{ color: row.comp1.colorBIndex?.includes(i) ? '#222' : '#ccc' }">{{ detail }}</td>
         <td class="comp2-header right-align">
           {{ row.comp2.featureAdj[0] }}
         </td>
-        <td class="comp2-header right-align">
+        <td class="comp2-header right-align highlight-yellow" :class="{'gray-bg': idx >= tableRows.length - 2}" >
           {{ row.comp2.featureAdj[1] }}
         </td>
         <template v-if="Array.isArray(row.comp2.value)">
           <td class="comp2-header right-align">{{ row.comp2.value[0] }}</td>
           <td class="comp2-header right-align">{{ row.comp2.value[1] }}</td>
         </template>
-        <td v-else class="comp2-header right-align" colspan="2">{{ row.comp2.value }}</td>
+        <td v-else class="comp2-header right-align highlight-yellow" colspan="2" :class="{'gray-bg': idx >= tableRows.length - 2}">{{ row.comp2.value }}</td>
         <td v-for="(detail, i) in row.comp2.details" :key="'c2d'+i" class="comp2 right-align" 
           :class="{hidden: !comp2Open}"
           :style="{ color: row.comp2.colorBIndex?.includes(i) ? '#222' : '#ccc' }">{{ detail }}</td>
@@ -425,15 +428,15 @@ createApp({
         {
           attribute: 'Dist to Downtown',
           comp1: {
-            featureAdj: ['12.1', '+ 0.3'],
-            value: '- 3',
-            details: ['','','','','+ 0.3','- 3','+ 0.3','- 3'],
+            featureAdj: ['12.1', '+0.3'],
+            value: '-3',
+            details: ['','','','','+0.3','-3','+0.3','-3'],
             colorBIndex: [4,5]
           },
           comp2: {
-            featureAdj: ['10.5', '+ 1.8'],
-            value: '- 113',
-            details: ['+ 1.8','- 113','+ 1.8','- 113','+ 1.8','- 113','+ 1.8','- 113','+ 1.8','- 113'],
+            featureAdj: ['10.5', '+1.8'],
+            value: '-113',
+            details: ['+1.8','-113','+1.8','-113','+1.8','-113','+1.8','-113','+1.8','-113'],
             colorBIndex: [0,1]
           },
           target: '12.4'
@@ -441,9 +444,9 @@ createApp({
         {
           attribute: '# Bathroom',
           comp1: {
-            featureAdj: ['2', '− 1'] ,
-            value: '- 6',
-            details: ['- 1','- 6','- 1','- 6','- 1','- 6','- 1','- 6'],
+            featureAdj: ['2', '−1'] ,
+            value: '-6',
+            details: ['-1','-6','-1','-6','-1','-6','-1','-6'],
             colorBIndex: [0,1]
           },
           comp2: {
@@ -456,15 +459,15 @@ createApp({
         {
           attribute: 'Size',
           comp1: {
-            featureAdj: ['1.08', '+ 0.3'],
-            value: '+ 30',
-            details: ['','','+ 0.3','+ 30','+ 0.3','+ 30','+ 0.3','+ 30'],
+            featureAdj: ['1.08', '+0.3'],
+            value: '+30',
+            details: ['','','+0.3','+30','+0.3','+30','+0.3','+30'],
             colorBIndex: [2,3]
           },
           comp2: {
-            featureAdj: ['0.71', '+ 0.67'],
-            value: '+ 135',
-            details: ['','','+ 0.67','+ 135','+ 0.67','+ 135','+ 0.67','+ 135','+ 0.67','+ 135'],
+            featureAdj: ['0.71', '+0.67'],
+            value: '+135',
+            details: ['','','+0.67','+135','+0.67','+135','+0.67','+135','+0.67','+135'],
             colorBIndex: [2,3]
           },
           target: '1.38'
@@ -477,9 +480,9 @@ createApp({
             details: ['','','','','','','','']
           },
           comp2: {
-            featureAdj: ['6', '+ 1'],
-            value: '+ 97',
-            details: ['','','','','+ 1','+ 97','+ 1','+ 97','+ 1','+ 97'],
+            featureAdj: ['6', '+1'],
+            value: '+97',
+            details: ['','','','','+1','+97','+1','+97','+1','+97'],
             colorBIndex: [4,5]
           },
           target: '7'
@@ -492,9 +495,9 @@ createApp({
             details: ['','','','','','','','']
           },
           comp2: {
-            featureAdj: ['73', '- 7'],
-            value: '+ 7',
-            details: ['','','','','','','- 7','+ 7','- 7','+ 7'],
+            featureAdj: ['73', '-7'],
+            value: '+7',
+            details: ['','','','','','','-7','+7','-7','+7'],
             colorBIndex: [6,7]
           },
           target: '68'
@@ -502,15 +505,15 @@ createApp({
         {
           attribute: 'Condition',
           comp1: {
-            featureAdj: ['5', '- 1'],
-            value: '- 3',
-            details: ['','','','','','','- 1','- 3'],
+            featureAdj: ['5', '-1'],
+            value: '-3',
+            details: ['','','','','','','-1','-3'],
             colorBIndex: [6,7]
           },
           comp2: {
-            featureAdj: ['3', '+ 1'],
-            value: '+ 22',
-            details: ['','','','','','','','','+ 1','+ 22'],
+            featureAdj: ['3', '+1'],
+            value: '+22',
+            details: ['','','','','','','','','+1','+22'],
             colorBIndex: [8,9]
           },
           target: '4'
@@ -519,14 +522,14 @@ createApp({
           attribute: 'Total Adjustment',
           comp1: {
             featureAdj: ['',''],
-            value: '+ 18',
-            details: ['','-6','','+ 24','','+ 21','','+ 18'],
+            value: '+18',
+            details: ['','-6','','+24','','+21','','+18'],
             colorBIndex: [0,1,2,3,4,5,6,7]
           },
           comp2: {
             featureAdj: ['',''],
-            value: '+ 148',
-            details: ['','- 113','','+ 22','','+ 119','','+ 126','','+ 148'],
+            value: '+148',
+            details: ['','-113','','+22','','+119','','+126','','+148'],
             colorBIndex: [0,1,2,3,4,5,6,7,8,9]
           },
           target: ''
