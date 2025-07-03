@@ -302,10 +302,10 @@
     <thead>
       <tr>
         <th rowspan="2" style="width: 140px;">Feature</th>
-        <th :colspan="3" @click="toggleCols('comp1')" class="comp1-header" v-if="!comp2Open">
+        <th :colspan="3" class="comp1-header" v-if="!comp2Open">
           Comp1 Adjustment 
         </th>
-        <th :colspan="3" @click="toggleCols('comp2')" class="comp2-header" v-if="!comp1Open">
+        <th :colspan="3" class="comp2-header" v-if="!comp1Open">
           Comp2 Adjustment 
         </th>
         <th colspan="2">Target</th>
