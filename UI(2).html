@@ -45,8 +45,12 @@
       pointer-events: none;
     }
     .comp1, .comp2 {
+      width: 40px;
       background-color: #fef6e4;
       transition: max-width 0.4s cubic-bezier(0.4,0,0.2,1), opacity 0.4s cubic-bezier(0.4,0,0.2,1), padding 0.4s cubic-bezier(0.4,0,0.2,1), border-width 0.4s cubic-bezier(0.4,0,0.2,1);
+    }
+    .adj-price{
+      background-color: #fcecc9;
     }
     .highlight-yellow {
       background-color: #fef6e4;
@@ -190,13 +194,13 @@
             Comparable 1
           </div>
         </th>
-        <th colspan="8" class="comp1" :class="{hidden: !comp1Open}">Comparable 1 Adjustment Details</th>
+        <th rowspan="2" colspan="8" class="comp1" :class="{hidden: !comp1Open}">Comparable 1 Adjustment Details</th>
         <th colspan="4" class="comp2-header" style="position:relative;">
           <div style="display:flex;align-items:center;justify-content:center;">
             Comparable 2 
           </div>
         </th>
-        <th colspan="10" class="comp2" :class="{hidden: !comp2Open}">Comparable 2 Adjustment Details</th>
+        <th rowspan="2" colspan="10" class="comp2" :class="{hidden: !comp2Open}">Comparable 2 Adjustment Details</th>
         <th>Target</th>
       </tr>
       <tr class="sub-header">
@@ -204,12 +208,12 @@
         <td colspan="4" class="comp1-header right-align"><span>
           373K
         </td>
-        <td colspan="8" class="comp1 right-align" 
-          :class="{hidden: !comp1Open}"></td>
+        <!-- <td colspan="8" class="comp1 right-align" 
+          :class="{hidden: !comp1Open}"></td> -->
         <td colspan="4" class="comp2-header right-align">232K </th>
         
-        <td colspan="10" class="comp2 right-align" 
-          :class="{hidden: !comp2Open}"></td>
+        <!-- <td colspan="10" class="comp2 right-align" 
+          :class="{hidden: !comp2Open}"></td> -->
         <td class="right-align">389K </th>
       </tr>
       <tr class="sub-header">
@@ -227,13 +231,13 @@
         </th>
         
         <th class="comp1" :class="{hidden: !comp1Open}">Δ</th>
-        <th class="comp1" :class="{hidden: !comp1Open}">$ ΔP</th>
+        <th class="comp1 adj-price" :class="{hidden: !comp1Open}">$ Δ</th>
         <th class="comp1" :class="{hidden: !comp1Open}">Δ</th>
-        <th class="comp1" :class="{hidden: !comp1Open}">$ ΔP</th>
+        <th class="comp1 adj-price" :class="{hidden: !comp1Open}">$ Δ</th>
         <th class="comp1" :class="{hidden: !comp1Open}">Δ</th>
-        <th class="comp1" :class="{hidden: !comp1Open}">$ ΔP</th>
+        <th class="comp1 adj-price" :class="{hidden: !comp1Open}">$ Δ</th>
         <th class="comp1" :class="{hidden: !comp1Open}">Δ</th>
-        <th class="comp1" :class="{hidden: !comp1Open}">$ ΔP</th>
+        <th class="comp1 adj-price" :class="{hidden: !comp1Open}">$ Δ</th>
         <th style="width: 40px;" class="comp1-header">Values</th>
         <th style="width: 40px;" class="comp1-header">Δ</th>
         <th colspan="2" class="comp1-header">
@@ -247,15 +251,15 @@
 
         </th>
         <th class="comp2" :class="{hidden: !comp2Open}">Δ</th>
-        <th class="comp2" :class="{hidden: !comp2Open}">$ ΔP</th>
+        <th class="comp2 adj-price" :class="{hidden: !comp2Open}">$ Δ</th>
         <th class="comp2" :class="{hidden: !comp2Open}">Δ</th>
-        <th class="comp2" :class="{hidden: !comp2Open}">$ ΔP</th>
+        <th class="comp2 adj-price" :class="{hidden: !comp2Open}">$ Δ</th>
         <th class="comp2" :class="{hidden: !comp2Open}">Δ</th>
-        <th class="comp2" :class="{hidden: !comp2Open}">$ ΔP</th>
+        <th class="comp2 adj-price" :class="{hidden: !comp2Open}">$ Δ</th>
         <th class="comp2" :class="{hidden: !comp2Open}">Δ</th>
-        <th class="comp2" :class="{hidden: !comp2Open}">$ ΔP</th>
+        <th class="comp2 adj-price" :class="{hidden: !comp2Open}">$ Δ</th>
         <th class="comp2" :class="{hidden: !comp2Open}">Δ</th>
-        <th class="comp2" :class="{hidden: !comp2Open}">$ ΔP</th>
+        <th class="comp2 adj-price" :class="{hidden: !comp2Open}">$ Δ</th>
         <!-- <th style="width: 30px;">Feature </th> -->
         <td></td>
       </tr>
@@ -275,7 +279,10 @@
         </template>
         <td v-else class="comp1-header right-align" colspan="2">{{ row.comp1.value }}</td>
         <td v-for="(detail, i) in row.comp1.details" :key="'c1d'+i" class="comp1 right-align" 
-          :class="{hidden: !comp1Open}"
+          :class="{
+            hidden: !comp1Open,
+            'adj-price': i % 2 !== 0  
+          }"
           :style="{ color: row.comp1.colorBIndex?.includes(i) ? '#222' : '#ccc' }">{{ detail }}</td>
         <td class="comp2-header right-align">
           {{ row.comp2.featureAdj[0] }}
@@ -289,7 +296,10 @@
         </template>
         <td v-else class="comp2-header right-align" colspan="2">{{ row.comp2.value }}</td>
         <td v-for="(detail, i) in row.comp2.details" :key="'c2d'+i" class="comp2 right-align" 
-          :class="{hidden: !comp2Open}"
+          :class="{
+            hidden: !comp2Open,
+            'adj-price': i % 2 !== 0  
+          }"
           :style="{ color: row.comp2.colorBIndex?.includes(i) ? '#222' : '#ccc' }">{{ detail }}</td>
         <td style="text-align: right;">{{ row.target }}</td>
       </tr>
