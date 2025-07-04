@@ -77,7 +77,7 @@
       transform: rotate(180deg);
     }
     .toggle-text {
-      width: 90px;
+      width: 34px;
     }
     .toggle-text:hover {
       text-decoration: underline;
@@ -238,7 +238,7 @@
         <th colspan="2" class="comp1-header">
           $ Adjustment <br/>
           <span class="clickable-header" style="margin-left: 10px;" @click="toggleCols('comp1')">
-            <span class="toggle-text">{{ comp1Open ? 'Hide Details' : 'Show Details' }}</span>
+            <span class="toggle-text">{{ comp1Open ? 'Hide' : 'More' }}</span>
             <span class="arrow">
               <i :class="comp1Open ? 'fa-solid fa-angle-left' : 'fa-solid fa-angle-right'"></i>
             </span>
@@ -258,7 +258,7 @@
         <th colspan="2" class="comp1-header">
           $K Adjustment <br/>
           <span class="clickable-header" style="margin-left: 10px;" @click="toggleCols('comp2')">
-            <span class="toggle-text">{{ comp2Open ? 'Hide Details' : 'Show Details' }}</span>
+            <span class="toggle-text">{{ comp2Open ? 'Hide' : 'More' }}</span>
             <span class="arrow">
               <i :class="comp2Open ? 'fa-solid fa-angle-left' : 'fa-solid fa-angle-right'"></i>
             </span>
