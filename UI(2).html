@@ -6,7 +6,7 @@
   <title>Comparable XAI</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
   <script src="https://unpkg.com/vue@3/dist/vue.global.prod.js"></script>
-  
+
   <!-- No internet open 👇-->
   <!-- <link rel="stylesheet" href="./min.css">
   <script src="./min.js"></script> -->
@@ -64,9 +64,10 @@
       background-color: #fef6e4;
       transition: max-width 0.4s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.4s cubic-bezier(0.4, 0, 0.2, 1), padding 0.4s cubic-bezier(0.4, 0, 0.2, 1), border-width 0.4s cubic-bezier(0.4, 0, 0.2, 1);
     }
-    .comp-header{
+
+    .comp-header {
       font-size: 12px;
-      
+
     }
 
     .adj-price,
@@ -119,6 +120,7 @@
 
     .toggle-text {
       width: 20px;
+      line-height: 16px;
     }
 
     .toggle-text:hover {
@@ -185,6 +187,7 @@
       width: 30px;
       text-align: right;
     }
+
     .gray-bg {
       background-color: #888;
     }
@@ -203,8 +206,11 @@
       font-size: 14px;
       min-width: 650px;
     }
-    .feature-name{
+
+    .feature-name {
       font-size: 12px;
+      text-align: left;
+      font-weight: 400;
     }
 
     .right-align {
@@ -288,7 +294,8 @@
                   {{row.actual}}K
               </td>
               <template v-for="i in row.adjusted_step_number">
-                <td colspan="2" class="right-align highlight-blue" :class="{hidden: currentOpenComp!==idx}">{{row.actual}}K</td>
+                <td colspan="2" class="right-align highlight-blue" :class="{hidden: currentOpenComp!==idx}">
+                  {{row.actual}}K</td>
               </template>
             </template>
             <td class="right-align highlight-blue">?? </th>
@@ -300,11 +307,11 @@
               <th style="width: 30px;" class="comp-header">Values</th>
               <th style="width: 30px;" class="comp-header">Δ</th>
               <th colspan="2" class="comp1-header" style="font-size: 12px;">
-                $ Adjustment 
+                $ Adjustment
                 <span class="clickable-header" @click="toggleCols(`comp${idx+1}`,idx)">
                   <span v-if="currentOpenComp!=idx" class="toggle-text">{{ currentOpenComp ==idx ? ' ' : '...' }}</span>
-                    <i class="toggle-text fa-solid fa-angle-left" v-if="currentOpenComp==idx"></i> 
-                    <!-- <i :class="currentOpenComp==idx ? 'fa-solid fa-angle-left' : 'fa-solid fa-angle-right'"></i>  -->
+                  <i class="toggle-text fa-solid fa-angle-left" v-if="currentOpenComp==idx"></i>
+                  <!-- <i :class="currentOpenComp==idx ? 'fa-solid fa-angle-left' : 'fa-solid fa-angle-right'"></i>  -->
                 </span>
               </th>
               <template v-for="i in row.adjusted_step_number">
@@ -341,18 +348,6 @@
             <td style="text-align: right;">{{ Targets.feature_val[index] }}</td>
           </tr>
 
-          <!-- <tr>
-            <td class="feature-name">Actual Price ($)</td>
-            <template v-for="(row, idx) in Comparables" :key="row.id">
-              <td colspan="4" class="comp1-header right-align"><span>
-                  {{row.actual}}K
-              </td>
-              <template v-for="i in row.adjusted_step_number">
-                <td colspan="2" class="right-align" :class="{hidden: currentOpenComp!==idx}">{{row.actual}}K</td>
-              </template>
-            </template>
-            <td class="right-align">?? </th>
-          </tr> -->
 
           <tr>
             <td class="feature-name highlight-blue">Adjusted Price ($)</td>
@@ -361,7 +356,8 @@
                   = {{row.adjusted_price[row.adjusted_step_number - 1]}}K
               </td>
               <template v-for="(ele, i) in row.adjusted_price">
-                <td colspan="2" class="right-align highlight-blue" :class="{hidden: currentOpenComp!==idx}">= {{ele}}K</td>
+                <td colspan="2" class="right-align highlight-blue" :class="{hidden: currentOpenComp!==idx}">= {{ele}}K
+                </td>
               </template>
             </template>
             <td class="right-align gray-bg">
@@ -373,117 +369,137 @@
 
     <!-- NO Trace Version -->
     <div v-else-if="currentTab === 1">
+
       <table>
         <thead>
+          <!-- Header row -->
           <tr>
-            <th rowspan="2" style="width: 140px;">Feature</th>
-            <th :colspan="3" class="comp1-header" v-if="!comp2Open">
-              Comp1 Adjustment
-            </th>
-            <th :colspan="3" class="comp2-header" v-if="!comp1Open">
-              Comp2 Adjustment
-            </th>
-            <th colspan="2">Target</th>
-          </tr>
-          <tr class="sub-header">
-            <th style="width: 80px;" class="comp1-header" v-if="!comp2Open">Feature <br />Adjustment</th>
-            <th style="width: 70px;" class="comp1-header" v-if="!comp2Open">AI Pred: <br /> $ 372.7 K</th>
-            <th style="width: 70px;" class="comp1-header highlight-green" v-if="!comp2Open">Actual: <br /> $ 390.0 K
-            </th>
+            <th rowspan="1" style="width: 100px;">Feature</th>
+            <template v-for="(row, idx) in Comparables_no_trace" :key="row.id" class="comp1-header"
+              style="position:relative;">
+              <th colspan="4" class="comp1-header" style="position:relative;">
+                <div style="display:flex;align-items:center;justify-content:center;">
+                  Comparable {{idx + 1}}
+                </div>
+                <div style="font-size: 12px; display:flex;align-items:center;justify-content:center;color:#800080">
+                  AI Prediction ($): {{row.pred}}K
+                </div>
+              </th>
 
-            <th style="width: 80px;" class="comp2-header" v-if="!comp1Open">Feature <br />Adjustment</th>
-            <th style="width: 70px;" class="comp2-header" v-if="!comp1Open">AI Pred: <br /> $ 231.7 K </th>
-            <th style="width: 70px;" class="comp2-header highlight-green" v-if="!comp1Open">Actual: <br /> $ 245.0 K
-            </th>
-            <th style="width: 30px;">Feature </th>
-            <th style="width: 60px;">AI Pred: <br /> $ 389.0 K </th>
+            </template>
+            <th>Target</th>
+          </tr>
+
+
+          <!-- AI prediction row -->
+          <!-- <tr>
+            <td class="feature-name">AI Prediction ($)</td>
+            <template v-for="(row, idx) in Comparables_no_trace" :key="row.id">
+              <td colspan="4" class="comp1-header right-align"><span>
+                  {{row.pred}}K
+              </td>
+            </template>
+            <td class="right-align">{{Targets.pred}}K </th>
+          </tr> -->
+          <!-- header -->
+
+          <tr class="highlight-blue">
+            <td class="feature-name highlight-blue">Actual Price ($)</td>
+            <template v-for="(row, idx) in Comparables_no_trace" :key="row.id">
+              <td colspan="4" class="comp1-header right-align highlight-blue"><span>
+                  {{row.actual}}K
+              </td>
+
+            </template>
+            <td class="right-align highlight-blue">?? </th>
+          </tr>
+
+          <tr>
+            <td class="comp1-header gray-bg"></td>
+            <template v-for="(row, idx) in Comparables_no_trace" :key="row.id">
+              <th style="width: 30px;" class="comp-header">Values</th>
+              <th style="width: 30px;" class="comp-header">Δ</th>
+              <th colspan="2" class="comp1-header" style="font-size: 12px;">
+                $ Adjustment
+              </th>
+
+            </template>
+            <td class="gray-bg"></td>
           </tr>
         </thead>
+
         <tbody>
-          <tr v-for="row in tableRows_no_trace" :key="row.attribute">
-            <td>{{ row.attribute }}</td>
-            <td class="comp1-header" v-if="!comp2Open"><span class="adj-flex"><span class="adj-grey">{{
-                  row.comp1.featureAdj[0] }}</span><span class="adj-black">{{ row.comp1.featureAdj[1] }}</span></span>
-            </td>
-            <template v-if="!comp2Open">
-              <template v-if="Array.isArray(row.comp1.value)">
-                <td class="comp1-header">{{ row.comp1.value[0] }}</td>
-                <td class="comp1-header">{{ row.comp1.value[1] }}</td>
-              </template>
-              <td v-else class="comp1-header right-align" colspan="2">{{ row.comp1.value }}</td>
-            </template>
-            <td class="comp2-header" v-if="!comp1Open"><span class="adj-flex"><span class="adj-grey">{{
-                  row.comp2.featureAdj[0] }}</span><span class="adj-black">{{ row.comp2.featureAdj[1] }}</span></span>
-            </td>
-            <template v-if="!comp1Open">
-              <template v-if="Array.isArray(row.comp2.value)">
-                <td class="comp2-header">{{ row.comp2.value[0] }}</td>
-                <td class="comp2-header">{{ row.comp2.value[1] }}</td>
-              </template>
-              <td v-else class="comp2-header" colspan="2">{{ row.comp2.value }}</td>
+          <tr v-for="(tb, index) in Features">
+            <td class="feature-name">{{ Features[index] }}</td>
+            <template v-for="(row, idx) in Comparables_no_trace" :key="row.id">
+              <td class="comp1-header right-align"><span>
+                  {{ row.feature_val[index] }}
+              </td>
+              <td class="comp1-header right-align"><span>
+                  {{ row.delta_x[index] }}
+              </td>
+              <td class="comp1-header right-align" colspan="2">{{row.delta_y[index]!==0? row.delta_y[index]+'K':'' }}
+              </td>
 
             </template>
-            <td colspan="2" style="text-align: left;">{{ row.target }}</td>
+
+            <td style="text-align: right;">{{ Targets.feature_val[index] }}</td>
+          </tr>
+
+
+          <tr>
+            <td class="feature-name highlight-blue">Adjusted Price ($)</td>
+            <template v-for="(row, idx) in Comparables_no_trace" :key="row.id">
+              <td colspan="4" class="comp1-header right-align highlight-blue"><span>
+                  = {{row.adjusted_price}}K
+              </td>
+
+            </template>
+            <td class="right-align gray-bg">
+              </th>
           </tr>
         </tbody>
       </table>
+
+     
     </div>
     <div v-else class="tab-content">
       <table class="plain-xai-table">
         <thead>
           <tr>
-
-            <th rowspan="2" style="width: 140px;">Feature</th>
-            <th colspan="2">Target</th>
-            <th colspan="2">Comp1</th>
-            <th colspan="2">Comp2</th>
+            <th style="width: 140px;">Feature</th>
+            <th>Target</th>
+            <template v-for="(row, idx) in Comparables" :key="row.id">
+              <th>Comparable {{idx+1}}</th>
+            </template>
+     
           </tr>
           <tr>
-            <th class="plain-xai-pred">Pred <br /> $ 389.0K </th>
-            <th class="plain-xai-actual highlight-green">Actual <br /> ?? </th>
-            <th class="plain-xai-pred">Pred <br /> $ 372.7 K </th>
-            <th class="plain-xai-actual highlight-green">Actual <br /> $ 390.0 K </th>
-            <th class="plain-xai-pred">Pred <br /> $ 231.7 K </th>
-            <th class="plain-xai-actual highlight-green">Actual <br /> $ 245.0 K </th>
+            <td style="width: 140px;" class="feature-name">AI Prediction ($)</td>
+            <td class="right-align">{{Targets.pred}}K</td>
+            <template v-for="(row, idx) in Comparables" :key="row.id">
+              <td class="right-align">{{row.pred}}K</td>
+            </template>
+     
+          </tr>
+          <tr>
+            <td style="width: 140px;" class="feature-name">Actual Price ($)</td>
+            <td class="right-align">??</td>
+            <template v-for="(row, idx) in Comparables" :key="row.id">
+              <td class="right-align">{{row.actual}}K</td>
+            </template>
           </tr>
         </thead>
         <tbody>
-          <tr>
-            <td>Dist to Downtown (km)</td>
-            <td colspan="2">12.4</td>
-            <td colspan="2">12.1</td>
-            <td colspan="2">10.5</td>
-          </tr>
-          <tr>
-            <td># Bathroom</td>
-            <td colspan="2">1</td>
-            <td colspan="2">2</td>
-            <td colspan="2">1</td>
-          </tr>
-          <tr>
-            <td>Liveing Area (ksqft)</td>
-            <td colspan="2">1.38</td>
-            <td colspan="2">1.08</td>
-            <td colspan="2">0.71</td>
-          </tr>
-          <tr>
-            <td>Grade</td>
-            <td colspan="2">7</td>
-            <td colspan="2">7</td>
-            <td colspan="2">6</td>
-          </tr>
-          <tr>
-            <td>Age</td>
-            <td colspan="2">68</td>
-            <td colspan="2">68</td>
-            <td colspan="2">73</td>
-          </tr>
-          <tr>
-            <td>Condition</td>
-            <td colspan="2">4</td>
-            <td colspan="2">5</td>
-            <td colspan="2">3</td>
-          </tr>
+          <template v-for="(feature, index) in Features">
+            <tr>
+            <td>{{feature}}</td>
+            <td class="right-align">{{Targets.feature_val[index]}}</td>
+            <template v-for="(row, idx) in Comparables" :key="row.id">
+              <td class="right-align">{{row.feature_val[index]}}</td>
+            </template></tr>
+          </template>
+         
         </tbody>
       </table>
     </div>
@@ -511,7 +527,7 @@
           Comparables: [
             {
               'id': 0,
-              'feature_val': [12.4, 1, 1.4, 7, 68, 4],
+              'feature_val': [12.1, 2, 1.1, 7, 68, 5],
               'delta_x': [+0.3, -1, +0.3, 0, 0, -1],
               'delta_y': [-3, -6, +30, 0, 0, -3],
               'pred': 373,
@@ -531,191 +547,30 @@
               'adjusted_order': [0, 2, 3, 4, 5],
               'adjusted_price': [132, 267, 364, 371, 393]
             },
-
           ],
 
-          tableRows: [
+          Comparables_no_trace: [
             {
-              attribute: 'Dist to Downtown (km)',
-              comp1: {
-                featureAdj: ['12.1', '+0.3'],
-                value: '-3K',
-                details: ['', '', '', '', '+0.3', '-3K', '+0.3', '-3K'],
-                colorBIndex: [4, 5]
-              },
-              comp2: {
-                featureAdj: ['10.5', '+1.8'],
-                value: '-113K',
-                details: ['+1.8', '-113K', '+1.8', '-113K', '+1.8', '-113K', '+1.8', '-113K', '+1.8', '-113K'],
-                colorBIndex: [0, 1]
-              },
-              target: '12.4'
+              'id': 0,
+              'feature_val': [12.1, 2, 1.1, 7, 68, 5],
+              'delta_x': [+0.3, -1, +0.3, 0, 0, -1],
+              'delta_y': [+11, -6, -10, 0, 0, +1.5],
+              'pred': 373,
+              'actual': 390,
+              'adjusted_step_number': 4,
+              'adjusted_price': 386
             },
             {
-              attribute: '# Bathroom',
-              comp1: {
-                featureAdj: ['2', '-1'],
-                value: '-6K',
-                details: ['-1', '-6K', '-1', '-6K', '-1', '-6K', '-1', '-6K'],
-                colorBIndex: [0, 1]
-              },
-              comp2: {
-                featureAdj: ['1', ''],
-                value: '',
-                details: ['', '', '', '', '', '', '', '', '', '']
-              },
-              target: '1'
+              'id': 1,
+              'feature_val': [10.5, 1, 0.7, 6, 73, 3],
+              'delta_x': [+1.8, 0, +0.7, +1, -7, +1],
+              'delta_y': [-67, 0, +154, +150, +6, +35],
+              'pred': 232,
+              'actual': 245,
+              'adjusted_step_number': 5,
+              'adjusted_price': 524
             },
-            {
-              attribute: 'Living Area (ksqft)',
-              comp1: {
-                featureAdj: ['1.2', '+0.3'],
-                value: '+30K',
-                details: ['', '', '+0.3', '+30K', '+0.3', '+30K', '+0.3', '+30K'],
-                colorBIndex: [2, 3]
-              },
-              comp2: {
-                featureAdj: ['0.7', '+0.7'],
-                value: '+135K',
-                details: ['', '', '+0.7', '+135K', '+0.7', '+135K', '+0.7', '+135K', '+0.7', '+135K'],
-                colorBIndex: [2, 3]
-              },
-              target: '1.4'
-            },
-            {
-              attribute: 'Grade',
-              comp1: {
-                featureAdj: ['7', ''],
-                value: '',
-                details: ['', '', '', '', '', '', '', '']
-              },
-              comp2: {
-                featureAdj: ['6', '+1'],
-                value: '+97K',
-                details: ['', '', '', '', '+1', '+97K', '+1', '+97K', '+1', '+97K'],
-                colorBIndex: [4, 5]
-              },
-              target: '7'
-            },
-            {
-              attribute: 'Age (years)',
-              comp1: {
-                featureAdj: ['68', ''],
-                value: '',
-                details: ['', '', '', '', '', '', '', '']
-              },
-              comp2: {
-                featureAdj: ['73', '-7'],
-                value: '+7K',
-                details: ['', '', '', '', '', '', '-7', '+7K', '-7', '+7K'],
-                colorBIndex: [6, 7]
-              },
-              target: '68'
-            },
-            {
-              attribute: 'Condition',
-              comp1: {
-                featureAdj: ['5', '-1'],
-                value: '-3K',
-                details: ['', '', '', '', '', '', '-1', '-3K'],
-                colorBIndex: [6, 7]
-              },
-              comp2: {
-                featureAdj: ['3', '+1'],
-                value: '+22K',
-                details: ['', '', '', '', '', '', '', '', '+1', '+22K'],
-                colorBIndex: [8, 9]
-              },
-              target: '4'
-            }
           ],
-          tableRows_no_trace: [
-            {
-              attribute: 'Dis to Downtown',
-              comp1: {
-                featureAdj: ['12.1', '+ 0.3'],
-                value: '+ $ 11K',
-              },
-              comp2: {
-                featureAdj: ['10.5', '+ 1.8'],
-                value: '- $ 67K',
-              },
-              target: '12.4'
-            },
-            {
-              attribute: '# Bathroom',
-              comp1: {
-                featureAdj: ['2', '-1'],
-                value: '- $ 6K',
-              },
-              comp2: {
-                featureAdj: ['1', ''],
-                value: '',
-              },
-              target: '1'
-            },
-            {
-              attribute: 'Size',
-              comp1: {
-                featureAdj: ['1.08', '+ 0.3'],
-                value: '- $ 10K',
-              },
-              comp2: {
-                featureAdj: ['0.71', '+ 0.67'],
-                value: '+ $ 154K',
-              },
-              target: '1.38'
-            },
-            {
-              attribute: 'Grade',
-              comp1: {
-                featureAdj: ['7', ''],
-                value: '',
-              },
-              comp2: {
-                featureAdj: ['6', '+ 1'],
-                value: '+ $ 150K',
-              },
-              target: '7'
-            },
-            {
-              attribute: 'Age',
-              comp1: {
-                featureAdj: ['68', ''],
-                value: '',
-              },
-              comp2: {
-                featureAdj: ['73', '- 7'],
-                value: '+ $ 6K'
-              },
-              target: '68'
-            },
-            {
-              attribute: 'Condition',
-              comp1: {
-                featureAdj: ['5', '- 1'],
-                value: '+ $ 1.5K',
-
-              },
-              comp2: {
-                featureAdj: ['3', '+ 1'],
-                value: '+ $ 35K'
-              },
-              target: '4'
-            },
-            {
-              attribute: 'Adjusted Price ($)',
-              comp1: {
-                featureAdj: ['', ''],
-                value: ['= $ 369.0 K', '= $ 386.0 K'],
-              },
-              comp2: {
-                featureAdj: ['', ''],
-                value: ['= $ 510.9 K', '= $ 524.1 K'],
-              },
-              target: ''
-            }
-          ]
         }
       },
       methods: {
