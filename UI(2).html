@@ -493,7 +493,7 @@
         <tbody>
           <template v-for="(feature, index) in Features">
             <tr>
-            <td>{{feature}}</td>
+            <td class="feature-name">{{feature}}</td>
             <td class="right-align">{{Targets.feature_val[index]}}</td>
             <template v-for="(row, idx) in Comparables" :key="row.id">
               <td class="right-align">{{row.feature_val[index]}}</td>
