@@ -268,6 +268,11 @@
       background: #005fa3;
       color: #fff;
     }
+    .tab-content{
+      height: 300px;
+      padding: 4px 0 30px 20px;
+      border-bottom: 1px solid #e5e7eb;
+    }
   </style>
 </head>
 
@@ -280,7 +285,7 @@
           @click="currentTab = idx">{{ tab }}</span>
       </div>
     </h2>
-    <div v-if="currentTab === 0">
+    <div class="tab-content" v-if="currentTab === 0">
       <table>
         <thead>
           <!-- Header row -->
@@ -400,7 +405,7 @@
     </div>
 
     <!-- NO Trace Version -->
-    <div v-else-if="currentTab === 1">
+    <div class="tab-content" v-else-if="currentTab === 1">
 
       <table>
         <thead>
@@ -495,7 +500,7 @@
 
      
     </div>
-    <div v-else class="tab-content">
+    <div class="tab-content"  v-else class="tab-content">
       <table class="plain-xai-table">
         <thead>
           <tr>
@@ -535,7 +540,7 @@
         </tbody>
       </table>
     </div>
-    <div style="display:flex;align-items:center;gap:16px;margin-top:30px;">
+    <div style="display:flex;align-items:center;gap:16px;margin-top:20px;">
       <button class="nav-btn" @click="prevTarget" :disabled="currentTargetIndex===0">
         <i class="fa fa-angle-left"></i> Prev
       </button>
