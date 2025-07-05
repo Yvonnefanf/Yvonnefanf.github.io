@@ -239,6 +239,10 @@
 
     .gray-bg {
       background-color: #ededed !important;
+      color: #ccc;
+    }
+    .gray-font{
+      color: #ccc;
     }
 
     .nav-btn {
@@ -364,19 +368,19 @@
           <tr v-for="(tb, index) in Features">
             <td class="feature-name">{{ Features[index] }}</td>
             <template v-for="(row, idx) in Comparables[currentTargetIndex]" :key="row.id">
-              <td class="comp1-header right-align"><span>
+              <td class="comp1-header right-align" :class="{'gray-font': row.delta_x[index]==0}"><span>
                   {{ row.feature_val[index] }}
               </td>
-              <td class="comp1-header right-align"><span>
-                  {{ row.delta_x[index] }}
+              <td class="comp1-header right-align" :class="{'gray-font': row.delta_x[index]==0}"><span>
+                  {{ row.delta_x[index]!==0? row.delta_x[index]:'' }}
               </td>
-              <td class="comp1-header right-align" colspan="2">{{row.delta_y[index]!==0? row.delta_y[index]+'K':'' }}
+              <td class="comp1-header right-align" :class="{'gray-font': row.delta_x[index]==0}" colspan="2">{{row.delta_y[index]!==0? row.delta_y[index]+'K':'' }}
               </td>
               <template v-for="i in row.adjusted_step_number">
-                <th class="right-align adj-value" :class="{hidden: currentOpenComp!==idx}" :style="{ color: index ==
+                <th class="right-align adj-value" :class="{hidden: currentOpenComp!==idx, 'gray-bg': row.delta_x[index]==0 }" :style="{ color: index ==
                   row.adjusted_order[i-1] ? '#222' : '#ccc' }">{{
                   row.adjusted_order.slice(0,i).includes(index)? row.delta_x[index] : '' }}</th>
-                <th class="right-align adj-price" :class="{hidden: currentOpenComp!==idx}" :style="{ color: index ==
+                <th class="right-align adj-price" :class="{hidden: currentOpenComp!==idx, 'gray-bg': row.delta_x[index]==0 }" :style="{ color: index ==
                 row.adjusted_order[i-1] ? '#222' : '#ccc' }">{{
                   row.adjusted_order.slice(0,i).includes(index)? row.delta_y[index]+'K' : ''}}</th>
               </template>
