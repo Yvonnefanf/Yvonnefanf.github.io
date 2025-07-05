@@ -140,7 +140,7 @@
       padding: 12px 32px 10px 32px;
       border: none;
       background: none;
-      font-size: 1.08em;
+      font-size: 20px;
       font-weight: 500;
       color: #888;
       position: relative;
@@ -189,7 +189,7 @@
     }
 
     .gray-bg {
-      background-color: #888;
+      background-color: #ededed !important;
     }
 
     .adj-black {
@@ -240,6 +240,34 @@
     .gray-bg {
       background-color: #ededed !important;
     }
+
+    .nav-btn {
+      background: #0074d9;
+      color: #fff;
+      border: none;
+      border-radius: 6px;
+      padding: 7px 18px;
+      font-size: 1em;
+      font-weight: 500;
+      cursor: pointer;
+      transition: background 0.18s, color 0.18s, box-shadow 0.18s;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      box-shadow: 0 2px 8px 0 #0074d91a;
+    }
+
+    .nav-btn:disabled {
+      background: #e5e7eb;
+      color: #aaa;
+      cursor: not-allowed;
+      box-shadow: none;
+    }
+
+    .nav-btn:not(:disabled):hover {
+      background: #005fa3;
+      color: #fff;
+    }
   </style>
 </head>
 
@@ -258,7 +286,7 @@
           <!-- Header row -->
           <tr>
             <th rowspan="1" style="width: 100px;">Feature</th>
-            <template v-for="(row, idx) in Comparables" :key="row.id" class="comp1-header" style="position:relative;">
+            <template v-for="(row, idx) in Comparables[currentTargetIndex]" :key="row.id" class="comp1-header" style="position:relative;">
               <th colspan="4" class="comp1-header" style="position:relative;">
                 <div style="display:flex;align-items:center;justify-content:center;">
                   Comparable {{idx + 1}}
@@ -289,7 +317,7 @@
 
           <tr class="highlight-blue">
             <td class="feature-name highlight-blue">Actual Price ($)</td>
-            <template v-for="(row, idx) in Comparables" :key="row.id">
+            <template v-for="(row, idx) in Comparables[currentTargetIndex]" :key="row.id">
               <td colspan="4" class="comp1-header right-align highlight-blue"><span>
                   {{row.actual}}K
               </td>
@@ -303,7 +331,7 @@
 
           <tr>
             <td class="comp1-header gray-bg"></td>
-            <template v-for="(row, idx) in Comparables" :key="row.id">
+            <template v-for="(row, idx) in Comparables[currentTargetIndex]" :key="row.id">
               <th style="width: 30px;" class="comp-header">Values</th>
               <th style="width: 30px;" class="comp-header">Δ</th>
               <th colspan="2" class="comp1-header" style="font-size: 12px;">
@@ -315,8 +343,12 @@
                 </span>
               </th>
               <template v-for="i in row.adjusted_step_number">
-                <th class="adj-value" :class="{hidden: currentOpenComp!==idx}">Δ</th>
-                <th class="adj-price" :class="{hidden: currentOpenComp!==idx}">$ Δ</th>
+                <th class="adj-value" :class="{hidden: currentOpenComp!==idx}" :style="{ color: index ==
+                  row.adjusted_order[i-1] ? '#222' : '#ccc' }">{{
+                  row.adjusted_order.slice(0,i).includes(index)? row.delta_x[index] : '' }}</th>
+                <th class="right-align adj-price" :class="{hidden: currentOpenComp!==idx}" :style="{ color: index ==
+                row.adjusted_order[i-1] ? '#222' : '#ccc' }">{{
+                  row.adjusted_order.slice(0,i).includes(index)? row.delta_y[index]+'K' : ''}}</th>
               </template>
             </template>
             <td class="gray-bg"></td>
@@ -326,7 +358,7 @@
         <tbody>
           <tr v-for="(tb, index) in Features">
             <td class="feature-name">{{ Features[index] }}</td>
-            <template v-for="(row, idx) in Comparables" :key="row.id">
+            <template v-for="(row, idx) in Comparables[currentTargetIndex]" :key="row.id">
               <td class="comp1-header right-align"><span>
                   {{ row.feature_val[index] }}
               </td>
@@ -345,13 +377,13 @@
               </template>
             </template>
 
-            <td style="text-align: right;">{{ Targets.feature_val[index] }}</td>
+            <td style="text-align: right;">{{ Targets[currentTargetIndex].feature_val[index] }}</td>
           </tr>
 
 
           <tr>
             <td class="feature-name highlight-blue">Adjusted Price ($)</td>
-            <template v-for="(row, idx) in Comparables" :key="row.id">
+            <template v-for="(row, idx) in Comparables[currentTargetIndex]" :key="row.id">
               <td colspan="4" class="comp1-header right-align highlight-blue"><span>
                   = {{row.adjusted_price[row.adjusted_step_number - 1]}}K
               </td>
@@ -375,7 +407,7 @@
           <!-- Header row -->
           <tr>
             <th rowspan="1" style="width: 100px;">Feature</th>
-            <template v-for="(row, idx) in Comparables_no_trace" :key="row.id" class="comp1-header"
+            <template v-for="(row, idx) in Comparables_no_trace[currentTargetIndex]" :key="row.id" class="comp1-header"
               style="position:relative;">
               <th colspan="4" class="comp1-header" style="position:relative;">
                 <div style="display:flex;align-items:center;justify-content:center;">
@@ -405,7 +437,7 @@
 
           <tr class="highlight-blue">
             <td class="feature-name highlight-blue">Actual Price ($)</td>
-            <template v-for="(row, idx) in Comparables_no_trace" :key="row.id">
+            <template v-for="(row, idx) in Comparables_no_trace[currentTargetIndex]" :key="row.id">
               <td colspan="4" class="comp1-header right-align highlight-blue"><span>
                   {{row.actual}}K
               </td>
@@ -416,7 +448,7 @@
 
           <tr>
             <td class="comp1-header gray-bg"></td>
-            <template v-for="(row, idx) in Comparables_no_trace" :key="row.id">
+            <template v-for="(row, idx) in Comparables_no_trace[currentTargetIndex]" :key="row.id">
               <th style="width: 30px;" class="comp-header">Values</th>
               <th style="width: 30px;" class="comp-header">Δ</th>
               <th colspan="2" class="comp1-header" style="font-size: 12px;">
@@ -431,7 +463,7 @@
         <tbody>
           <tr v-for="(tb, index) in Features">
             <td class="feature-name">{{ Features[index] }}</td>
-            <template v-for="(row, idx) in Comparables_no_trace" :key="row.id">
+            <template v-for="(row, idx) in Comparables_no_trace[currentTargetIndex]" :key="row.id">
               <td class="comp1-header right-align"><span>
                   {{ row.feature_val[index] }}
               </td>
@@ -443,13 +475,13 @@
 
             </template>
 
-            <td style="text-align: right;">{{ Targets.feature_val[index] }}</td>
+            <td style="text-align: right;">{{ Targets[currentTargetIndex].feature_val[index] }}</td>
           </tr>
 
 
           <tr>
             <td class="feature-name highlight-blue">Adjusted Price ($)</td>
-            <template v-for="(row, idx) in Comparables_no_trace" :key="row.id">
+            <template v-for="(row, idx) in Comparables_no_trace[currentTargetIndex]" :key="row.id">
               <td colspan="4" class="comp1-header right-align highlight-blue"><span>
                   = {{row.adjusted_price}}K
               </td>
@@ -469,15 +501,15 @@
           <tr>
             <th style="width: 140px;">Feature</th>
             <th>Target</th>
-            <template v-for="(row, idx) in Comparables" :key="row.id">
+            <template v-for="(row, idx) in Comparables[currentTargetIndex]" :key="row.id">
               <th>Comparable {{idx+1}}</th>
             </template>
      
           </tr>
           <tr>
             <td style="width: 140px;" class="feature-name">AI Prediction ($)</td>
-            <td class="right-align">{{Targets.pred}}K</td>
-            <template v-for="(row, idx) in Comparables" :key="row.id">
+            <td class="right-align">{{Targets[currentTargetIndex].pred}}K</td>
+            <template v-for="(row, idx) in Comparables[currentTargetIndex]" :key="row.id">
               <td class="right-align">{{row.pred}}K</td>
             </template>
      
@@ -485,7 +517,7 @@
           <tr>
             <td style="width: 140px;" class="feature-name">Actual Price ($)</td>
             <td class="right-align">??</td>
-            <template v-for="(row, idx) in Comparables" :key="row.id">
+            <template v-for="(row, idx) in Comparables[currentTargetIndex]" :key="row.id">
               <td class="right-align">{{row.actual}}K</td>
             </template>
           </tr>
@@ -494,14 +526,23 @@
           <template v-for="(feature, index) in Features">
             <tr>
             <td class="feature-name">{{feature}}</td>
-            <td class="right-align">{{Targets.feature_val[index]}}</td>
-            <template v-for="(row, idx) in Comparables" :key="row.id">
+            <td class="right-align">{{Targets[currentTargetIndex].feature_val[index]}}</td>
+            <template v-for="(row, idx) in Comparables[currentTargetIndex]" :key="row.id">
               <td class="right-align">{{row.feature_val[index]}}</td>
             </template></tr>
           </template>
          
         </tbody>
       </table>
+    </div>
+    <div style="display:flex;align-items:center;gap:16px;margin-top:30px;">
+      <button class="nav-btn" @click="prevTarget" :disabled="currentTargetIndex===0">
+        <i class="fa fa-angle-left"></i> Prev
+      </button>
+      <span>Instance {{ currentTargetIndex + 1 }} / {{ Targets.length }}</span>
+      <button class="nav-btn" @click="nextTarget" :disabled="currentTargetIndex===Targets.length-1">
+        Next <i class="fa fa-angle-right"></i>
+      </button>
     </div>
   </div>
 
@@ -514,63 +555,119 @@
           comp2Open: false,
           currentTab: 0,
           currentOpenComp: null,
+          currentTargetIndex: 0,
           tabs: [
             'Comparable XAI',
             'Comparable XAI (No Trace)',
             'Plain Example-based XAI'
           ],
           Features: ['Dist to Downtown (km)', '# Bathroom', 'Living Area (ksqft)', 'Grade', 'Age (years)', 'Condition'],
-          Targets: {
-            'feature_val': [12.4, 1, 1.4, 7, 68, 4],
-            'pred': 389
-          },
+          Targets: [
+            {
+              'feature_val': [12.4, 1, 1.4, 7, 68, 4],
+              'pred': 389
+            },
+            {
+              'feature_val': [0, 0, 0, 0, 0, 0],
+              'pred': 0
+            }
+          ],
           Comparables: [
-            {
-              'id': 0,
-              'feature_val': [12.1, 2, 1.1, 7, 68, 5],
-              'delta_x': [+0.3, -1, +0.3, 0, 0, -1],
-              'delta_y': [-3, -6, +30, 0, 0, -3],
-              'pred': 373,
-              'actual': 390,
-              'adjusted_step_number': 4,
-              'adjusted_order': [1, 2, 0, 5],
-              'adjusted_price': [384, 414, 411, 408]
-            },
-            {
-              'id': 1,
-              'feature_val': [10.5, 1, 0.7, 6, 73, 3],
-              'delta_x': [+1.8, 0, +0.7, +1, -7, +1],
-              'delta_y': [-113, 0, +135, +97, +7, +22],
-              'pred': 232,
-              'actual': 245,
-              'adjusted_step_number': 5,
-              'adjusted_order': [0, 2, 3, 4, 5],
-              'adjusted_price': [132, 267, 364, 371, 393]
-            },
+            [
+              {
+                'id': 0,
+                'feature_val': [12.1, 2, 1.1, 7, 68, 5],
+                'delta_x': [+0.3, -1, +0.3, 0, 0, -1],
+                'delta_y': [-3, -6, +30, 0, 0, -3],
+                'pred': 373,
+                'actual': 390,
+                'adjusted_step_number': 4,
+                'adjusted_order': [1, 2, 0, 5],
+                'adjusted_price': [384, 414, 411, 408]
+              },
+              {
+                'id': 1,
+                'feature_val': [10.5, 1, 0.7, 6, 73, 3],
+                'delta_x': [+1.8, 0, +0.7, +1, -7, +1],
+                'delta_y': [-113, 0, +135, +97, +7, +22],
+                'pred': 232,
+                'actual': 245,
+                'adjusted_step_number': 5,
+                'adjusted_order': [0, 2, 3, 4, 5],
+                'adjusted_price': [132, 267, 364, 371, 393]
+              }
+            ],
+            [
+              {
+                'id': 0,
+                'feature_val': [0, 0, 0, 0, 0, 0],
+                'delta_x': [0, 0, 0, 0, 0, 0],
+                'delta_y': [0, 0, 0, 0, 0, 0],
+                'pred': 0,
+                'actual': 0,
+                'adjusted_step_number': 3,
+                'adjusted_order': [0, 0, 0],
+                'adjusted_price': [0, 0, 0]
+              },
+              {
+                'id': 1,
+                'feature_val': [0, 0, 0, 0, 0, 0],
+                'delta_x': [0, 0, 0, 0, 0, 0],
+                'delta_y': [0, 0, 0, 0, 0, 0],
+                'pred': 0,
+                'actual': 0,
+                'adjusted_step_number': 4,
+                'adjusted_order': [0, 0, 0, 0],
+                'adjusted_price': [0, 0, 0, 0]
+              }
+            ]
           ],
-
           Comparables_no_trace: [
-            {
-              'id': 0,
-              'feature_val': [12.1, 2, 1.1, 7, 68, 5],
-              'delta_x': [+0.3, -1, +0.3, 0, 0, -1],
-              'delta_y': [+11, -6, -10, 0, 0, +1.5],
-              'pred': 373,
-              'actual': 390,
-              'adjusted_step_number': 4,
-              'adjusted_price': 386
-            },
-            {
-              'id': 1,
-              'feature_val': [10.5, 1, 0.7, 6, 73, 3],
-              'delta_x': [+1.8, 0, +0.7, +1, -7, +1],
-              'delta_y': [-67, 0, +154, +150, +6, +35],
-              'pred': 232,
-              'actual': 245,
-              'adjusted_step_number': 5,
-              'adjusted_price': 524
-            },
-          ],
+            [
+              {
+                'id': 0,
+                'feature_val': [12.1, 2, 1.1, 7, 68, 5],
+                'delta_x': [+0.3, -1, +0.3, 0, 0, -1],
+                'delta_y': [+11, -6, -10, 0, 0, +1.5],
+                'pred': 373,
+                'actual': 390,
+                'adjusted_step_number': 4,
+                'adjusted_price': 386
+              },
+              {
+                'id': 1,
+                'feature_val': [10.5, 1, 0.7, 6, 73, 3],
+                'delta_x': [+1.8, 0, +0.7, +1, -7, +1],
+                'delta_y': [-67, 0, +154, +150, +6, +35],
+                'pred': 232,
+                'actual': 245,
+                'adjusted_step_number': 5,
+                'adjusted_price': 524
+              }
+            ],
+            [
+              {
+                'id': 0,
+                'feature_val': [0, 0, 0, 0, 0, 0],
+                'delta_x': [0, 0, 0, 0, 0, 0],
+                'delta_y': [0, 0, 0, 0, 0, 0],
+                'pred': 0,
+                'actual': 0,
+                'adjusted_step_number': 3,
+                'adjusted_price': 0
+              },
+              {
+                'id': 1,
+                'feature_val': [0, 0, 0, 0, 0, 0],
+                'delta_x': [0, 0, 0, 0, 0, 0],
+                'delta_y': [0, 0, 0, 0, 0, 0],
+                'pred': 0,
+                'actual': 0,
+                'adjusted_step_number': 4,
+                'adjusted_price': 0
+              }
+            ]
+          ]
         }
       },
       methods: {
@@ -588,6 +685,18 @@
           } else {
             this.comp2Open = !this.comp2Open;
             if (this.comp2Open) this.comp1Open = false;
+          }
+        },
+        nextTarget() {
+          if (this.currentTargetIndex < this.Targets.length - 1) {
+            this.currentTargetIndex++;
+            this.currentOpenComp = null;
+          }
+        },
+        prevTarget() {
+          if (this.currentTargetIndex > 0) {
+            this.currentTargetIndex--;
+            this.currentOpenComp = null;
           }
         }
       }
