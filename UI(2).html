@@ -5,40 +5,112 @@
   <meta charset="UTF-8">
   <title>Comparable XAI</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Space+Mono&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Roboto+Condensed&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono&display=swap" rel="stylesheet">
   <script src="https://unpkg.com/vue@3/dist/vue.global.prod.js"></script>
 
-  <!-- No internet open 👇-->
-  <!-- <link rel="stylesheet" href="./min.css">
-  <script src="./min.js"></script> -->
-
   <style>
+    /* Base styles */
     body {
       font-family: Arial, sans-serif;
       padding: 20px;
     }
 
+    /* Table base styles */
     table {
-      /* width: 100%; */
       border-collapse: collapse;
       margin-bottom: 10px;
       font-size: 14px;
+      font-family: 'Roboto Condensed', monospace;
+      color: #212121;
     }
 
-    th,
-    td {
+    th, td {
       border: 1px solid #ccc;
       padding: 6px;
-      transition: max-width 0.4s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.4s cubic-bezier(0.4, 0, 0.2, 1), padding 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+      transition: max-width 0.4s cubic-bezier(0.4, 0, 0.2, 1), 
+                  opacity 0.4s cubic-bezier(0.4, 0, 0.2, 1), 
+                  padding 0.4s cubic-bezier(0.4, 0, 0.2, 1);
       max-width: 200px;
       opacity: 1;
       overflow: hidden;
       white-space: nowrap;
-      background-color: #fff;
     }
 
     th {
-      background-color: #fff;
-      /*background-color: #f0f8ff;*/
+      font-size: 14px;
+      font-family: sans-serif;
+    }
+
+    table, th, td {
+      border: none;
+      background-color: #fbfbfb;
+    }
+
+    /* Column-specific classes */
+    .col-feature {
+      width: 100px;
+    }
+
+    .col-subject {
+      width: 50px;
+      text-align: right;
+    }
+
+    .col-comparable-header {
+      width: 50px;
+      text-align: right;
+    }
+
+    .col-comparable-value {
+      width: 50px;
+      text-align: right;
+    }
+
+    .col-comparable-delta {
+      width: 50px;
+      text-align: right;
+    }
+
+    .col-adjustment-detail {
+      width: 80px;
+      text-align: right;
+      font-weight: bold;
+    }
+
+    .col-adjustment-price {
+      width: 26px;
+      text-align: right;
+      font-weight: bold;
+      padding-right: 10px;
+    }
+
+    .col-adjustment-value {
+      width: 80px;
+      text-align: right;
+      font-weight: 400;
+      padding-right: 4px;
+    }
+    /* bg color */
+    .col-adjustment-detail,.col-adjustment-price,.col-adjustment-value {
+      background-color: #fcf8e8;
+    }
+
+    .col-target {
+      width: 50px;
+      text-align: right;
+    }
+
+    /* Utility classes */
+    .hidden {
+      max-width: 0 !important;
+      opacity: 0 !important;
+      padding-left: 0 !important;
+      padding-right: 0 !important;
+      border-width: 0 !important;
+      pointer-events: none;
     }
 
     .highlight-blue {
@@ -49,51 +121,76 @@
       background-color: #d9f5dc;
     }
 
-    .hidden {
-      max-width: 0 !important;
-      opacity: 0 !important;
-      padding-left: 0 !important;
-      padding-right: 0 !important;
-      border-width: 0 !important;
-      pointer-events: none;
-    }
-
-    .comp1,
-    .comp2 {
-      width: 40px;
-      background-color: #fef6e4;
-      transition: max-width 0.4s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.4s cubic-bezier(0.4, 0, 0.2, 1), padding 0.4s cubic-bezier(0.4, 0, 0.2, 1), border-width 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-    }
-
-    .comp-header {
-      font-size: 12px;
-
-    }
-
-    .adj-price,
-    .adj-value {
-      font-weight: 400;
-      width: 34px;
-    }
-
-    .adj-price {
-      background-color: #fcecc9;
-    }
-
-    .adj-value {
-      background-color: #fef6e4;
-    }
-
     .highlight-yellow {
       background-color: #fef6e4;
     }
 
-    .sub-header {
-      background-color: #f0f0f0;
-      font-weight: normal;
-      font-size: 0.9em;
+    .gray-bg {
+      background-color: #ededed !important;
     }
 
+    .gray-font {
+      color: #ccc;
+    }
+
+    .ai-pred-bg {
+      background-color: #dedede;
+    }
+
+    .border-btm {
+      border-bottom: 1px solid #666;
+    }
+
+    .border-top {
+      border-top: 1px solid #666;
+    }
+
+    .border-wider {
+      border-top: 2px solid #a4a4a4;
+    }
+
+    /* Text alignment */
+    .right-align {
+      text-align: right;
+    }
+
+    .left-align {
+      text-align: left;
+    }
+
+    /* Typography */
+    .feature-name {
+      font-size: 14px;
+      text-align: left;
+      font-weight: 400;
+      font-family: sans-serif;
+    }
+
+    .money {
+      font-family: 'Roboto Condensed', monospace;
+      font-size: 14px;
+      font-variant-numeric: tabular-nums;
+      letter-spacing: 0.5px;
+      font-weight: 1200;
+      color: #2e8113;
+    }
+
+    .adj-grey {
+      color: #ccc;
+      font-size: 1em;
+      width: 30px;
+      text-align: right;
+    }
+
+    .adj-black {
+      color: #222;
+      font-weight: 500;
+      font-size: 1em;
+      width: 40px;
+      text-align: left;
+    }
+
+    /* Interactive elements */
     .clickable-header {
       cursor: pointer;
       user-select: none;
@@ -124,6 +221,16 @@
       line-height: 16px;
     }
 
+    .toggle-button {
+      cursor: pointer;
+      margin: 2px 0;
+    }
+
+    .toggle-button:hover {
+      background: #cbf4be;
+    }
+
+    /* Tabs */
     .tabs {
       display: flex;
       gap: 0;
@@ -171,6 +278,7 @@
       box-shadow: 0 2px 8px 0 #0074d91a;
     }
 
+    /* Layout */
     .adj-flex {
       display: flex;
       justify-content: space-between;
@@ -178,70 +286,13 @@
       width: 100%;
     }
 
-    .adj-grey {
-      color: #ccc;
-      font-size: 1em;
-      width: 30px;
-      text-align: right;
+    .tab-content {
+      height: 390px;
+      padding: 4px 0 30px 20px;
+      border-bottom: 1px solid #e5e7eb;
     }
 
-    .gray-bg {
-      background-color: #ededed !important;
-    }
-
-    .adj-black {
-      color: #222;
-      font-weight: 500;
-      font-size: 1em;
-      width: 40px;
-      text-align: left;
-    }
-
-    .plain-xai-table {
-      border-collapse: collapse;
-      margin-top: 10px;
-      font-size: 14px;
-      min-width: 650px;
-    }
-
-    .feature-name {
-      font-size: 12px;
-      text-align: left;
-      font-weight: 400;
-    }
-
-    .right-align {
-      text-align: right;
-    }
-
-    .left-align {
-      text-align: left;
-    }
-
-    .plain-xai-table th,
-    .plain-xai-table td {
-      border: 1px solid #bfc9d1;
-      padding: 6px 12px;
-
-    }
-
-    .plain-xai-table th {
-      font-weight: bold;
-    }
-
-    .plain-xai-table tr td:first-child {
-
-      font-weight: 500;
-    }
-
-    .gray-bg {
-      background-color: #ededed !important;
-      color: #ccc;
-    }
-    .gray-font{
-      color: #ccc;
-    }
-
+    /* Navigation */
     .nav-btn {
       background: #0074d9;
       color: #fff;
@@ -269,10 +320,93 @@
       background: #005fa3;
       color: #fff;
     }
-    .tab-content{
-      height: 300px;
-      padding: 4px 0 30px 20px;
-      border-bottom: 1px solid #e5e7eb;
+
+    /* Plain XAI table */
+    .plain-xai-table {
+      border-collapse: collapse;
+      margin-top: 10px;
+      font-size: 14px;
+      min-width: 650px;
+    }
+
+    .plain-xai-table th,
+    .plain-xai-table td {
+      border: 1px solid #bfc9d1;
+      padding: 6px 12px;
+    }
+
+    .plain-xai-table th {
+      font-weight: bold;
+    }
+
+    .plain-xai-table tr td:first-child {
+      font-weight: 500;
+    }
+
+    /* Specific widths for plain table */
+    .plain-feature-col {
+      width: 140px;
+    }
+
+    .comp-header {
+      font-size: 14px;
+    }
+
+    .comp-details {
+      background-color: #f4fdf1;
+    }
+
+    .sub-header {
+      background-color: #f0f0f0;
+      font-weight: normal;
+      font-size: 0.9em;
+    }
+
+    .detail-header-bg {
+      background-attachment: #cbf4be !important;
+    }
+
+    .subject {
+      padding-right: 20px;
+    }
+
+    /* Additional utility classes for inline styles */
+    .help-icon {
+      cursor: pointer;
+      margin-left: 4px;
+      font-size: 10px;
+    }
+
+    .arrow-icon {
+      font-size: 10px;
+      vertical-align: middle;
+    }
+
+    .flex-center {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .small-text {
+      font-size: 12px;
+    }
+
+    .explanation-text {
+      color: rgb(129 129 129);
+      font-size: 12px;
+      margin-top: 24px;
+    }
+
+    .nav-container {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      margin-top: 20px;
+    }
+
+    .col-small {
+      width: 30px;
     }
   </style>
 </head>
@@ -291,116 +425,152 @@
         <thead>
           <!-- Header row -->
           <tr>
-            <th rowspan="1" style="width: 100px;">Feature</th>
-            <template v-for="(row, idx) in Comparables[currentTargetIndex]" :key="row.id" class="comp1-header" style="position:relative;">
-              <th colspan="4" class="comp1-header" style="position:relative;">
-                <div style="display:flex;align-items:center;justify-content:center;">
-                  Comparable {{idx + 1}}
-                </div>
-                <div style="font-size: 12px; display:flex;align-items:center;justify-content:center;color:#800080">
-                  AI Prediction ($): {{row.pred}}K
-                </div>
-              </th>
-              <th :colspan="row.adjusted_step_number * 2" :class="{hidden: currentOpenComp!==idx}">
-                Comparable {{idx + 1}} Adjustment Details
-              </th>
-            </template>
-            <th>Target</th>
-          </tr>
-
-
-          <!-- AI prediction row -->
-          <!-- <tr>
-            <td class="feature-name">AI Prediction ($)</td>
-            <template v-for="(row, idx) in Comparables" :key="row.id">
-              <td colspan="4" class="comp1-header right-align"><span>
-                  {{row.pred}}K
-              </td>
-            </template>
-            <td class="right-align">{{Targets.pred}}K </th>
-          </tr> -->
-          <!-- header -->
-
-          <tr class="highlight-blue">
-            <td class="feature-name highlight-blue">Actual Price ($)</td>
+            <th class="col-feature"></th>
+            <th class="col-subject subject">Subject</th>
             <template v-for="(row, idx) in Comparables[currentTargetIndex]" :key="row.id">
-              <td colspan="4" class="comp1-header right-align highlight-blue"><span>
-                  {{row.actual}}K
-              </td>
-              <!-- <template v-for="i in row.adjusted_step_number">
-                <td colspan="2" class="right-align highlight-blue" :class="{hidden: currentOpenComp!==idx}">
-                  {{row.actual}}K</td>
-              </template> -->
-              <td :colspan="row.adjusted_step_number*2" class="right-align highlight-blue" :class="{hidden: currentOpenComp!==idx}">
-                {{row.actual}}K</td>
-            </template>
-            <td class="right-align highlight-blue">?? </th>
-          </tr>
-
-          <tr>
-            <td class="comp1-header gray-bg"></td>
-            <template v-for="(row, idx) in Comparables[currentTargetIndex]" :key="row.id">
-              <th style="width: 30px;" class="comp-header">Values</th>
-              <th style="width: 30px;" class="comp-header">Δ</th>
-              <th colspan="2" class="comp1-header" style="font-size: 12px;">
-                $ Adjustment
-                <span class="clickable-header" @click="toggleCols(`comp${idx+1}`,idx)">
+              <th colspan="2" class="col-comparable-header border-btm">
+                Comparable {{idx + 1}}
+                <button class="toggle-button" @click="toggleCols(`comp${idx+1}`,idx)">
                   <span v-if="currentOpenComp!=idx" class="toggle-text">{{ currentOpenComp ==idx ? ' ' : '...' }}</span>
                   <i class="toggle-text fa-solid fa-angle-left" v-if="currentOpenComp==idx"></i>
-                  <!-- <i :class="currentOpenComp==idx ? 'fa-solid fa-angle-left' : 'fa-solid fa-angle-right'"></i>  -->
-                </span>
+                </button>
               </th>
               <template v-for="i in row.adjusted_step_number">
-                <th class="adj-value" :class="{hidden: currentOpenComp!==idx}">Δ</th>
-                <th class="adj-price" :class="{hidden: currentOpenComp!==idx}">$ Δ</th>
+                <th style="padding-right: 10px;" class="col-adjustment-detail border-btm" :colspan="2"
+                :class="{hidden: currentOpenComp!==idx}">
+                Sub Comp {{i}}
+              </th>
+              </template>
+             
+            </template>
+          </tr>
+          <!-- header -->
+          <tr>
+            <td class="comp-header"></td>
+            <td class="subject"></td>
+            <template v-for="(row, idx) in Comparables[currentTargetIndex]" :key="row.id">
+              <th class="col-comparable-value comp-header border-btm">Values</th>
+              <th class="col-comparable-delta comp-header border-btm money">
+                <span> $ Δ </span>
+              </th>
+              <template v-for="i in row.adjusted_step_number">
+                <th class="col-adjustment-value border-btm" :class="{hidden: currentOpenComp!==idx}">
+                  Values
+                </th>
+                <th class="col-adjustment-price border-btm money" :class="{hidden: currentOpenComp!==idx}">$ Δ</th>
               </template>
             </template>
-            <td class="gray-bg"></td>
           </tr>
         </thead>
-
         <tbody>
           <tr v-for="(tb, index) in Features">
-            <td class="feature-name">{{ Features[index] }}</td>
+            <td class="feature-name">
+              <span>{{ Features[index] }}</span>
+              <span class="help-icon" :title="FeatureDescriptions[index]">
+                <i class="fa-regular fa-circle-question"></i>
+              </span>
+            </td>
+            <td class="right-align subject">{{ Targets[currentTargetIndex].feature_val[index] }}</td>
             <template v-for="(row, idx) in Comparables[currentTargetIndex]" :key="row.id">
-              <td class="comp1-header right-align" :class="{'gray-font': row.delta_x[index]==0}"><span>
-                  {{ row.feature_val[index] }}
+              <td class="col-comparable-value" :class="{'gray-font': row.delta_x[index]==0}">
+                <span>{{ row.feature_val[index] }}</span>
               </td>
-              <td class="comp1-header right-align" :class="{'gray-font': row.delta_x[index]==0}"><span>
-                  {{ row.delta_x[index]!==0? row.delta_x[index]:'' }}
-              </td>
-              <td class="comp1-header right-align" :class="{'gray-font': row.delta_x[index]==0}" colspan="2">{{row.delta_y[index]!==0? row.delta_y[index]+'K':'' }}
+              <td class="col-comparable-delta money" :class="{'gray-font': row.delta_x[index]==0}">
+                {{row.delta_y[index]!==0? row.delta_y[index]+'K':'—' }}
               </td>
               <template v-for="i in row.adjusted_step_number">
-                <th class="right-align adj-value" :class="{hidden: currentOpenComp!==idx, 'gray-bg': row.delta_x[index]==0 }" :style="{ color: index ==
-                  row.adjusted_order[i-1] ? '#222' : '#ccc' }">{{
-                  row.adjusted_order.slice(0,i).includes(index)? row.delta_x[index] : '' }}</th>
-                <th class="right-align adj-price" :class="{hidden: currentOpenComp!==idx, 'gray-bg': row.delta_x[index]==0 }" :style="{ color: index ==
-                row.adjusted_order[i-1] ? '#222' : '#ccc' }">{{
-                  row.adjusted_order.slice(0,i).includes(index)? row.delta_y[index]+'K' : ''}}</th>
-              </template>
-            </template>
-
-            <td style="text-align: right;">{{ Targets[currentTargetIndex].feature_val[index] }}</td>
-          </tr>
-
-
-          <tr>
-            <td class="feature-name highlight-blue">Adjusted Price ($)</td>
-            <template v-for="(row, idx) in Comparables[currentTargetIndex]" :key="row.id">
-              <td colspan="4" class="comp1-header right-align highlight-blue"><span>
-                  = {{row.adjusted_price[row.adjusted_step_number - 1]}}K
-              </td>
-              <template v-for="(ele, i) in row.adjusted_price">
-                <td colspan="2" class="right-align highlight-blue" :class="{hidden: currentOpenComp!==idx}">= {{ele}}K
+                <td class="col-adjustment-value" :class="{hidden: currentOpenComp!==idx }"
+                  :style="{ color: index == row.adjusted_order[i-1] ? '#222' : '#ccc' }">
+                  <span v-if="row.adjusted_order.slice(0,i).includes(index)">
+                    {{ row.feature_val[index] }}
+                    <i class="fa-solid fa-arrow-right arrow-icon"></i>
+                    {{ Targets[currentTargetIndex].feature_val[index] }}
+                  </span>
+                </td>
+                <td class="col-adjustment-price money" :class="{hidden: currentOpenComp!==idx}" 
+                    :style="{ color: index == row.adjusted_order[i-1] ? '#2e8113' : '#ccc' }">
+                  {{ row.adjusted_order.slice(0,i).includes(index)? row.delta_y[index]+'K' : ''}}
                 </td>
               </template>
             </template>
-            <td class="right-align gray-bg">
-              </th>
+          </tr>
+
+          <tr>
+            <td class="feature-name money">Actual Price ($)
+              <span class="help-icon" title="Actual Price ($) is the actual sale price of the comparable house.">
+                <i class="fa-regular fa-circle-question"></i>
+              </span>
+            </td>
+            <td class="right-align subject money"></td>
+            <template v-for="(row, idx) in Comparables[currentTargetIndex]" :key="row.id">
+              <td colspan="2" class="col-comparable-header money">
+                <span>{{row.actual}}K</span>
+              </td>
+              <template v-for="(ele, i) in row.adjusted_price">
+                <td :colspan="2" class="col-adjustment-detail money" :class="{hidden: currentOpenComp!==idx}">
+                  <span>{{row.actual}}K</span>
+                </td>
+              </template>
+            </template>
+          </tr>
+
+          <tr>
+            <td class="feature-name money">Adjusted Price ($)
+              <span class="help-icon" title="Adjusted Price ($) is the price of the comparable house after all adjustments.">
+                <i class="fa-regular fa-circle-question"></i>
+              </span>
+            </td>
+            <td class="right-align money subject"></td>
+            <template v-for="(row, idx) in Comparables[currentTargetIndex]" :key="row.id">
+              <td colspan="2" class="col-comparable-header money border-top">
+                <span>{{row.adjusted_price[row.adjusted_step_number - 1]}}K</span>
+              </td>
+              <template v-for="(ele, i) in row.adjusted_price">
+                <td :colspan="2" class="col-adjustment-detail money border-top" :class="{hidden: currentOpenComp!==idx}">
+                  <span>{{ele}}K</span>
+                </td>
+              </template>
+            </template>
+          </tr>
+          <!-- Empty row -->
+          <tr style="height: 20px;">
+            <td class="feature-name">
+            </td>
+            <td class="right-align money subject">
+             </td>
+            <template v-for="(row, idx) in Comparables[currentTargetIndex]" :key="row.id">
+              <td colspan="2" class="col-comparable-header money">
+                <span> </span>
+              </td>
+              <td :colspan="row.adjusted_step_number*2" class="right-align" :class="{hidden: currentOpenComp!==idx}">
+              </td>
+            </template>
+          </tr>
+
+          <tr>
+            <td class="feature-name money ai-pred-bg">AI Prediction ($)
+              <span class="help-icon" title="AI Prediction ($) is the price of the house predicted by the AI model.">
+                <i class="fa-regular fa-circle-question"></i>
+              </span>
+            </td>
+            <td class="right-align money subject ai-pred-bg">
+              {{Targets[currentTargetIndex].pred}}K </td>
+            <template v-for="(row, idx) in Comparables[currentTargetIndex]" :key="row.id">
+              <td colspan="2" class="col-comparable-header money ai-pred-bg">
+                <span>{{row.pred}}K</span>
+              </td>
+              <td :colspan="row.adjusted_step_number*2" class="right-align" :class="{hidden: currentOpenComp!==idx}">
+              </td>
+            </template>
           </tr>
         </tbody>
       </table>
+      <!-- 说明行 -->
+      <div class="explanation-text">
+        <span>
+          <span>Sum of $ Δ + Actual Price ($) = Adjusted Price ($)</span>
+        </span>
+      </div>
     </div>
 
     <!-- NO Trace Version -->
@@ -410,55 +580,38 @@
         <thead>
           <!-- Header row -->
           <tr>
-            <th rowspan="1" style="width: 100px;">Feature</th>
-            <template v-for="(row, idx) in Comparables_no_trace[currentTargetIndex]" :key="row.id" class="comp1-header"
-              style="position:relative;">
-              <th colspan="4" class="comp1-header" style="position:relative;">
-                <div style="display:flex;align-items:center;justify-content:center;">
+            <th class="col-feature">Feature</th>
+            <template v-for="(row, idx) in Comparables_no_trace[currentTargetIndex]" :key="row.id">
+              <th colspan="4" class="col-comparable-header">
+                <div class="flex-center">
                   Comparable {{idx + 1}}
                 </div>
-                <div style="font-size: 12px; display:flex;align-items:center;justify-content:center;color:#800080">
+                <div class="small-text flex-center">
                   AI Prediction ($): {{row.pred}}K
                 </div>
               </th>
-
             </template>
             <th>Target</th>
           </tr>
 
-
-          <!-- AI prediction row -->
-          <!-- <tr>
-            <td class="feature-name">AI Prediction ($)</td>
-            <template v-for="(row, idx) in Comparables_no_trace" :key="row.id">
-              <td colspan="4" class="comp1-header right-align"><span>
-                  {{row.pred}}K
-              </td>
-            </template>
-            <td class="right-align">{{Targets.pred}}K </th>
-          </tr> -->
-          <!-- header -->
-
-          <tr class="highlight-blue">
-            <td class="feature-name highlight-blue">Actual Price ($)</td>
+          <tr>
+            <td class="feature-name">Actual Price ($)</td>
             <template v-for="(row, idx) in Comparables_no_trace[currentTargetIndex]" :key="row.id">
-              <td colspan="4" class="comp1-header right-align highlight-blue"><span>
-                  {{row.actual}}K
+              <td colspan="2" class="col-comparable-header money">
+                <span>{{row.actual}}K</span>
               </td>
-
             </template>
-            <td class="right-align highlight-blue">?? </th>
+            <td class="right-align">?? </th>
           </tr>
 
           <tr>
-            <td class="comp1-header gray-bg"></td>
+            <td class="gray-bg"></td>
             <template v-for="(row, idx) in Comparables_no_trace[currentTargetIndex]" :key="row.id">
-              <th style="width: 30px;" class="comp-header">Values</th>
-              <th style="width: 30px;" class="comp-header">Δ</th>
-              <th colspan="2" class="comp1-header" style="font-size: 12px;">
+              <th class="comp-header col-small">Values</th>
+              <th class="comp-header col-small">Δ</th>
+              <th colspan="2" class="col-comparable-header small-text">
                 $ Adjustment
               </th>
-
             </template>
             <td class="gray-bg"></td>
           </tr>
@@ -466,60 +619,55 @@
 
         <tbody>
           <tr v-for="(tb, index) in Features">
-            <td class="feature-name">{{ Features[index] }}</td>
+            <td class="feature-name">
+              {{ Features[index] }}
+              <span class="help-icon" :title="FeatureDescriptions[index]">
+                <i class="fa-regular fa-circle-question"></i>
+              </span>
+            </td>
             <template v-for="(row, idx) in Comparables_no_trace[currentTargetIndex]" :key="row.id">
-              <td class="comp1-header right-align"><span>
-                  {{ row.feature_val[index] }}
+              <td class="col-comparable-value">
+                <span>{{ row.feature_val[index] }}</span>
               </td>
-              <td class="comp1-header right-align"><span>
-                  {{ row.delta_x[index] }}
+              <td class="col-comparable-delta">
+                <span>{{ row.delta_x[index] }}</span>
               </td>
-              <td class="comp1-header right-align" colspan="2">{{row.delta_y[index]!==0? row.delta_y[index]+'K':'' }}
-              </td>
-
+              <td class="col-comparable-header" colspan="2">{{row.delta_y[index]!==0? row.delta_y[index]+'K':'' }}</td>
             </template>
-
-            <td style="text-align: right;">{{ Targets[currentTargetIndex].feature_val[index] }}</td>
+            <td class="right-align">{{ Targets[currentTargetIndex].feature_val[index] }}</td>
           </tr>
-
 
           <tr>
             <td class="feature-name highlight-blue">Adjusted Price ($)</td>
             <template v-for="(row, idx) in Comparables_no_trace[currentTargetIndex]" :key="row.id">
-              <td colspan="4" class="comp1-header right-align highlight-blue"><span>
-                  = {{row.adjusted_price}}K
+              <td colspan="4" class="col-comparable-header highlight-blue">
+                <span>= {{row.adjusted_price}}K</span>
               </td>
-
             </template>
-            <td class="right-align gray-bg">
-              </th>
+            <td class="right-align gray-bg"></th>
           </tr>
         </tbody>
       </table>
-
-     
     </div>
-    <div class="tab-content"  v-else class="tab-content">
+    <div class="tab-content" v-else>
       <table class="plain-xai-table">
         <thead>
           <tr>
-            <th style="width: 140px;">Feature</th>
+            <th class="plain-feature-col">Feature</th>
             <th>Target</th>
             <template v-for="(row, idx) in Comparables[currentTargetIndex]" :key="row.id">
               <th>Comparable {{idx+1}}</th>
             </template>
-     
           </tr>
           <tr>
-            <td style="width: 140px;" class="feature-name">AI Prediction ($)</td>
+            <td class="plain-feature-col feature-name">AI Prediction ($)</td>
             <td class="right-align">{{Targets[currentTargetIndex].pred}}K</td>
             <template v-for="(row, idx) in Comparables[currentTargetIndex]" :key="row.id">
               <td class="right-align">{{row.pred}}K</td>
             </template>
-     
           </tr>
           <tr>
-            <td style="width: 140px;" class="feature-name">Actual Price ($)</td>
+            <td class="plain-feature-col feature-name">Actual Price ($)</td>
             <td class="right-align">??</td>
             <template v-for="(row, idx) in Comparables[currentTargetIndex]" :key="row.id">
               <td class="right-align">{{row.actual}}K</td>
@@ -529,13 +677,18 @@
         <tbody>
           <template v-for="(feature, index) in Features">
             <tr>
-            <td class="feature-name">{{feature}}</td>
-            <td class="right-align">{{Targets[currentTargetIndex].feature_val[index]}}</td>
-            <template v-for="(row, idx) in Comparables[currentTargetIndex]" :key="row.id">
-              <td class="right-align">{{row.feature_val[index]}}</td>
-            </template></tr>
+              <td class="plain-feature-col feature-name">
+                {{feature}}
+                              <span class="help-icon" :title="FeatureDescriptions[index]">
+                <i class="fa-regular fa-circle-question"></i>
+              </span>
+              </td>
+              <td class="right-align">{{Targets[currentTargetIndex].feature_val[index]}}</td>
+              <template v-for="(row, idx) in Comparables[currentTargetIndex]" :key="row.id">
+                <td class="right-align">{{row.feature_val[index]}}</td>
+              </template>
+            </tr>
           </template>
-         
         </tbody>
       </table>
     </div>
@@ -566,6 +719,14 @@
             'Plain Example-based XAI'
           ],
           Features: ['Dist to Downtown (km)', '# Bathroom', 'Living Area (ksqft)', 'Grade', 'Age (years)', 'Condition'],
+          FeatureDescriptions: [
+            'Distance from the property to the city center in kilometers.',
+            'The number of bathrooms in the house.',
+            'Indoor living space in thousands of square feet.',
+            'A rating of the overall quality and design of the house, based on King County\'s grading system.',
+            'The year the house was originally built.',
+            'A rating of the overall condition of the house (e.g., from 1 to 5, with 5 being the best).'
+          ],
           Targets: [
             {
               'feature_val': [12.4, 1, 1.4, 7, 68, 4],
@@ -587,7 +748,9 @@
                 'actual': 390,
                 'adjusted_step_number': 4,
                 'adjusted_order': [1, 2, 0, 5],
-                'adjusted_price': [384, 414, 411, 408]
+                'adjusted_price': [384, 414, 411, 408],
+                'net_adjustments': [-6, 24, 21, 18],
+                'net_adjustment': 18
               },
               {
                 'id': 1,
@@ -598,7 +761,9 @@
                 'actual': 245,
                 'adjusted_step_number': 5,
                 'adjusted_order': [0, 2, 3, 4, 5],
-                'adjusted_price': [132, 267, 364, 371, 393]
+                'adjusted_price': [132, 267, 364, 371, 393],
+                'net_adjustments': [-113, 22, 119, 126, 148],
+                'net_adjustment': 148
               }
             ],
             [
