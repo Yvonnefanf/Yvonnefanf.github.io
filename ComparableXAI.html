@@ -310,16 +310,17 @@
     .ai-pred-bg {
       /*background-color: #cbf4be;*/
       background-color: #ffffff;
-      
+
     }
-    .pred-description{
+
+    .pred-description {
       color: #666;
       font-size: 12px;
       padding: 2px 0 2px 4px;
       margin-top: 4px;
       display: inline-block;
     }
-    
+
     /* Slider styles */
     .slider-container {
       margin-top: 15px;
@@ -328,7 +329,7 @@
       border: 1px solid #e9ecef;
       max-width: 600px;
     }
-    
+
     .slider-label {
       font-size: 14px;
       font-weight: 500;
@@ -336,7 +337,7 @@
       margin-bottom: 8px;
       display: block;
     }
-    
+
     .slider-track {
       position: relative;
       height: 4px;
@@ -344,7 +345,7 @@
       border-radius: 2px;
       margin: 15px 0;
     }
-    
+
     .slider-fill {
       position: absolute;
       height: 100%;
@@ -352,7 +353,7 @@
       border-radius: 2px;
       top: 0;
     }
-    
+
     .slider-handle {
       position: absolute;
       width: 16px;
@@ -364,15 +365,15 @@
       cursor: pointer;
       transition: box-shadow 0.2s;
     }
-    
+
     .slider-handle:hover {
       box-shadow: 0 2px 8px rgba(40, 167, 69, 0.3);
     }
-    
+
     .slider-handle.active {
       box-shadow: 0 0 0 3px rgba(40, 167, 69, 0.2);
     }
-    
+
     .slider-values {
       display: flex;
       justify-content: space-between;
@@ -380,7 +381,7 @@
       color: #6c757d;
       margin-top: 8px;
     }
-    
+
     .disabled-input {
       background-color: #f8f9fa;
       border: 1px solid #dee2e6;
@@ -500,7 +501,8 @@
           <tr v-for="(tb, index) in Features[domain]">
             <td class="feature-name">
               <span>{{ Features[domain][index] }}</span>
-              <span style="cursor: pointer; margin-left: 4px; font-size: 10px;" :title="FeatureDescriptions[domain][index]">
+              <span style="cursor: pointer; margin-left: 4px; font-size: 10px;"
+                :title="FeatureDescriptions[domain][index]">
                 <i class="fa-regular fa-circle-question"></i>
               </span>
             </td>
@@ -552,9 +554,8 @@
           </tr> -->
 
           <tr class="">
-            <td class="feature-name money highlight-green">Actual Price ($)
-              <span style="cursor: pointer; margin-left: 4px; font-size: 10px;"
-                title="Actual Price ($) is the actual sale price of the comparable house.">
+            <td class="feature-name money highlight-green">{{Labels[domain][0]}}
+              <span style="cursor: pointer; margin-left: 4px; font-size: 10px;" :title="Labels_Descriptions[domain][0]">
                 <i class="fa-regular fa-circle-question"></i>
               </span>
             </td>
@@ -600,15 +601,15 @@
             </template>
           </tr> -->
           <tr>
-            <td class="feature-name money border-top highlight-yellow ">Adjusted Price ($)
-              <span style="cursor: pointer; margin-left: 4px; font-size: 10px;"
-                title="Adjusted Price ($) is the price of the comparable house after all adjustments.">
+            <td class="feature-name money border-top highlight-yellow ">{{Labels[domain][2]}}
+              <span style="cursor: pointer; margin-left: 4px; font-size: 10px;" :title="Labels_Descriptions[domain][2]">
                 <i class="fa-regular fa-circle-question"></i>
               </span>
             </td>
             <td class="right-align money subject border-top highlight-yellow">—</td>
             <template v-for="(row, idx) in Comparables[domain][currentTargetIndex]" :key="row.id">
-              <td colspan="2" class="comp1-header right-align money border-top highlight-yellow" style="position:relative;">
+              <td colspan="2" class="comp1-header right-align money border-top highlight-yellow"
+                style="position:relative;">
                 <span>{{row.adjusted_price[row.adjusted_step_number - 1]}}K
               </td>
               <template v-for="(ele, i) in row.adjusted_price">
@@ -629,16 +630,21 @@
 
               </td>
               <td :colspan="row.adjusted_step_number*2" class="right-align" :class="{hidden: currentOpenComp!==idx}">
-              
+
               </td>
             </template>
           </tr>
 
           <tr style="border: 2px solid #1a87d5;">
-            <td class="feature-name money ai-pred-bg">AI Prediction ($)
-              <span style="cursor: pointer; margin-left: 4px; font-size: 10px;"
-                title="AI Prediction ($) is the price of the house predicted by the AI model.">
+            <td class="feature-name money ai-pred-bg">{{Labels[domain][1]}}
+              <span style="cursor: pointer; margin-left: 4px; font-size: 10px;" :title="Labels_Descriptions[domain][1]">
                 <i class="fa-regular fa-circle-question"></i>
+              </span>
+              <br/>
+              <span class="pred-description"> Prediction Error 
+                <span style="cursor: pointer; margin-left: 4px; font-size: 10px;" title="The difference between the actual price and the predicted price.">
+                  <i class="fa-regular fa-circle-question"></i>
+                </span>
               </span>
             </td>
             <td class="right-align money subject ai-pred-bg">
@@ -652,7 +658,8 @@
                   <br />
                   <span class="pred-description highlight-green">{{ getPredictionDifference(row) }}</span>
               </td>
-              <td :colspan="row.adjusted_step_number*2" class="right-align ai-pred-bg" :class="{hidden: currentOpenComp!==idx}">
+              <td :colspan="row.adjusted_step_number*2" class="right-align ai-pred-bg"
+                :class="{hidden: currentOpenComp!==idx}">
                 <!-- {{row.pred}}K -->
               </td>
             </template>
@@ -665,9 +672,9 @@
           <span>Sum of $ Δ + Actual Price ($) = Adjusted Price ($)</span>
         </span>
       </div> -->
-      
+
       <!-- Subject Actual Price Slider -->
-    
+
     </div>
 
     <!-- NO Trace Version -->
@@ -819,15 +826,19 @@
     </div>
     <div class="slider-container highlight-yellow">
       <label class="slider-label">Subject Actual Price Range ($)</label>
-      <div class="slider-track" @mousedown="startSliderDrag" @mousemove="onSliderDrag" @mouseup="stopSliderDrag" @mouseleave="stopSliderDrag">
-        <div class="slider-fill" :style="{ left: minSliderPercent + '%', width: (maxSliderPercent - minSliderPercent) + '%' }"></div>
-        <div class="slider-handle" :class="{ active: draggingHandle === 'min' }" :style="{ left: minSliderPercent + '%' }" @mousedown="startHandleDrag('min', $event)"></div>
-        <div class="slider-handle" :class="{ active: draggingHandle === 'max' }" :style="{ left: maxSliderPercent + '%' }" @mousedown="startHandleDrag('max', $event)"></div>
+      <div class="slider-track" @mousedown="startSliderDrag" @mousemove="onSliderDrag" @mouseup="stopSliderDrag"
+        @mouseleave="stopSliderDrag">
+        <div class="slider-fill"
+          :style="{ left: minSliderPercent + '%', width: (maxSliderPercent - minSliderPercent) + '%' }"></div>
+        <div class="slider-handle" :class="{ active: draggingHandle === 'min' }"
+          :style="{ left: minSliderPercent + '%' }" @mousedown="startHandleDrag('min', $event)"></div>
+        <div class="slider-handle" :class="{ active: draggingHandle === 'max' }"
+          :style="{ left: maxSliderPercent + '%' }" @mousedown="startHandleDrag('max', $event)"></div>
       </div>
-             <div class="slider-values">
-         <span class="money">{{ minSliderValue }}K</span>
-         <span class="money">{{ maxSliderValue }}K</span>
-       </div>
+      <div class="slider-values">
+        <span class="money">{{ minSliderValue }}K</span>
+        <span class="money">{{ maxSliderValue }}K</span>
+      </div>
     </div>
   </div>
 
@@ -854,25 +865,45 @@
             'Comparable XAI (No Trace)',
             'Plain Example-based XAI'
           ],
+          Labels: [
+            //domain 1
+            ['Actual Price ($)', 'AI Prediction ($)', 'Adjusted Price ($)'],
+            //domain 2
+            ['Actual Salary ($)', 'AI Prediction ($)', 'Adjusted Salary ($)']
+          ],
+          Labels_Descriptions: [
+            //domain 1
+            ['The actual sale price of the comparable house.',
+              'The price of the comparable house after all adjustments.',
+              'the price of the house predicted by the AI model.'],
+            // domain 2
+            ['The annual salary of each employee in US dollars. ',
+              'The predicted salary of the employee in US dollars.',
+              'The adjusted salary of the employee in US dollars.']],
           Features:
             [
+              //domain 1
               ['Dist to Downtown (km)', '# Bathroom', 'Living Area (ksqft)', 'Grade', 'Age (years)', 'Condition'],
-              ['Age', 'Gender', 'Education Level','Job Title', 'Years of Experience']],
-          FeatureDescriptions: [[
-            'Distance from the property to the city center in kilometers.',
-            'The number of bathrooms in the house.',
-            'Indoor living space in thousands of square feet.',
-            'A rating of the overall quality and design of the house, based on King County\'s grading system.',
-            'The year the house was originally built.',
-            'A rating of the overall condition of the house (e.g., from 1 to 5, with 5 being the best).'
-          ],
-          [
-            'Age of the employee.',
-            'Gender of the employee.',
-            'Education level of the employee.',
-            'Job title of the employee.',
-            'Years of experience of the employee.'
-          ]
+              //domain 2
+              ['Age (years)', 'Gender', 'Education Level', 'Job Title', 'Work Experience (years)']],
+          FeatureDescriptions: [
+            //domain 1
+            [
+              'Distance from the property to the city center in kilometers.',
+              'The number of bathrooms in the house.',
+              'Indoor living space in thousands of square feet.',
+              'A rating of the overall quality and design of the house, based on King County\'s grading system.',
+              'The year the house was originally built.',
+              'A rating of the overall condition of the house (e.g., from 1 to 5, with 5 being the best).'
+            ],
+            //domain 2
+            [
+              'The age of the employee in years.',
+              'The gender of the employee.',
+              'The education level of the employee.',
+              'Job title of the employee.',
+              'The number of years of work experience of the employee.'
+            ]
           ],
           Targets: [
             // domain 1
@@ -963,7 +994,7 @@
                   'adjusted_order': [1, 3, 4, 5],
                   'adjusted_price': [384, 414, 411, 408],
                   'final_adjusted_price': 408,
-                  
+
                   'net_adjustments': [-6, 24, 21, 18],
                   'net_adjustment': 18
                 },
@@ -1067,20 +1098,20 @@
         currentComparableFinalPrices() {
           const comparables = this.Comparables[this.domain][this.currentTargetIndex];
           if (!comparables || comparables.length === 0) return [];
-          
+
           const finalPrices = [];
           comparables.forEach(comp => {
             if (comp.final_adjusted_price) {
               finalPrices.push(comp.final_adjusted_price);
             }
           });
-          
+
           return finalPrices;
         },
         comparablePriceRange() {
           const prices = this.currentComparableFinalPrices;
           if (prices.length === 0) return { min: 350, max: 450 };
-          
+
           const min = Math.min(...prices);
           const max = Math.max(...prices);
           return { min, max };
@@ -1103,7 +1134,7 @@
           // Map the comparable price range to slider_min-slider_max range
           const comparableMin = range.min;
           const comparableMax = range.max;
-          
+
           // If comparable prices are all 0, use default range
           if (comparableMin === 0 && comparableMax === 0) {
             this.minSliderValue = 350;
@@ -1140,11 +1171,11 @@
           if (row.pred === 0 || row.actual === 0) {
             return "—";
           }
-          
+
           const difference = row.pred - row.actual;
           const percentage = Math.abs((difference / row.actual) * 100);
           const roundedPercentage = Math.round(percentage * 10) / 10; // Round to 1 decimal place
-          
+
           if (difference > 0) {
             return `${roundedPercentage}% Higher`;
           } else if (difference < 0) {
@@ -1177,7 +1208,7 @@
           const x = event.clientX - rect.left;
           const percent = Math.max(0, Math.min(100, (x / rect.width) * 100));
           const value = Math.round(this.slider_min + (percent / 100) * (this.slider_max - this.slider_min));
-          
+
           if (this.draggingHandle === 'min') {
             this.minSliderValue = Math.min(value, this.maxSliderValue - 10);
           } else if (this.draggingHandle === 'max') {
