@@ -327,7 +327,7 @@
       margin-top: 15px;
       padding: 15px;
       border-radius: 6px;
-      border: 1px solid #e9ecef;
+      border: 1px dashed #222;
       max-width: 600px;
     }
 
@@ -412,6 +412,13 @@
     }
 
     .adjusted-price-highlight {
+      font-size: 18px !important;
+      font-weight: bold !important;
+      text-decoration: underline !important;
+      transition: all 0.3s ease;
+    }
+
+    .all-pred-actual-highlight {
       font-size: 18px !important;
       font-weight: bold !important;
       text-decoration: underline !important;
@@ -538,9 +545,9 @@
                   white-space: nowrap;
                   text-overflow: ellipsis;
                   vertical-align: top;">
-                  {{ Targets[domain][currentTargetIndex].feature_val[index] }}
+                {{ Targets[domain][currentTargetIndex].feature_val[index] }}
 
-                </div>
+              </div>
             </td>
             <template v-for="(row, idx) in Comparables[domain][currentTargetIndex]" :key="row.id">
               <td class="comp1-header right-align" :title="row.feature_val[index]"
@@ -605,17 +612,22 @@
                 <i class="fa-regular fa-circle-question"></i>
               </span>
             </td>
-            <td class="right-align subject money highlight-yellow" @mouseenter="highlightAllAdjustedPrices()"
+            <td class="right-align subject money highlight-green" @mouseenter="highlightAllAdjustedPrices()"
               @mouseleave="unhighlightAllAdjustedPrices()">
               <div style="cursor: pointer;">
-                <input type="text" class="disabled-input" :value="minSliderValue" disabled style="width: 20px;">
+                <!-- <input type="text" class="disabled-input" :value="minSliderValue" disabled style="width: 20px;">
                 <span style="color: #6c757d; font-size: 12px;">—</span>
-                <input type="text" class="disabled-input" :value="maxSliderValue" disabled style="width: 20px;"> K
+                <input type="text" class="disabled-input" :value="maxSliderValue" disabled style="width: 20px;"> K -->
+                TBD <span style="cursor: pointer; margin-left: 4px; font-size: 10px;"
+                  title="Estimate the value by referring to the adjusted values.">
+                  <i class="fa-regular fa-circle-question"></i>
+                </span>
               </div>
             </td>
             <template v-for="(row, idx) in Comparables[domain][currentTargetIndex]" :key="row.id">
               <td colspan="2" class="comp1-header right-align money highlight-green"
-                :class="{ 'actual-price-highlight': highlightedActualPrice === idx }"><span>
+                :class="{ 'actual-price-highlight': highlightedActualPrice === idx, 'all-pred-actual-highlight': allPredAndActualHighlighted }">
+                <span>
                   {{row.actual}}K
               </td>
               <!-- <td :colspan="row.adjusted_step_number*2" class="right-align money comp-details"
@@ -654,7 +666,7 @@
                 <i class="fa-regular fa-circle-question"></i>
               </span>
             </td>
-            <td class="right-align money subject border-top highlight-yellow">—</td>
+            <td class="right-align money subject highlight-yellow border-top">—</td>
             <template v-for="(row, idx) in Comparables[domain][currentTargetIndex]" :key="row.id">
               <td colspan="2" class="comp1-header right-align money border-top highlight-yellow"
                 :class="{ 'adjusted-price-highlight': allAdjustedPricesHighlighted }" style="position:relative;">
@@ -683,13 +695,14 @@
             </template>
           </tr>
 
-          <tr style="border: 2px solid #1a87d5;">
+          <tr>
             <td class="feature-name money ai-pred-bg">{{Labels[domain][1]}}
               <span style="cursor: pointer; margin-left: 4px; font-size: 10px;" :title="Labels_Descriptions[domain][1]">
                 <i class="fa-regular fa-circle-question"></i>
               </span>
               <br />
-              <span class="pred-description"> Prediction Error
+              <span class="pred-description" @mouseenter="highlightAllPredAndActual()"
+                @mouseleave="unhighlightAllPredAndActual()"> Prediction Error
                 <span style="cursor: pointer; margin-left: 4px; font-size: 10px;"
                   title="The difference between the actual price and the predicted price.">
                   <i class="fa-regular fa-circle-question"></i>
@@ -703,7 +716,8 @@
 
             <template v-for="(row, idx) in Comparables[domain][currentTargetIndex]" :key="row.id">
               <td colspan="2" class="comp1-header right-align money ai-pred-bg"
-                :class="{ 'pred-highlight': highlightedActualPrice === idx }"><span>
+                :class="{ 'pred-highlight': highlightedActualPrice === idx, 'all-pred-actual-highlight': allPredAndActualHighlighted }">
+                <span>
                   {{row.pred}}K
                   <br />
                   <span class="pred-description highlight-green" @mouseenter="highlightActualPrice(idx)"
@@ -875,7 +889,20 @@
         </tbody>
       </table>
     </div>
-    <div class="slider-container highlight-yellow">
+    <div style="margin-top: 20px; padding: 15px; background: #f8f9fa; border-radius: 6px; border: 1px solid #e9ecef; width: 300px;">
+      <div style="display: flex; align-items: center; gap: 10px; cursor: pointer;" @click="toggleAnswer">
+        <span style="font-weight: 500; color: #495057;">Check the Answer</span>
+        <i :class="showAnswer ? 'fa-solid fa-eye-slash' : 'fa-solid fa-eye'" style="color: #6c757d;"></i>
+      </div>
+      <div v-if="showAnswer"
+        style="margin-top: 10px; padding: 10px; background: #e4fcdc; border-radius: 4px; border-left: 4px solid #28a745;">
+        <span style="font-weight: 500; color: #155724;">Subject Actual Value: </span>
+        <span class="money" style="font-size: 16px; font-weight: bold;">{{ subjectActualValue }}{{ subjectActualValue
+          !== '-' ? 'K' : '' }}</span>
+      </div>
+    </div>
+    <!-- <h3>User Estimation</h3>
+    <div class="slider-container highlight-green">
       <label class="slider-label">Subject Actual Price Range ($)</label>
       <div class="slider-track" @mousedown="startSliderDrag" @mousemove="onSliderDrag" @mouseup="stopSliderDrag"
         @mouseleave="stopSliderDrag">
@@ -888,11 +915,12 @@
       </div>
       <div class="slider-values">
         <span style="color: #6c757d; font-size: 11px;">{{ currentSliderRange.min }}K</span>
-        <span class="money">{{ minSliderValue }}K - {{ maxSliderValue }}K</span>
-        <!-- <span class="money"></span> -->
+        <span> <span>Your Estimation:</span> <span class="money">{{ minSliderValue }}K - {{ maxSliderValue
+            }}K</span></span>
+      
         <span style="color: #6c757d; font-size: 11px;">{{ currentSliderRange.max }}K</span>
       </div>
-    </div>
+    </div> -->
   </div>
 
   <script>
@@ -901,7 +929,7 @@
       data() {
         return {
           domain: 1,
-          domain_list: ['house', 'salary'],
+          domain_list: ['House Price', 'Salary'],
 
           currentTab: 0,
           currentOpenComp: null,
@@ -915,6 +943,8 @@
           isDragging: false,
           highlightedActualPrice: null,
           allAdjustedPricesHighlighted: false,
+          allPredAndActualHighlighted: false,
+          showAnswer: false,
           slider_ranges: [
             { min: 200, max: 500 }, // domain 0
             { min: 30, max: 200 }   // domain 1
@@ -984,7 +1014,13 @@
               'feature_val': [35, 'Male', "Master's", 'Senior Product Manager', 10],
               'pred': 110,
               'actual': 120
-            }],
+            },
+            {
+              'feature_val': [46, 'Male', "phD", 'Senior Data Scientist', 18],
+              'pred': 157.8,
+              'actual': 160
+            },
+            ],
           ],
           Comparables: [
             // domain 1
@@ -1044,13 +1080,13 @@
               }
             ]],
             [
-            //domain 2 instance 1
+              //domain 2 instance 1
               [
                 //domain 2 instance 1 comp 1
                 {
                   'id': 0,
                   'feature_val': [31.0, 'Male', "Bachelor's", 'Junior Project Manager', 3.0],
-                  
+
                   'delta_x': [0, 0, 0, 1, 0],
                   'delta_y': [0, 0, 0, -4.2, 0],
                   'pred': 52.5,
@@ -1079,7 +1115,7 @@
                   'net_adjustment': 18
                 },
               ],
-               //domain 2 instance 2
+              //domain 2 instance 2
               [
                 //domain 2 instance 2 comp 1
                 {
@@ -1121,8 +1157,40 @@
                   'adjusted_price': [103.6, 112.3],
                   'final_adjusted_price': 112.3,
                 }
+              ],
+              //domain 2 instance 3
+              [
+                //domain 2 instance 3 comp 1
+                //'feature_val': [46, 'Male', "phD", 'Senior Data Scientist', 18],
+                {
+                  'id': 0,
+                  'feature_val': [46, 'Male', 'PhD', 'Senior Manager', 20],
+                  'delta_x': [0, 0, 0, 1, -2],
+                  'delta_y': [0, 0, 0, -7.6, -2.2],
+                  'pred': 168.5,
+                  'actual': 170,
+                  'adjusted_step_number': 2,
+                  'adjusted_order': [4, 3],
+                  'adjusted_price': [167.8, 160.2],
+                  'final_adjusted_price': 160.2,
+                },
+
+                {
+                  'id': 1,
+                  'feature_val': [47, 'Male', 'PhD', 'Director of Engineering', 20],
+                  'delta_x': [-1, 0, 0, 1, -2],
+                  'delta_y': [-15.6, 0, 0, -4.4, -2.4],
+                  'pred': 178.4,
+                  'actual': 180,
+                  'adjusted_step_number': 3,
+                  'adjusted_order': [4, 0, 3],
+                  'adjusted_price': [177.6, 162, 157.6],
+                  'final_adjusted_price': 157.6,
+                },
+
               ]
-            ]
+            ],
+
 
           ],
           Comparables_no_trace: [
@@ -1205,6 +1273,10 @@
           const min = Math.min(...prices);
           const max = Math.max(...prices);
           return { min, max };
+        },
+        subjectActualValue() {
+          const target = this.Targets[this.domain][this.currentTargetIndex];
+          return target && target.actual ? target.actual : '-';
         }
       },
       mounted() {
@@ -1250,6 +1322,15 @@
         },
         unhighlightAllAdjustedPrices() {
           this.allAdjustedPricesHighlighted = false;
+        },
+        highlightAllPredAndActual() {
+          this.allPredAndActualHighlighted = true;
+        },
+        unhighlightAllPredAndActual() {
+          this.allPredAndActualHighlighted = false;
+        },
+        toggleAnswer() {
+          this.showAnswer = !this.showAnswer;
         },
         toggleCols(group, idx) {
           if (this.currentOpenComp == idx) {
