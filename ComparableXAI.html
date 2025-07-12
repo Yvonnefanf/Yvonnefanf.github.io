@@ -439,7 +439,7 @@
       </div>
       <div>
         XAI Type:
-        <select v-model="currentTab">
+        <select v-model="currentTab" disabled>
           <option v-for="(tab, idx) in tabs" :key="tab" :value="idx">{{ tab }}</option>
         </select>
       </div>
@@ -891,7 +891,7 @@
     </div>
     <div style="margin-top: 20px; padding: 15px; background: #f8f9fa; border-radius: 6px; border: 1px solid #e9ecef; width: 300px;">
       <div style="display: flex; align-items: center; gap: 10px; cursor: pointer;" @click="toggleAnswer">
-        <span style="font-weight: 500; color: #495057;">Check the Answer</span>
+        <span style="font-weight: 500; color: #495057;">Check the Answer <span style="font-size: 12px; color: #6c757d;">(Subject's Actual Value)</span></span>
         <i :class="showAnswer ? 'fa-solid fa-eye-slash' : 'fa-solid fa-eye'" style="color: #6c757d;"></i>
       </div>
       <div v-if="showAnswer"
@@ -928,7 +928,7 @@
     createApp({
       data() {
         return {
-          domain: 1,
+          domain: 0,
           domain_list: ['House Price', 'Salary'],
 
           currentTab: 0,
@@ -998,11 +998,13 @@
             // domain 1
             [{
               'feature_val': [12.4, 1, 1.4, 7, 68, 4],
-              'pred': 389
+              'pred': 389,
+              'actual': 395
             },
             {
-              'feature_val': [0, 0, 0, 0, 0, 0],
-              'pred': 0
+              'feature_val': [3.1, '1¾', 1.7, 8, 112, 3],
+              'pred': 719.9,
+              'actual': 625
             }],
             //domain 2
             [{
@@ -1056,27 +1058,30 @@
             ],
 
             [
+            //'feature_val': [3.2, '1¾', 1.7, 8, 112, 3],
               {
                 'id': 0,
-                'feature_val': [0, 0, 0, 0, 0, 0],
-                'delta_x': [0, 0, 0, 0, 0, 0],
-                'delta_y': [0, 0, 0, 0, 0, 0],
-                'pred': 0,
-                'actual': 0,
-                'adjusted_step_number': 3,
-                'adjusted_order': [0, 0, 0],
-                'adjusted_price': [0, 0, 0]
+                'feature_val': [3, 2, 1.8, 8, 90, 3],
+                'delta_x': [-0.1, '¼', -0.1, 0, +22, 0],
+                'delta_y': [-41.4, 0, 0, 0, +105.6, 0],
+                'pred': 641.6,
+                'actual': 575,
+                'adjusted_step_number': 4,
+                'adjusted_order': [2, 4, 1,0],
+                'adjusted_price': [575, 680.6,680.6, 639.2],
+                'final_adjusted_price': 639.2,
               },
               {
                 'id': 1,
-                'feature_val': [0, 0, 0, 0, 0, 0],
-                'delta_x': [0, 0, 0, 0, 0, 0],
-                'delta_y': [0, 0, 0, 0, 0, 0],
-                'pred': 0,
-                'actual': 0,
+                'feature_val': [7, 2.5, 1.6, 8, 7, 3],
+                'delta_x': [-3.8, -0.5, +0.1, 0, +83, 0],
+                'delta_y': [+29.6, -18.5, +57.9, 0, +82, 0],
+                'pred': 517.6,
+                'actual': 525,
                 'adjusted_step_number': 4,
-                'adjusted_order': [0, 0, 0, 0],
-                'adjusted_price': [0, 0, 0, 0]
+                'adjusted_order': [2, 0, 4, 1],
+                'adjusted_price': [582.9, 612.5, +694.5, 676],
+                'final_adjusted_price': 639.2,
               }
             ]],
             [
@@ -1284,10 +1289,13 @@
       },
       watch: {
         domain() {
+          this.currentTargetIndex = 0;
           this.updateSliderFromComparables();
+          this.showAnswer = false;
         },
         currentTargetIndex() {
           this.updateSliderFromComparables();
+          this.showAnswer = false;
         }
       },
       methods: {
