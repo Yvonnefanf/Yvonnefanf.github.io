@@ -319,6 +319,7 @@
       padding: 2px 0 2px 4px;
       margin-top: 4px;
       display: inline-block;
+      cursor: pointer;
     }
 
     /* Slider styles */
@@ -393,6 +394,27 @@
       width: 50px;
       text-align: right;
       cursor: not-allowed;
+    }
+    
+    .actual-price-highlight {
+      font-size: 18px !important;
+      font-weight: bold !important;
+      text-decoration: underline !important;
+      transition: all 0.3s ease;
+    }
+    
+    .pred-highlight {
+      font-size: 18px !important;
+      font-weight: bold !important;
+      text-decoration: underline !important;
+      transition: all 0.3s ease;
+    }
+    
+    .adjusted-price-highlight {
+      font-size: 18px !important;
+      font-weight: bold !important;
+      text-decoration: underline !important;
+      transition: all 0.3s ease;
     }
   </style>
 </head>
@@ -559,17 +581,20 @@
                 <i class="fa-regular fa-circle-question"></i>
               </span>
             </td>
-            <td class="right-align subject money highlight-yellow">
-              <div style="display: flex; align-items: center; gap: 2px;">
+            <td class="right-align subject money highlight-yellow" 
+                @mouseenter="highlightAllAdjustedPrices()" 
+                @mouseleave="unhighlightAllAdjustedPrices()">
+              <div style="display: flex; align-items: center; gap: 2px; cursor: pointer;">
                 <input type="text" class="disabled-input" :value="minSliderValue" disabled style="width: 20px;">
                 <span style="color: #6c757d; font-size: 12px;">—</span>
                 <input type="text" class="disabled-input" :value="maxSliderValue" disabled style="width: 20px;"> K
               </div>
             </td>
-            <template v-for="(row, idx) in Comparables[domain][currentTargetIndex]" :key="row.id">
-              <td colspan="2" class="comp1-header right-align money highlight-green"><span>
-                  {{row.actual}}K
-              </td>
+                          <template v-for="(row, idx) in Comparables[domain][currentTargetIndex]" :key="row.id">
+                <td colspan="2" class="comp1-header right-align money highlight-green" 
+                    :class="{ 'actual-price-highlight': highlightedActualPrice === idx }"><span>
+                    {{row.actual}}K
+                </td>
               <!-- <td :colspan="row.adjusted_step_number*2" class="right-align money comp-details"
                 :class="{hidden: currentOpenComp!==idx}">
                 {{row.actual}}K</td> -->
@@ -607,11 +632,12 @@
               </span>
             </td>
             <td class="right-align money subject border-top highlight-yellow">—</td>
-            <template v-for="(row, idx) in Comparables[domain][currentTargetIndex]" :key="row.id">
-              <td colspan="2" class="comp1-header right-align money border-top highlight-yellow"
-                style="position:relative;">
-                <span>{{row.adjusted_price[row.adjusted_step_number - 1]}}K
-              </td>
+                          <template v-for="(row, idx) in Comparables[domain][currentTargetIndex]" :key="row.id">
+                <td colspan="2" class="comp1-header right-align money border-top highlight-yellow"
+                  :class="{ 'adjusted-price-highlight': allAdjustedPricesHighlighted }"
+                  style="position:relative;">
+                  <span>{{row.adjusted_price[row.adjusted_step_number - 1]}}K
+                </td>
               <template v-for="(ele, i) in row.adjusted_price">
                 <td :colspan="2" class="right-align money comp-details border-top"
                   :class="{hidden: currentOpenComp!==idx}" style="position:relative;">
@@ -653,11 +679,14 @@
             </td>
 
             <template v-for="(row, idx) in Comparables[domain][currentTargetIndex]" :key="row.id">
-              <td colspan="2" class="comp1-header right-align money ai-pred-bg"><span>
-                  {{row.pred}}K
-                  <br />
-                  <span class="pred-description highlight-green">{{ getPredictionDifference(row) }}</span>
-              </td>
+                              <td colspan="2" class="comp1-header right-align money ai-pred-bg" 
+                    :class="{ 'pred-highlight': highlightedActualPrice === idx }"><span>
+                    {{row.pred}}K
+                    <br />
+                    <span class="pred-description highlight-green" 
+                          @mouseenter="highlightActualPrice(idx)" 
+                          @mouseleave="unhighlightActualPrice(idx)">{{ getPredictionDifference(row) }}</span>
+                </td>
               <td :colspan="row.adjusted_step_number*2" class="right-align ai-pred-bg"
                 :class="{hidden: currentOpenComp!==idx}">
                 <!-- {{row.pred}}K -->
@@ -860,6 +889,8 @@
           maxSliderValue: 450,
           draggingHandle: null,
           isDragging: false,
+          highlightedActualPrice: null,
+          allAdjustedPricesHighlighted: false,
           tabs: [
             'Comparable XAI',
             'Comparable XAI (No Trace)',
@@ -1129,12 +1160,12 @@
         }
       },
       methods: {
-        updateSliderFromComparables() {
+                updateSliderFromComparables() {
           const range = this.comparablePriceRange;
           // Map the comparable price range to slider_min-slider_max range
           const comparableMin = range.min;
           const comparableMax = range.max;
-
+          
           // If comparable prices are all 0, use default range
           if (comparableMin === 0 && comparableMax === 0) {
             this.minSliderValue = 350;
@@ -1146,6 +1177,18 @@
             this.minSliderValue = Math.round(comparableMin * scale);
             this.maxSliderValue = Math.round(comparableMax * scale);
           }
+        },
+        highlightActualPrice(idx) {
+          this.highlightedActualPrice = idx;
+        },
+        unhighlightActualPrice() {
+          this.highlightedActualPrice = null;
+        },
+        highlightAllAdjustedPrices() {
+          this.allAdjustedPricesHighlighted = true;
+        },
+        unhighlightAllAdjustedPrices() {
+          this.allAdjustedPricesHighlighted = false;
         },
         toggleCols(group, idx) {
           if (this.currentOpenComp == idx) {
