@@ -1,0 +1,1198 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>Comparable XAI</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Space+Mono&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Roboto+Condensed&display=swap" rel="stylesheet">
+
+  <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono&display=swap" rel="stylesheet">
+
+  <script src="https://unpkg.com/vue@3/dist/vue.global.prod.js"></script>
+
+  <!-- No internet open 👇-->
+  <!-- <link rel="stylesheet" href="./min.css">
+  <script src="./min.js"></script> -->
+
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 20px;
+    }
+
+    table {
+      /* width: 100%; */
+      border-collapse: collapse;
+      margin-bottom: 10px;
+      font-size: 14px;
+      font-family: 'Roboto Condensed', monospace;
+      color: #212121;
+
+    }
+
+    th,
+    td {
+      border: 1px solid #ccc;
+      padding: 6px;
+      transition: max-width 0.4s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.4s cubic-bezier(0.4, 0, 0.2, 1), padding 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+      max-width: 200px;
+      opacity: 1;
+      overflow: hidden;
+      white-space: nowrap;
+
+
+    }
+
+    th {
+      font-size: 14px;
+      font-family: sans-serif;
+      /*background-color: #f0f8ff;*/
+    }
+
+    table,
+    th,
+    td {
+      border: none;
+
+    }
+
+    .highlight-blue {
+      background-color: #dcecfb;
+    }
+
+    .highlight-green {
+      background-color: #e4fcdc;
+    }
+
+    .hidden {
+      max-width: 0 !important;
+      opacity: 0 !important;
+      padding-left: 0 !important;
+      padding-right: 0 !important;
+      border-width: 0 !important;
+      pointer-events: none;
+    }
+
+    .comp1,
+    .comp2 {
+      width: 40px;
+      background-color: #fef6e4;
+      transition: max-width 0.4s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.4s cubic-bezier(0.4, 0, 0.2, 1), padding 0.4s cubic-bezier(0.4, 0, 0.2, 1), border-width 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .comp-header {
+      font-size: 14px;
+
+    }
+
+
+
+    .adj-price {
+      background-color: #fcecc9;
+      width: 26px;
+      padding-right: 10px;
+    }
+
+    .adj-value {
+      width: 70px;
+      background-color: #fef6e4;
+      font-weight: 400;
+      padding-right: 4px;
+    }
+
+    .adj-price,
+    .comp-details,
+    .adj-value {
+      /* background-color: #f4fdf1; */
+      background-color: #f4f4f4;
+    }
+
+    .highlight-yellow {
+      background-color: #fef6e4;
+    }
+
+    .sub-header {
+      background-color: #f0f0f0;
+      font-weight: normal;
+      font-size: 0.9em;
+    }
+
+    .clickable-header {
+      cursor: pointer;
+      user-select: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      font-weight: bold;
+      color: #0074d9;
+      transition: color 0.2s;
+    }
+
+    .clickable-header:hover {
+      color: #005fa3;
+      text-decoration: underline;
+    }
+
+    .arrow {
+      transition: transform 0.2s;
+      display: inline-block;
+    }
+
+    .arrow.open {
+      transform: rotate(180deg);
+    }
+
+    .toggle-text {
+      width: 12px;
+      line-height: 16px;
+    }
+
+
+
+    .adj-flex {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      width: 100%;
+    }
+
+    .money {
+      /* font-family: 'Roboto Mono', monospace; */
+      font-family: 'Roboto Condensed', monospace;
+      font-size: 14px;
+      font-variant-numeric: tabular-nums;
+      /* 等宽数字对齐 */
+      letter-spacing: 0.5px;
+      font-weight: 1200;
+      color: #2e8113;
+
+    }
+
+    .adj-grey {
+      color: #ccc;
+      font-size: 1em;
+      width: 30px;
+      text-align: right;
+    }
+
+
+    .gray-bg {
+      background-color: #ededed !important;
+    }
+
+    .adj-black {
+      color: #222;
+      font-weight: 500;
+      font-size: 1em;
+      width: 40px;
+      text-align: left;
+    }
+
+    .plain-xai-table {
+      border-collapse: collapse;
+      margin-top: 10px;
+      font-size: 14px;
+      min-width: 650px;
+    }
+
+    th {
+      font-family: sans-serif;
+    }
+
+    .feature-name {
+      font-size: 14px;
+      text-align: left;
+      font-weight: 400;
+
+      font-family: sans-serif;
+    }
+
+    .right-align {
+      text-align: right;
+    }
+
+    .left-align {
+      text-align: left;
+    }
+
+    .plain-xai-table th,
+    .plain-xai-table td {
+      border: 1px solid #bfc9d1;
+      padding: 6px 12px;
+
+    }
+
+    .plain-xai-table th {
+      font-weight: bold;
+    }
+
+    .plain-xai-table tr td:first-child {
+
+      font-weight: 500;
+    }
+
+    .gray-bg {
+      background-color: #ededed !important;
+      color: #ccc;
+    }
+
+    .gray-font {
+      color: #ccc;
+    }
+
+    .nav-btn {
+      background: #0074d9;
+      color: #fff;
+      border: none;
+      border-radius: 6px;
+      padding: 4px 10px;
+      font-size: 14px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: background 0.18s, color 0.18s, box-shadow 0.18s;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      box-shadow: 0 2px 8px 0 #0074d91a;
+    }
+
+    .nav-btn:disabled {
+      background: #e5e7eb;
+      color: #aaa;
+      cursor: not-allowed;
+      box-shadow: none;
+    }
+
+    .nav-btn:not(:disabled):hover {
+      background: #005fa3;
+      color: #fff;
+    }
+
+    .tab-content {
+      height: 420px;
+      padding: 4px 0 20px 20px;
+      border-bottom: 1px solid #e5e7eb;
+      border-top: 1px solid #e5e7eb;
+    }
+
+    .border-btm {
+      border-bottom: 1px solid #666;
+    }
+
+    .border-top {
+      border-top: 1px solid #666;
+    }
+
+    .toggle-button {
+      cursor: pointer;
+      margin: 2px 0;
+    }
+
+    .toggle-button:hover {
+      background: #cbf4be;
+    }
+
+    .subject {
+      padding-right: 20px;
+    }
+
+    .detail-header-bg {
+      background-attachment: #cbf4be !important;
+    }
+
+    .border-wider {
+      border-top: 2px solid #a4a4a4;
+    }
+
+    .ai-pred-bg {
+      /*background-color: #cbf4be;*/
+      background-color: #ffffff;
+      
+    }
+    .pred-description{
+      color: #666;
+      font-size: 12px;
+      padding: 2px 0 2px 4px;
+      margin-top: 4px;
+      display: inline-block;
+    }
+    
+    /* Slider styles */
+    .slider-container {
+      margin-top: 15px;
+      padding: 15px;
+      border-radius: 6px;
+      border: 1px solid #e9ecef;
+      max-width: 600px;
+    }
+    
+    .slider-label {
+      font-size: 14px;
+      font-weight: 500;
+      color: #495057;
+      margin-bottom: 8px;
+      display: block;
+    }
+    
+    .slider-track {
+      position: relative;
+      height: 4px;
+      background: #e9ecef;
+      border-radius: 2px;
+      margin: 15px 0;
+    }
+    
+    .slider-fill {
+      position: absolute;
+      height: 100%;
+      background: #28a745;
+      border-radius: 2px;
+      top: 0;
+    }
+    
+    .slider-handle {
+      position: absolute;
+      width: 16px;
+      height: 16px;
+      background: #fff;
+      border: 2px solid #2e8113;
+      border-radius: 50%;
+      top: -6px;
+      cursor: pointer;
+      transition: box-shadow 0.2s;
+    }
+    
+    .slider-handle:hover {
+      box-shadow: 0 2px 8px rgba(40, 167, 69, 0.3);
+    }
+    
+    .slider-handle.active {
+      box-shadow: 0 0 0 3px rgba(40, 167, 69, 0.2);
+    }
+    
+    .slider-values {
+      display: flex;
+      justify-content: space-between;
+      font-size: 11px;
+      color: #6c757d;
+      margin-top: 8px;
+    }
+    
+    .disabled-input {
+      background-color: #f8f9fa;
+      border: 1px solid #dee2e6;
+      color: #2e8113;
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-size: 12px;
+      font-family: 'Roboto Condensed', monospace;
+      width: 50px;
+      text-align: right;
+      cursor: not-allowed;
+    }
+  </style>
+</head>
+
+<body>
+
+  <div id="app">
+    <div style="display: flex; align-items: center; gap: 20px; margin-bottom: 20px;">
+      <div>
+        Domain:
+        <select v-model="domain">
+          <option v-for="(item,index) in domain_list" :value="index">{{item}}</option>
+        </select>
+      </div>
+      <div>
+        XAI Type:
+        <select v-model="currentTab">
+          <option v-for="(tab, idx) in tabs" :key="tab" :value="idx">{{ tab }}</option>
+        </select>
+      </div>
+      <div style="display: flex; align-items: center; gap: 16px;">
+        <button class="nav-btn" @click="prevTarget" :disabled="currentTargetIndex===0">
+          <i class="fa fa-angle-left"></i> Prev
+        </button>
+        <span>Instance {{ currentTargetIndex + 1 }} / {{ Targets[domain].length }}</span>
+        <button class="nav-btn" @click="nextTarget" :disabled="currentTargetIndex===Targets[domain].length-1">
+          Next <i class="fa fa-angle-right"></i>
+        </button>
+      </div>
+    </div>
+    <div class="tab-content" v-if="currentTab === 0">
+      <table>
+        <thead>
+          <!-- Header row -->
+          <tr>
+            <th rowspan="1" style="width: 100px;"></th>
+            <th class="comp1-header right-align subject" style="width: 50px;">Subject</th>
+            <template v-for="(row, idx) in Comparables[domain][currentTargetIndex]" :key="row.id" class="comp1-header"
+              style="position:relative;">
+              <th colspan="2" class="comp1-header border-btm right-align" style="position:relative;">
+
+                Comparable {{idx + 1}}
+
+                <!-- <div style="font-size: 12px; display:flex;align-items:center;justify-content:center;color:#800080">
+                  AI Prediction ($): {{row.pred}}K
+                </div> -->
+                <button class="toggle-button" @click="toggleCols(`comp${idx+1}`,idx)">
+                  <span v-if="currentOpenComp!=idx" class="toggle-text">{{ currentOpenComp ==idx ? ' ' : '...' }}</span>
+                  <i class="toggle-text fa-solid fa-angle-left" v-if="currentOpenComp==idx"></i>
+                </button>
+              </th>
+
+              <!-- <th class="border-btm comp-details" :colspan="row.adjusted_step_number * 2"
+              :class="{hidden: currentOpenComp!==idx}">
+              Comparable {{idx + 1}} Adjustment Trace
+              </th> -->
+              <template v-for="i in row.adjusted_step_number">
+                <th class="border-btm comp-details right-align" style="padding-right: 10px;" colspan="2"
+                  :class="{hidden: currentOpenComp!==idx}">Sub
+                  Comp{{i}}</th>
+              </template>
+
+              <!-- <th class="border-btm comp-details" :colspan="row.adjusted_step_number * 2"
+                :class="{hidden: currentOpenComp!==idx}">
+                Comparable {{idx + 1}} Adjustment Trace
+              </th> -->
+            </template>
+          </tr>
+          <!-- AI prediction row -->
+          <!-- <tr>
+            <td class="feature-name money">AI Prediction ($)</td>
+            <td class="right-align money subject">{{Targets[currentTargetIndex].pred}}K </td>
+            <template v-for="(row, idx) in Comparables[currentTargetIndex]" :key="row.id">
+              <td colspan="2" class="comp1-header right-align money"><span>
+                  {{row.pred}}K
+              </td>
+              <td :colspan="row.adjusted_step_number*2" class="right-align comp-details"
+                :class="{hidden: currentOpenComp!==idx}"> 
+              </td>
+            </template>
+          </tr> -->
+          <!-- header -->
+
+          <tr>
+            <td class="comp1-header"></td>
+            <td class="subject"></td>
+            <template v-for="(row, idx) in Comparables[domain][currentTargetIndex]" :key="row.id">
+              <th style="width: 40px;" class="comp-header right-align border-btm">Values</th>
+              <th class="comp1-header right-align border-btm money" style="width: 36px;">
+                <span> $ Δ </span>
+                <!-- <button class="toggle-button" @click="toggleCols(`comp${idx+1}`,idx)">
+                  <span v-if="currentOpenComp!=idx" class="toggle-text">{{ currentOpenComp ==idx ? ' ' : '...' }}</span>
+                  <i class="toggle-text fa-solid fa-angle-left" v-if="currentOpenComp==idx"></i>
+                </button> -->
+              </th>
+              <template v-for="i in row.adjusted_step_number">
+                <th class="adj-value border-btm right-align" style="font-weight: bold;"
+                  :class="{hidden: currentOpenComp!==idx}">Values</th>
+                <th class="adj-price border-btm right-align money" style="font-weight: bold;"
+                  :class="{hidden: currentOpenComp!==idx}">$ Δ</th>
+              </template>
+            </template>
+          </tr>
+        </thead>
+        <tbody>
+          <tr v-for="(tb, index) in Features[domain]">
+            <td class="feature-name">
+              <span>{{ Features[domain][index] }}</span>
+              <span style="cursor: pointer; margin-left: 4px; font-size: 10px;" :title="FeatureDescriptions[domain][index]">
+                <i class="fa-regular fa-circle-question"></i>
+              </span>
+            </td>
+            <td class="right-align subject">{{ Targets[domain][currentTargetIndex].feature_val[index] }}</td>
+            <template v-for="(row, idx) in Comparables[domain][currentTargetIndex]" :key="row.id">
+              <td class="comp1-header right-align" :class="{'gray-font': row.delta_x[index]==0}"><span>
+                  {{ row.feature_val[index] }}
+              </td>
+              <td class="comp1-header right-align money" :class="{'gray-font': row.delta_x[index]==0}">
+                {{row.delta_y[index]!==0? row.delta_y[index]+'K':'—' }}
+              </td>
+              <template v-for="i in row.adjusted_step_number">
+                <td class="right-align adj-value" :class="{hidden: currentOpenComp!==idx }"
+                  :style="{ color: index == row.adjusted_order[i-1] ? '#222' : '#ccc' }">
+                  <span v-if="row.adjusted_order.slice(0,i).includes(index)">
+                    <!-- {{ row.feature_val[index] }} -->
+                    <!-- <i class="fa-solid fa-arrow-right" style="font-size:10px;vertical-align:middle;"></i> -->
+                    {{ Targets[domain][currentTargetIndex].feature_val[index] }}
+                  </span>
+                  <!-- <span v-else>
+                    —
+                  </span> -->
+                </td>
+                <td class="right-align adj-price money" :class="{hidden: currentOpenComp!==idx}" :style="{ color: index ==
+                 row.adjusted_order[i-1] ? '#2e8113' : '#ccc' }">{{
+                  row.adjusted_order.slice(0,i).includes(index)? row.delta_y[index]+'K' : ''}}</td>
+              </template>
+            </template>
+          </tr>
+
+          <!-- <tr>
+            <td class="feature-name money">Net Adjustment ($)</td>
+            <td class="right-align subject"></td>
+            <template v-for="(row, idx) in Comparables[currentTargetIndex]" :key="row.id">
+              <td class="comp1-header right-align money border-wider">
+              </td>
+              <td class="comp1-header right-align money border-wider" style="position:relative;">
+                <span>{{row.net_adjustment}}K
+              </td>
+
+              <template v-for="(ele, i) in row.net_adjustments">
+                <td :colspan="2" class="right-align money comp-details border-wider"
+                  :class="{hidden: currentOpenComp!==idx}" style="position:relative;">
+
+                  <span>{{ele}}K</span>
+                </td>
+              </template>
+            </template>
+          </tr> -->
+
+          <tr class="">
+            <td class="feature-name money highlight-green">Actual Price ($)
+              <span style="cursor: pointer; margin-left: 4px; font-size: 10px;"
+                title="Actual Price ($) is the actual sale price of the comparable house.">
+                <i class="fa-regular fa-circle-question"></i>
+              </span>
+            </td>
+            <td class="right-align subject money highlight-yellow">
+              <div style="display: flex; align-items: center; gap: 2px;">
+                <input type="text" class="disabled-input" :value="minSliderValue" disabled style="width: 20px;">
+                <span style="color: #6c757d; font-size: 12px;">—</span>
+                <input type="text" class="disabled-input" :value="maxSliderValue" disabled style="width: 20px;"> K
+              </div>
+            </td>
+            <template v-for="(row, idx) in Comparables[domain][currentTargetIndex]" :key="row.id">
+              <td colspan="2" class="comp1-header right-align money highlight-green"><span>
+                  {{row.actual}}K
+              </td>
+              <!-- <td :colspan="row.adjusted_step_number*2" class="right-align money comp-details"
+                :class="{hidden: currentOpenComp!==idx}">
+                {{row.actual}}K</td> -->
+              <template v-for="(ele, i) in row.adjusted_price">
+                <td :colspan="2" class="right-align money comp-details " :class="{hidden: currentOpenComp!==idx}"
+                  style="position:relative;">
+                  <span>{{row.actual}}K</span>
+                </td>
+              </template>
+            </template>
+          </tr>
+          <!-- <tr>
+            <td class="feature-name money">Net Adjustment ($)</td>
+            <td class="right-align subject"></td>
+            <template v-for="(row, idx) in Comparables[currentTargetIndex]" :key="row.id">
+              <td class="comp1-header right-align money border-wider">
+              </td>
+              <td class="comp1-header right-align money border-wider" style="position:relative;">
+                <span>{{row.net_adjustment}}K
+              </td>
+
+              <template v-for="(ele, i) in row.net_adjustments">
+                <td :colspan="2" class="right-align money comp-details border-wider"
+                  :class="{hidden: currentOpenComp!==idx}" style="position:relative;">
+
+                  <span>{{ele}}K</span>
+                </td>
+              </template>
+            </template>
+          </tr> -->
+          <tr>
+            <td class="feature-name money border-top highlight-yellow ">Adjusted Price ($)
+              <span style="cursor: pointer; margin-left: 4px; font-size: 10px;"
+                title="Adjusted Price ($) is the price of the comparable house after all adjustments.">
+                <i class="fa-regular fa-circle-question"></i>
+              </span>
+            </td>
+            <td class="right-align money subject border-top highlight-yellow">—</td>
+            <template v-for="(row, idx) in Comparables[domain][currentTargetIndex]" :key="row.id">
+              <td colspan="2" class="comp1-header right-align money border-top highlight-yellow" style="position:relative;">
+                <span>{{row.adjusted_price[row.adjusted_step_number - 1]}}K
+              </td>
+              <template v-for="(ele, i) in row.adjusted_price">
+                <td :colspan="2" class="right-align money comp-details border-top"
+                  :class="{hidden: currentOpenComp!==idx}" style="position:relative;">
+                  <span>{{ele}}K</span>
+                </td>
+              </template>
+            </template>
+          </tr>
+          <tr>
+            <td style="height:20px;" class="feature-name money">
+            </td>
+            <td class="right-align money subject">
+            </td>
+            <template v-for="(row, idx) in Comparables[domain][currentTargetIndex]" :key="row.id">
+              <td colspan="2" class="comp1-header right-align money"><span>
+
+              </td>
+              <td :colspan="row.adjusted_step_number*2" class="right-align" :class="{hidden: currentOpenComp!==idx}">
+              
+              </td>
+            </template>
+          </tr>
+
+          <tr style="border: 2px solid #1a87d5;">
+            <td class="feature-name money ai-pred-bg">AI Prediction ($)
+              <span style="cursor: pointer; margin-left: 4px; font-size: 10px;"
+                title="AI Prediction ($) is the price of the house predicted by the AI model.">
+                <i class="fa-regular fa-circle-question"></i>
+              </span>
+            </td>
+            <td class="right-align money subject ai-pred-bg">
+              {{Targets[domain][currentTargetIndex].pred}}K <br />
+              <span class="pred-description"> — </span>
+            </td>
+
+            <template v-for="(row, idx) in Comparables[domain][currentTargetIndex]" :key="row.id">
+              <td colspan="2" class="comp1-header right-align money ai-pred-bg"><span>
+                  {{row.pred}}K
+                  <br />
+                  <span class="pred-description highlight-green">{{ getPredictionDifference(row) }}</span>
+              </td>
+              <td :colspan="row.adjusted_step_number*2" class="right-align ai-pred-bg" :class="{hidden: currentOpenComp!==idx}">
+                <!-- {{row.pred}}K -->
+              </td>
+            </template>
+          </tr>
+        </tbody>
+      </table>
+      <!-- 说明行 -->
+      <div style=" color:rgb(129 129 129); font-size:12px; margin-top:24px;">
+        <span style="">
+          <span>Sum of $ Δ + Actual Price ($) = Adjusted Price ($)</span>
+        </span>
+      </div>
+      
+      <!-- Subject Actual Price Slider -->
+    
+    </div>
+
+    <!-- NO Trace Version -->
+    <div class="tab-content" v-else-if="currentTab === 1">
+
+      <table>
+        <thead>
+          <!-- Header row -->
+          <tr>
+            <th rowspan="1" style="width: 100px;">Feature</th>
+            <template v-for="(row, idx) in Comparables_no_trace[currentTargetIndex]" :key="row.id" class="comp1-header"
+              style="position:relative;">
+              <th colspan="4" class="comp1-header" style="position:relative;">
+                <div style="display:flex;align-items:center;justify-content:center;">
+                  Comparable {{idx + 1}}
+                </div>
+                <div style="font-size: 12px; display:flex;align-items:center;justify-content:center;">
+                  AI Prediction ($): {{row.pred}}K
+                </div>
+              </th>
+
+            </template>
+            <th>Target</th>
+          </tr>
+
+
+          <!-- AI prediction row -->
+          <!-- <tr>
+            <td class="feature-name">AI Prediction ($)</td>
+            <template v-for="(row, idx) in Comparables_no_trace" :key="row.id">
+              <td colspan="4" class="comp1-header right-align"><span>
+                  {{row.pred}}K
+              </td>
+            </template>
+            <td class="right-align">{{Targets.pred}}K </th>
+          </tr> -->
+          <!-- header -->
+
+          <tr class="">
+            <td class="feature-name">Actual Price ($)</td>
+            <template v-for="(row, idx) in Comparables_no_trace[currentTargetIndex]" :key="row.id">
+              <td colspan="2" class="comp1-header right-align money"><span>
+                  {{row.actual}}K
+              </td>
+
+            </template>
+            <td class="right-align">?? </th>
+          </tr>
+
+          <tr>
+            <td class="comp1-header gray-bg"></td>
+            <template v-for="(row, idx) in Comparables_no_trace[currentTargetIndex]" :key="row.id">
+              <th style="width: 30px;" class="comp-header">Values</th>
+              <th style="width: 30px;" class="comp-header">Δ</th>
+              <th colspan="2" class="comp1-header" style="font-size: 12px;">
+                $ Adjustment
+              </th>
+
+            </template>
+            <td class="gray-bg"></td>
+          </tr>
+        </thead>
+
+        <tbody>
+          <tr v-for="(tb, index) in Features[domain]">
+            <td class="feature-name">
+              {{ Features[domain][index] }}
+              <span style="cursor: pointer; margin-left: 4px;" :title="FeatureDescriptions[domain][index]">
+                <i class="fa-regular fa-circle-question"></i>
+              </span>
+            </td>
+            <template v-for="(row, idx) in Comparables_no_trace[currentTargetIndex]" :key="row.id">
+              <td class="comp1-header right-align"><span>
+                  {{ row.feature_val[index] }}
+              </td>
+              <td class="comp1-header right-align"><span>
+                  {{ row.delta_x[index] }}
+              </td>
+              <td class="comp1-header right-align" colspan="2">{{row.delta_y[index]!==0? row.delta_y[index]+'K':'' }}
+              </td>
+
+            </template>
+
+            <td style="text-align: right;">{{ Targets[domain][currentTargetIndex].feature_val[index] }}</td>
+          </tr>
+
+
+          <tr>
+            <td class="feature-name highlight-blue">Adjusted Price ($)</td>
+            <template v-for="(row, idx) in Comparables_no_trace[currentTargetIndex]" :key="row.id">
+              <td colspan="4" class="comp1-header right-align highlight-blue"><span>
+                  = {{row.adjusted_price}}K
+              </td>
+
+            </template>
+            <td class="right-align gray-bg">
+              </th>
+          </tr>
+        </tbody>
+      </table>
+
+
+    </div>
+    <div class="tab-content" v-else class="tab-content">
+      <table class="plain-xai-table">
+        <thead>
+          <tr>
+            <th style="width: 140px;">Feature</th>
+            <th>Target</th>
+            <template v-for="(row, idx) in Comparables[currentTargetIndex]" :key="row.id">
+              <th>Comparable {{idx+1}}</th>
+            </template>
+
+          </tr>
+          <tr>
+            <td style="width: 140px;" class="feature-name">AI Prediction ($)</td>
+            <td class="right-align">{{Targets[domain][currentTargetIndex].pred}}K</td>
+            <template v-for="(row, idx) in Comparables[currentTargetIndex]" :key="row.id">
+              <td class="right-align">{{row.pred}}K</td>
+            </template>
+
+          </tr>
+          <tr>
+            <td style="width: 140px;" class="feature-name">Actual Price ($)</td>
+            <td class="right-align">??</td>
+            <template v-for="(row, idx) in Comparables[currentTargetIndex]" :key="row.id">
+              <td class="right-align">{{row.actual}}K</td>
+            </template>
+          </tr>
+        </thead>
+        <tbody>
+          <template v-for="(feature, index) in Features[domain]">
+            <tr>
+              <td class="feature-name">
+                {{feature}}
+                <span style="cursor: pointer; margin-left: 4px;" :title="FeatureDescriptions[domain][index]">
+                  <i class="fa-regular fa-circle-question"></i>
+                </span>
+              </td>
+              <td class="right-align">{{Targets[domain][currentTargetIndex].feature_val[index]}}</td>
+              <template v-for="(row, idx) in Comparables[domain][currentTargetIndex]" :key="row.id">
+                <td class="right-align">{{row.feature_val[index]}}</td>
+              </template>
+            </tr>
+          </template>
+
+        </tbody>
+      </table>
+    </div>
+    <div class="slider-container highlight-yellow">
+      <label class="slider-label">Subject Actual Price Range ($)</label>
+      <div class="slider-track" @mousedown="startSliderDrag" @mousemove="onSliderDrag" @mouseup="stopSliderDrag" @mouseleave="stopSliderDrag">
+        <div class="slider-fill" :style="{ left: minSliderPercent + '%', width: (maxSliderPercent - minSliderPercent) + '%' }"></div>
+        <div class="slider-handle" :class="{ active: draggingHandle === 'min' }" :style="{ left: minSliderPercent + '%' }" @mousedown="startHandleDrag('min', $event)"></div>
+        <div class="slider-handle" :class="{ active: draggingHandle === 'max' }" :style="{ left: maxSliderPercent + '%' }" @mousedown="startHandleDrag('max', $event)"></div>
+      </div>
+             <div class="slider-values">
+         <span class="money">{{ minSliderValue }}K</span>
+         <span class="money">{{ maxSliderValue }}K</span>
+       </div>
+    </div>
+  </div>
+
+  <script>
+    const { createApp } = Vue;
+    createApp({
+      data() {
+        return {
+          domain: 0,
+          domain_list: ['house', 'salary'],
+
+          currentTab: 0,
+          currentOpenComp: null,
+          currentTargetIndex: 0,
+          // Slider data
+          slider_min: 200,
+          slider_max: 500,
+          minSliderValue: 350,
+          maxSliderValue: 450,
+          draggingHandle: null,
+          isDragging: false,
+          tabs: [
+            'Comparable XAI',
+            'Comparable XAI (No Trace)',
+            'Plain Example-based XAI'
+          ],
+          Features:
+            [
+              ['Dist to Downtown (km)', '# Bathroom', 'Living Area (ksqft)', 'Grade', 'Age (years)', 'Condition'],
+              ['Age', 'Gender', 'Education Level','Job Title', 'Years of Experience']],
+          FeatureDescriptions: [[
+            'Distance from the property to the city center in kilometers.',
+            'The number of bathrooms in the house.',
+            'Indoor living space in thousands of square feet.',
+            'A rating of the overall quality and design of the house, based on King County\'s grading system.',
+            'The year the house was originally built.',
+            'A rating of the overall condition of the house (e.g., from 1 to 5, with 5 being the best).'
+          ],
+          [
+            'Age of the employee.',
+            'Gender of the employee.',
+            'Education level of the employee.',
+            'Job title of the employee.',
+            'Years of experience of the employee.'
+          ]
+          ],
+          Targets: [
+            // domain 1
+            [{
+              'feature_val': [12.4, 1, 1.4, 7, 68, 4],
+              'pred': 389
+            },
+            {
+              'feature_val': [0, 0, 0, 0, 0, 0],
+              'pred': 0
+            }],
+            //domain 2
+            [{
+              'feature_val': ['Full Time', 'Senior', 'Data Engineer', 30, 2023, 'Large'],
+              'pred': 389
+            },
+            {
+              'feature_val': [0, 0, 0, 0, 0, 0],
+              'pred': 0
+            }],
+          ],
+          Comparables: [
+            // domain 1
+            [[
+              {
+                'id': 0,
+                'feature_val': [12.1, 2, 1.1, 7, 68, 5],
+                'delta_x': [+0.3, -1, +0.3, 0, 0, -1],
+                'delta_y': [-3, -6, +30, 0, 0, -3],
+                'pred': 373,
+                'actual': 390,
+                'adjusted_step_number': 4,
+                'adjusted_order': [1, 2, 0, 5],
+                'adjusted_price': [384, 414, 411, 408],
+                'final_adjusted_price': 408,
+                'net_adjustments': [-6, 24, 21, 18],
+                'net_adjustment': 18
+              },
+              {
+                'id': 1,
+                'feature_val': [10.5, 1, 0.7, 6, 73, 3],
+                'delta_x': [+1.8, 0, +0.7, +1, -7, +1],
+                'delta_y': [-113, 0, +135, +97, +7, +22],
+                'pred': 232,
+                'actual': 245,
+                'adjusted_step_number': 5,
+                'adjusted_order': [0, 2, 3, 4, 5],
+                'adjusted_price': [132, 267, 364, 371, 393],
+                'final_adjusted_price': 393,
+                'net_adjustments': [-113, 22, 119, 126, 148],
+                'net_adjustment': 148
+              }
+            ],
+            [
+              {
+                'id': 0,
+                'feature_val': [0, 0, 0, 0, 0, 0],
+                'delta_x': [0, 0, 0, 0, 0, 0],
+                'delta_y': [0, 0, 0, 0, 0, 0],
+                'pred': 0,
+                'actual': 0,
+                'adjusted_step_number': 3,
+                'adjusted_order': [0, 0, 0],
+                'adjusted_price': [0, 0, 0]
+              },
+              {
+                'id': 1,
+                'feature_val': [0, 0, 0, 0, 0, 0],
+                'delta_x': [0, 0, 0, 0, 0, 0],
+                'delta_y': [0, 0, 0, 0, 0, 0],
+                'pred': 0,
+                'actual': 0,
+                'adjusted_step_number': 4,
+                'adjusted_order': [0, 0, 0, 0],
+                'adjusted_price': [0, 0, 0, 0]
+              }
+            ]],
+            [
+              [
+                {
+                  'id': 0,
+                  'feature_val': ['Full Time', 'Mid', 'Data Engineer', 50, 2022, 'Mid'],
+                  'delta_x': [0, -1, 0, 3, 2, -1],
+                  'delta_y': [-3, -6, +30, 0, 0, -3],
+                  'pred': 373,
+                  'actual': 390,
+                  'adjusted_step_number': 4,
+                  'adjusted_order': [1, 3, 4, 5],
+                  'adjusted_price': [384, 414, 411, 408],
+                  'final_adjusted_price': 408,
+                  
+                  'net_adjustments': [-6, 24, 21, 18],
+                  'net_adjustment': 18
+                },
+                {
+                  'id': 1,
+                  'feature_val': ['Full Time', 'Mid', 'Data Engineer', 50, 2022, 'Mid'],
+                  'delta_x': [0, -1, 0, 3, 2, -1],
+                  'delta_y': [-113, 0, +135, +97, +7, +22],
+                  'pred': 232,
+                  'actual': 245,
+                  'adjusted_step_number': 5,
+                  'adjusted_order': [1, 3, 4, 5],
+                  'adjusted_price': [132, 267, 364, 371, 393],
+                  'final_adjusted_price': 393,
+                  'net_adjustments': [-113, 22, 119, 126, 148],
+                  'net_adjustment': 148
+                }
+              ],
+              [
+                {
+                  'id': 0,
+                  'feature_val': [0, 0, 0, 0, 0, 0],
+                  'delta_x': [0, 0, 0, 0, 0, 0],
+                  'delta_y': [0, 0, 0, 0, 0, 0],
+                  'pred': 0,
+                  'actual': 0,
+                  'adjusted_step_number': 3,
+                  'adjusted_order': [0, 0, 0],
+                  'adjusted_price': [0, 0, 0]
+                },
+                {
+                  'id': 1,
+                  'feature_val': [0, 0, 0, 0, 0, 0],
+                  'delta_x': [0, 0, 0, 0, 0, 0],
+                  'delta_y': [0, 0, 0, 0, 0, 0],
+                  'pred': 0,
+                  'actual': 0,
+                  'adjusted_step_number': 4,
+                  'adjusted_order': [0, 0, 0, 0],
+                  'adjusted_price': [0, 0, 0, 0]
+                }
+              ]
+            ]
+
+          ],
+          Comparables_no_trace: [
+            [
+              {
+                'id': 0,
+                'feature_val': [12.1, 2, 1.1, 7, 68, 5],
+                'delta_x': [+0.3, -1, +0.3, 0, 0, -1],
+                'delta_y': [+11, -6, -10, 0, 0, +1.5],
+                'pred': 373,
+                'actual': 390,
+                'adjusted_step_number': 4,
+                'adjusted_price': 386
+              },
+              {
+                'id': 1,
+                'feature_val': [10.5, 1, 0.7, 6, 73, 3],
+                'delta_x': [+1.8, 0, +0.7, +1, -7, +1],
+                'delta_y': [-67, 0, +154, +150, +6, +35],
+                'pred': 232,
+                'actual': 245,
+                'adjusted_step_number': 5,
+                'adjusted_price': 524
+              }
+            ],
+            [
+              {
+                'id': 0,
+                'feature_val': [0, 0, 0, 0, 0, 0],
+                'delta_x': [0, 0, 0, 0, 0, 0],
+                'delta_y': [0, 0, 0, 0, 0, 0],
+                'pred': 0,
+                'actual': 0,
+                'adjusted_step_number': 3,
+                'adjusted_price': 0
+              },
+              {
+                'id': 1,
+                'feature_val': [0, 0, 0, 0, 0, 0],
+                'delta_x': [0, 0, 0, 0, 0, 0],
+                'delta_y': [0, 0, 0, 0, 0, 0],
+                'pred': 0,
+                'actual': 0,
+                'adjusted_step_number': 4,
+                'adjusted_price': 0
+              }
+            ]
+          ]
+        }
+      },
+      computed: {
+        minSliderPercent() {
+          return ((this.minSliderValue - this.slider_min) / (this.slider_max - this.slider_min)) * 100;
+        },
+        maxSliderPercent() {
+          return ((this.maxSliderValue - this.slider_min) / (this.slider_max - this.slider_min)) * 100;
+        },
+        currentComparableFinalPrices() {
+          const comparables = this.Comparables[this.domain][this.currentTargetIndex];
+          if (!comparables || comparables.length === 0) return [];
+          
+          const finalPrices = [];
+          comparables.forEach(comp => {
+            if (comp.final_adjusted_price) {
+              finalPrices.push(comp.final_adjusted_price);
+            }
+          });
+          
+          return finalPrices;
+        },
+        comparablePriceRange() {
+          const prices = this.currentComparableFinalPrices;
+          if (prices.length === 0) return { min: 350, max: 450 };
+          
+          const min = Math.min(...prices);
+          const max = Math.max(...prices);
+          return { min, max };
+        }
+      },
+      mounted() {
+        this.updateSliderFromComparables();
+      },
+      watch: {
+        domain() {
+          this.updateSliderFromComparables();
+        },
+        currentTargetIndex() {
+          this.updateSliderFromComparables();
+        }
+      },
+      methods: {
+        updateSliderFromComparables() {
+          const range = this.comparablePriceRange;
+          // Map the comparable price range to slider_min-slider_max range
+          const comparableMin = range.min;
+          const comparableMax = range.max;
+          
+          // If comparable prices are all 0, use default range
+          if (comparableMin === 0 && comparableMax === 0) {
+            this.minSliderValue = 350;
+            this.maxSliderValue = 450;
+          } else {
+            // Map comparable prices to slider range
+            // Scale the comparable range to fit within slider_min-slider_max
+            const scale = Math.min(this.slider_max / comparableMax, 1); // Ensure we don't exceed slider_max
+            this.minSliderValue = Math.round(comparableMin * scale);
+            this.maxSliderValue = Math.round(comparableMax * scale);
+          }
+        },
+        toggleCols(group, idx) {
+          if (this.currentOpenComp == idx) {
+            this.currentOpenComp = null
+          } else {
+            this.currentOpenComp = idx
+          }
+          console.log("group", group)
+        },
+        nextTarget() {
+          if (this.currentTargetIndex < this.Targets[this.domain].length - 1) {
+            this.currentTargetIndex++;
+            this.currentOpenComp = null;
+          }
+        },
+        prevTarget() {
+          if (this.currentTargetIndex > 0) {
+            this.currentTargetIndex--;
+            this.currentOpenComp = null;
+          }
+        },
+        getPredictionDifference(row) {
+          if (row.pred === 0 || row.actual === 0) {
+            return "—";
+          }
+          
+          const difference = row.pred - row.actual;
+          const percentage = Math.abs((difference / row.actual) * 100);
+          const roundedPercentage = Math.round(percentage * 10) / 10; // Round to 1 decimal place
+          
+          if (difference > 0) {
+            return `${roundedPercentage}% Higher`;
+          } else if (difference < 0) {
+            return `${roundedPercentage}% Lower`;
+          } else {
+            return "0% (Same)";
+          }
+        },
+        startHandleDrag(handle, event) {
+          event.preventDefault();
+          this.draggingHandle = handle;
+          this.isDragging = true;
+        },
+        startSliderDrag(event) {
+          if (!this.isDragging) {
+            this.updateSliderValue(event);
+          }
+        },
+        onSliderDrag(event) {
+          if (this.isDragging) {
+            this.updateSliderValue(event);
+          }
+        },
+        stopSliderDrag() {
+          this.isDragging = false;
+          this.draggingHandle = null;
+        },
+        updateSliderValue(event) {
+          const rect = event.currentTarget.getBoundingClientRect();
+          const x = event.clientX - rect.left;
+          const percent = Math.max(0, Math.min(100, (x / rect.width) * 100));
+          const value = Math.round(this.slider_min + (percent / 100) * (this.slider_max - this.slider_min));
+          
+          if (this.draggingHandle === 'min') {
+            this.minSliderValue = Math.min(value, this.maxSliderValue - 10);
+          } else if (this.draggingHandle === 'max') {
+            this.maxSliderValue = Math.max(value, this.minSliderValue + 10);
+          } else {
+            // Click on track - move both handles
+            const currentRange = this.maxSliderValue - this.minSliderValue;
+            this.minSliderValue = Math.max(this.slider_min, value - currentRange / 2);
+            this.maxSliderValue = Math.min(this.slider_max, this.minSliderValue + currentRange);
+          }
+        }
+      }
+    }).mount('#app');
+  </script>
+
+</body>
+
+</html>
