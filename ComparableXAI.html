@@ -327,7 +327,7 @@
 
     .pred-description {
       color: #666;
-      padding: 2px 0 2px 4px;
+      padding: 2px 0 2px 0px;
       margin-top: 4px;
       display: inline-block;
       cursor: pointer;
@@ -761,7 +761,7 @@
               </el-tooltip>
               <br />
               <span class="pred-description" @mouseenter="highlightAllPredAndActual()"
-                @mouseleave="unhighlightAllPredAndActual()"> Prediction Error
+                @mouseleave="unhighlightAllPredAndActual()">Prediction Error
                 <el-tooltip content="The difference between the actual price and the predicted price." placement="right"
                   effect="dark" :show-after="0" trigger="hover" :hide-after="0">
                   <span class="tooltip-icon">
@@ -1035,7 +1035,7 @@
             //domain 2
             ['Actual Salary ($)', 'AI Prediction ($)', 'Adjusted Salary ($)'],
             //domain 3
-            ['Actual Energy Usage (kWh)', 'AI Prediction (kWh)', 'Adjusted Energy Usage (kWh)']
+            ['Actual Energy Usage (kWh)', 'AI Prediction (kWh)', 'Adjusted Usage (kWh)']
           ],
           Labels_Descriptions: [
             //domain 1
