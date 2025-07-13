@@ -34,6 +34,7 @@
       font-size: 14px;
       font-family: 'Roboto Condensed', monospace;
       color: #212121;
+      
 
     }
 
@@ -63,13 +64,7 @@
 
     }
 
-    .highlight-blue {
-      background-color: #dcecfb;
-    }
 
-    .highlight-green {
-      background-color: #e4fcdc;
-    }
 
     .hidden {
       max-width: 0 !important;
@@ -92,11 +87,23 @@
 
     }
 
+    .highlight-blue {
+      background-color: #e8f3fd;
+    }
 
+    .highlight-green2,
+    .adj-price {
+      background-color: #e4fcdc !important;
+
+    }
+
+
+    .highlight-green {
+      background-color: #baf2a7 !important;
+    }
 
     .adj-price {
-      background-color: #fcecc9;
-      width: 26px;
+      width: 60px;
       padding-right: 10px;
     }
 
@@ -104,14 +111,15 @@
       width: 70px;
       background-color: #fef6e4;
       font-weight: 400;
-      padding-right: 4px;
+      padding-right: 10px;
     }
 
-    .adj-price,
+
     .comp-details,
     .adj-value {
       /* background-color: #f4fdf1; */
-      background-color: #f4f4f4;
+      background-color: #ffffff;
+      
     }
 
     .highlight-yellow {
@@ -434,6 +442,19 @@
       font-size: 12px;
       display: inline-block;
     }
+    .trace-border-top {
+      border-top: 2px solid #36a341;
+    }
+    .trace-border-bottom {
+      border-bottom: 2px solid #36a341;
+    }
+    .trace-border-right{
+      border-right: 2px solid #36a341;
+    }
+    .trace-border-left{
+      border-left: 2px solid #36a341;
+    }
+  
   </style>
 </head>
 
@@ -466,7 +487,7 @@
     <div class="tab-content" v-if="currentTab === 0">
       <table>
         <thead>
-          <tr>
+          <!-- <tr>
             <th rowspan="1" style="width: 100px;"></th>
             <th class="comp1-header right-align subject" style="width: 50px;"></th>
             <template v-for="(row, idx) in Comparables[domain][currentTargetIndex]" :key="row.id" class="comp1-header"
@@ -480,22 +501,22 @@
 
 
             </template>
-          </tr>
+          </tr> -->
           <!-- Header row -->
-          <tr>
+          <tr style="border-top: 2px solid transparent;">
             <th rowspan="1" style="width: 100px;"></th>
             <th class="comp1-header right-align subject" style="width: 50px;">Subject</th>
             <template v-for="(row, idx) in Comparables[domain][currentTargetIndex]" :key="row.id" class="comp1-header"
               style="position:relative;">
-              <th colspan="2" class="comp1-header border-btm right-align" style="position:relative;">
+              <th colspan="2" class="comp1-header border-btm right-align" :class="{'trace-border-left': currentOpenComp===idx, 'trace-border-top': currentOpenComp===idx}" style="position:relative;">
 
                 Comparable {{idx + 1}}
 
                 <!-- <div style="font-size: 12px; display:flex;align-items:center;justify-content:center;color:#800080">
                   AI Prediction ($): {{row.pred}}K
                 </div> -->
-                <el-tooltip :content="currentOpenComp==idx ? 'Hide Trace' : 'Show Trace'" placement="top" effect="light" :show-after="0" trigger="hover"
-                  :hide-after="0">
+                <el-tooltip :content="currentOpenComp==idx ? 'Hide Trace' : 'Show Trace'" placement="top" effect="light"
+                  :show-after="0" trigger="hover" :hide-after="0">
                   <button class="toggle-button" @click="toggleCols(`comp${idx+1}`,idx)">
 
                     <span v-if="currentOpenComp!=idx" class="toggle-text">{{ currentOpenComp ==idx ? ' ' : '...'
@@ -512,8 +533,8 @@
               Comparable {{idx + 1}} Adjustment Trace
               </th> -->
               <template v-for="i in row.adjusted_step_number">
-                <th class="border-btm comp-details right-align" style="padding-right: 10px;" colspan="2"
-                  :class="{hidden: currentOpenComp!==idx}">
+                <th class="border-btm comp-details trace-border-top" style="" colspan="2"
+                :class="{hidden: currentOpenComp!==idx, 'trace-border-right': i === row.adjusted_price.length}">
                   {{i}}</th>
               </template>
 
@@ -542,8 +563,8 @@
             <td class="comp1-header"></td>
             <td class="subject"></td>
             <template v-for="(row, idx) in Comparables[domain][currentTargetIndex]" :key="row.id">
-              <th style="width: 40px;" class="comp-header right-align border-btm">Values</th>
-              <th class="comp1-header right-align border-btm money" style="width: 36px;">
+              <th style="width: 40px;" class="comp-header right-align border-btm" :class="{'trace-border-left': currentOpenComp===idx}">Values</th>
+              <th class="comp1-header right-align border-btm money" style="width: 60px;">
                 <span> $ Δ </span>
                 <!-- <button class="toggle-button" @click="toggleCols(`comp${idx+1}`,idx)">
                   <span v-if="currentOpenComp!=idx" class="toggle-text">{{ currentOpenComp ==idx ? ' ' : '...' }}</span>
@@ -554,7 +575,7 @@
                 <th class="adj-value border-btm right-align" style="font-weight: bold;"
                   :class="{hidden: currentOpenComp!==idx}">Values</th>
                 <th class="adj-price border-btm right-align money" style="font-weight: bold;"
-                  :class="{hidden: currentOpenComp!==idx}">$ Δ</th>
+                :class="{hidden: currentOpenComp!==idx, 'trace-border-right': i === row.adjusted_price.length}">$ Δ</th>
               </template>
             </template>
           </tr>
@@ -585,7 +606,7 @@
             </td>
             <template v-for="(row, idx) in Comparables[domain][currentTargetIndex]" :key="row.id">
               <td class="comp1-header right-align" :title="row.feature_val[index]"
-                :class="{'gray-font': row.delta_x[index]==0}">
+                :class="{'gray-font': row.delta_x[index]==0, 'trace-border-left': currentOpenComp===idx}">
                 <div style=" display: inline-block;
                   max-width: 100px;
                   width: 100px;
@@ -613,32 +634,12 @@
                     —
                   </span> -->
                 </td>
-                <td class="right-align adj-price money" :class="{hidden: currentOpenComp!==idx}" :style="{ color: index ==
+                <td class="right-align adj-price money" :class="{hidden: currentOpenComp!==idx, 'trace-border-right': i === row.adjusted_price.length}" :style="{ color: index ==
                  row.adjusted_order[i-1] ? '#2e8113' : '#ccc' }">{{
                   row.adjusted_order.slice(0,i).includes(index)? row.delta_y[index]+'K' : ''}}</td>
               </template>
             </template>
           </tr>
-
-          <!-- <tr>
-            <td class="feature-name money">Net Adjustment ($)</td>
-            <td class="right-align subject"></td>
-            <template v-for="(row, idx) in Comparables[currentTargetIndex]" :key="row.id">
-              <td class="comp1-header right-align money border-wider">
-              </td>
-              <td class="comp1-header right-align money border-wider" style="position:relative;">
-                <span>{{row.net_adjustment}}K
-              </td>
-
-              <template v-for="(ele, i) in row.net_adjustments">
-                <td :colspan="2" class="right-align money comp-details border-wider"
-                  :class="{hidden: currentOpenComp!==idx}" style="position:relative;">
-
-                  <span>{{ele}}K</span>
-                </td>
-              </template>
-            </template>
-          </tr> -->
 
           <tr class="">
             <td class="feature-name money highlight-green">{{Labels[domain][0]}}
@@ -651,11 +652,7 @@
             <td class="right-align subject money highlight-green" @mouseenter="highlightAllAdjustedPrices()"
               @mouseleave="unhighlightAllAdjustedPrices()">
               <div style="cursor: pointer;">
-                <!-- <input type="text" class="disabled-input" :value="minSliderValue" disabled style="width: 20px;">
-                <span style="color: #6c757d; font-size: 12px;">—</span>
-                <input type="text" class="disabled-input" :value="maxSliderValue" disabled style="width: 20px;"> K -->
                 TBD
-
                 <el-tooltip content="Please estimate the value by referring to the adjusted values." placement="right"
                   effect="light" :show-after="0" trigger="hover" :hide-after="0">
                   <span style="cursor: pointer; margin-left: 2px; font-size: 12px;">
@@ -667,7 +664,7 @@
             </td>
             <template v-for="(row, idx) in Comparables[domain][currentTargetIndex]" :key="row.id">
               <td colspan="2" class="comp1-header right-align money highlight-green"
-                :class="{ 'actual-price-highlight': highlightedActualPrice === idx, 'all-pred-actual-highlight': allPredAndActualHighlighted }">
+                :class="{ 'actual-price-highlight': highlightedActualPrice === idx, 'all-pred-actual-highlight': allPredAndActualHighlighted, 'trace-border-left': currentOpenComp===idx }">
                 <span>
                   {{row.actual}}K
               </td>
@@ -675,8 +672,8 @@
                 :class="{hidden: currentOpenComp!==idx}">
                 {{row.actual}}K</td> -->
               <template v-for="(ele, i) in row.adjusted_price">
-                <td :colspan="2" class="right-align money comp-details " :class="{hidden: currentOpenComp!==idx}"
-                  style="position:relative;">
+                <td :colspan="2" class="right-align money comp-details highlight-green"
+                :class="{hidden: currentOpenComp!==idx, 'trace-border-right': i === row.adjusted_price.length - 1}" style="position:relative;">
                   <span>{{row.actual}}K</span>
                 </td>
               </template>
@@ -702,7 +699,7 @@
             </template>
           </tr> -->
           <tr>
-            <td class="feature-name money border-top highlight-yellow ">{{Labels[domain][2]}}
+            <td class="feature-name money border-top highlight-green2 ">{{Labels[domain][2]}}
               <el-tooltip :content="Labels_Descriptions[domain][2]" placement="right" effect="light" :show-after="0"
                 trigger="hover" :hide-after="0">
                 <span class="tooltip-icon">
@@ -710,15 +707,15 @@
                 </span>
               </el-tooltip>
             </td>
-            <td class="right-align money subject highlight-yellow border-top">—</td>
+            <td class="right-align money subject highlight-green2 border-top">—</td>
             <template v-for="(row, idx) in Comparables[domain][currentTargetIndex]" :key="row.id">
-              <td colspan="2" class="comp1-header right-align money border-top highlight-yellow"
-                :class="{ 'adjusted-price-highlight': allAdjustedPricesHighlighted }" style="position:relative;">
+              <td colspan="2" class="comp1-header right-align money border-top highlight-green2"
+                :class="{ 'adjusted-price-highlight': allAdjustedPricesHighlighted, 'trace-border-bottom': currentOpenComp===idx, 'trace-border-left': currentOpenComp===idx}" style="position:relative;">
                 <span>{{row.adjusted_price[row.adjusted_step_number - 1]}}K
               </td>
               <template v-for="(ele, i) in row.adjusted_price">
-                <td :colspan="2" class="right-align money comp-details border-top"
-                  :class="{hidden: currentOpenComp!==idx}" style="position:relative;">
+                <td :colspan="2" class="right-align money comp-details border-top highlight-green2 trace-border-bottom"
+                  :class="{hidden: currentOpenComp!==idx, 'trace-border-right': i === row.adjusted_price.length - 1}" style="position:relative;">
                   <span>{{ele}}K</span>
                 </td>
               </template>
@@ -948,7 +945,7 @@
       style="margin-top: 20px; padding: 15px; background: #f8f9fa; border-radius: 6px; border: 1px solid #e9ecef; width: 300px;">
       <div style="display: flex; align-items: center; gap: 10px; cursor: pointer;" @click="toggleAnswer">
         <span style="font-weight: 500; color: #495057;">Check the Answer <span
-            style="font-size: 12px; color: #6c757d;">(Subject's Actual Value)</span></span>
+            style="font-size: 12px; color: #6c757d;">(For internal testing)</span></span>
         <i :class="showAnswer ? 'fa-solid fa-eye-slash' : 'fa-solid fa-eye'" style="color: #6c757d;"></i>
       </div>
       <div v-if="showAnswer"
