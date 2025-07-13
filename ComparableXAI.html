@@ -13,6 +13,10 @@
 
   <script src="https://unpkg.com/vue@3/dist/vue.global.prod.js"></script>
 
+  <!-- Element UI CSS and JS -->
+  <link rel="stylesheet" href="https://unpkg.com/element-plus/dist/index.css">
+  <script src="https://unpkg.com/element-plus/dist/index.full.js"></script>
+
   <!-- No internet open 👇-->
   <!-- <link rel="stylesheet" href="./min.css">
   <script src="./min.js"></script> -->
@@ -315,7 +319,6 @@
 
     .pred-description {
       color: #666;
-      font-size: 12px;
       padding: 2px 0 2px 4px;
       margin-top: 4px;
       display: inline-block;
@@ -332,7 +335,7 @@
     }
 
     .slider-label {
-      font-size: 14px;
+
       font-weight: 500;
       color: #495057;
       margin-bottom: 8px;
@@ -379,7 +382,7 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
-      font-size: 11px;
+
       color: #6c757d;
       margin-top: 8px;
     }
@@ -390,7 +393,7 @@
       color: #2e8113;
       padding: 2px 6px;
       border-radius: 4px;
-      font-size: 12px;
+
       font-family: 'Roboto Condensed', monospace;
       width: 50px;
       text-align: right;
@@ -398,31 +401,38 @@
     }
 
     .actual-price-highlight {
-      font-size: 18px !important;
+      /*font-size: 18px !important;*/
       font-weight: bold !important;
       text-decoration: underline !important;
       transition: all 0.3s ease;
     }
 
     .pred-highlight {
-      font-size: 18px !important;
+      /*font-size: 18px !important;*/
       font-weight: bold !important;
       text-decoration: underline !important;
       transition: all 0.3s ease;
     }
 
     .adjusted-price-highlight {
-      font-size: 18px !important;
+      /*font-size: 18px !important;*/
       font-weight: bold !important;
       text-decoration: underline !important;
       transition: all 0.3s ease;
     }
 
     .all-pred-actual-highlight {
-      font-size: 18px !important;
+      /*font-size: 18px !important;*/
       font-weight: bold !important;
       text-decoration: underline !important;
       transition: all 0.3s ease;
+    }
+
+    .tooltip-icon {
+      cursor: pointer;
+      margin-left: 4px;
+      font-size: 12px;
+      display: inline-block;
     }
   </style>
 </head>
@@ -456,6 +466,21 @@
     <div class="tab-content" v-if="currentTab === 0">
       <table>
         <thead>
+          <tr>
+            <th rowspan="1" style="width: 100px;"></th>
+            <th class="comp1-header right-align subject" style="width: 50px;"></th>
+            <template v-for="(row, idx) in Comparables[domain][currentTargetIndex]" :key="row.id" class="comp1-header"
+              style="position:relative;">
+              <th colspan="2" class="comp1-header right-align" style="position:relative;">
+              </th>
+
+              <th :colspan="row.adjusted_step_number * 2" class="comp-details border-btm"
+                style="padding-right: 10px; text-align: center;" colspan="2" :class="{hidden: currentOpenComp!==idx}">
+                Comparable {{idx + 1}} Adjustment Trace</th>
+
+
+            </template>
+          </tr>
           <!-- Header row -->
           <tr>
             <th rowspan="1" style="width: 100px;"></th>
@@ -469,10 +494,17 @@
                 <!-- <div style="font-size: 12px; display:flex;align-items:center;justify-content:center;color:#800080">
                   AI Prediction ($): {{row.pred}}K
                 </div> -->
-                <button class="toggle-button" @click="toggleCols(`comp${idx+1}`,idx)">
-                  <span v-if="currentOpenComp!=idx" class="toggle-text">{{ currentOpenComp ==idx ? ' ' : '...' }}</span>
-                  <i class="toggle-text fa-solid fa-angle-left" v-if="currentOpenComp==idx"></i>
-                </button>
+                <el-tooltip :content="currentOpenComp==idx ? 'Hide Trace' : 'Show Trace'" placement="top" effect="light" :show-after="0" trigger="hover"
+                  :hide-after="0">
+                  <button class="toggle-button" @click="toggleCols(`comp${idx+1}`,idx)">
+
+                    <span v-if="currentOpenComp!=idx" class="toggle-text">{{ currentOpenComp ==idx ? ' ' : '...'
+                      }}</span>
+
+                    <i class="toggle-text fa-solid fa-angle-left" v-if="currentOpenComp==idx"></i>
+
+                  </button>
+                </el-tooltip>
               </th>
 
               <!-- <th class="border-btm comp-details" :colspan="row.adjusted_step_number * 2"
@@ -481,8 +513,8 @@
               </th> -->
               <template v-for="i in row.adjusted_step_number">
                 <th class="border-btm comp-details right-align" style="padding-right: 10px;" colspan="2"
-                  :class="{hidden: currentOpenComp!==idx}">Sub
-                  Comp{{i}}</th>
+                  :class="{hidden: currentOpenComp!==idx}">
+                  {{i}}</th>
               </template>
 
               <!-- <th class="border-btm comp-details" :colspan="row.adjusted_step_number * 2"
@@ -531,10 +563,12 @@
           <tr v-for="(tb, index) in Features[domain]">
             <td class="feature-name">
               <span>{{ Features[domain][index] }}</span>
-              <span style="cursor: pointer; margin-left: 4px; font-size: 10px;"
-                :title="FeatureDescriptions[domain][index]">
-                <i class="fa-regular fa-circle-question"></i>
-              </span>
+              <el-tooltip :content="FeatureDescriptions[domain][index]" placement="right" effect="light" :show-after="0"
+                trigger="hover" :hide-after="0">
+                <span class="tooltip-icon">
+                  <i class="fa-regular fa-circle-question"></i>
+                </span>
+              </el-tooltip>
             </td>
             <td class="right-align subject" :title="Targets[domain][currentTargetIndex].feature_val[index]">
 
@@ -565,7 +599,7 @@
 
               </td>
               <td class="comp1-header right-align money" :class="{'gray-font': row.delta_x[index]==0}">
-                {{row.delta_y[index]!==0? row.delta_y[index]+'K':'—' }}
+                {{row.delta_y[index]!==0? row.delta_y[index]+'K':'0' }}
               </td>
               <template v-for="i in row.adjusted_step_number">
                 <td class="right-align adj-value" :class="{hidden: currentOpenComp!==idx }"
@@ -608,9 +642,11 @@
 
           <tr class="">
             <td class="feature-name money highlight-green">{{Labels[domain][0]}}
-              <span style="cursor: pointer; margin-left: 4px; font-size: 10px;" :title="Labels_Descriptions[domain][0]">
-                <i class="fa-regular fa-circle-question"></i>
-              </span>
+              <el-tooltip :content="Labels_Descriptions[domain][0]" placement="top" effect="light" :show-after="0">
+                <span class="tooltip-icon">
+                  <i class="fa-regular fa-circle-question"></i>
+                </span>
+              </el-tooltip>
             </td>
             <td class="right-align subject money highlight-green" @mouseenter="highlightAllAdjustedPrices()"
               @mouseleave="unhighlightAllAdjustedPrices()">
@@ -618,9 +654,14 @@
                 <!-- <input type="text" class="disabled-input" :value="minSliderValue" disabled style="width: 20px;">
                 <span style="color: #6c757d; font-size: 12px;">—</span>
                 <input type="text" class="disabled-input" :value="maxSliderValue" disabled style="width: 20px;"> K -->
-                TBD <span style="cursor: pointer; margin-left: 4px; font-size: 10px;"
-                  title="Estimate the value by referring to the adjusted values.">
-                  <i class="fa-regular fa-circle-question"></i>
+                TBD
+
+                <el-tooltip content="Please estimate the value by referring to the adjusted values." placement="right"
+                  effect="light" :show-after="0" trigger="hover" :hide-after="0">
+                  <span style="cursor: pointer; margin-left: 2px; font-size: 12px;">
+                    <i class="fa-regular fa-circle-question"></i>
+                  </span>
+                </el-tooltip>
                 </span>
               </div>
             </td>
@@ -662,9 +703,12 @@
           </tr> -->
           <tr>
             <td class="feature-name money border-top highlight-yellow ">{{Labels[domain][2]}}
-              <span style="cursor: pointer; margin-left: 4px; font-size: 10px;" :title="Labels_Descriptions[domain][2]">
-                <i class="fa-regular fa-circle-question"></i>
-              </span>
+              <el-tooltip :content="Labels_Descriptions[domain][2]" placement="right" effect="light" :show-after="0"
+                trigger="hover" :hide-after="0">
+                <span class="tooltip-icon">
+                  <i class="fa-regular fa-circle-question"></i>
+                </span>
+              </el-tooltip>
             </td>
             <td class="right-align money subject highlight-yellow border-top">—</td>
             <template v-for="(row, idx) in Comparables[domain][currentTargetIndex]" :key="row.id">
@@ -697,16 +741,21 @@
 
           <tr>
             <td class="feature-name money ai-pred-bg">{{Labels[domain][1]}}
-              <span style="cursor: pointer; margin-left: 4px; font-size: 10px;" :title="Labels_Descriptions[domain][1]">
-                <i class="fa-regular fa-circle-question"></i>
-              </span>
+              <el-tooltip :content="Labels_Descriptions[domain][1]" placement="right" effect="light" :show-after="0"
+                trigger="hover" :hide-after="0">
+                <span class="tooltip-icon">
+                  <i class="fa-regular fa-circle-question"></i>
+                </span>
+              </el-tooltip>
               <br />
               <span class="pred-description" @mouseenter="highlightAllPredAndActual()"
                 @mouseleave="unhighlightAllPredAndActual()"> Prediction Error
-                <span style="cursor: pointer; margin-left: 4px; font-size: 10px;"
-                  title="The difference between the actual price and the predicted price.">
-                  <i class="fa-regular fa-circle-question"></i>
-                </span>
+                <el-tooltip content="The difference between the actual price and the predicted price." placement="right"
+                  effect="light" :show-after="0" trigger="hover" :hide-after="0">
+                  <span class="tooltip-icon">
+                    <i class="fa-regular fa-circle-question"></i>
+                  </span>
+                </el-tooltip>
               </span>
             </td>
             <td class="right-align money subject ai-pred-bg">
@@ -807,9 +856,12 @@
           <tr v-for="(tb, index) in Features[domain]">
             <td class="feature-name">
               {{ Features[domain][index] }}
-              <span style="cursor: pointer; margin-left: 4px;" :title="FeatureDescriptions[domain][index]">
-                <i class="fa-regular fa-circle-question"></i>
-              </span>
+              <el-tooltip :content="FeatureDescriptions[domain][index]" placement="right" effect="light" :show-after="0"
+                trigger="hover" :hide-after="0">
+                <span style="cursor: pointer; margin-left: 4px;">
+                  <i class="fa-regular fa-circle-question"></i>
+                </span>
+              </el-tooltip>
             </td>
             <template v-for="(row, idx) in Comparables_no_trace[currentTargetIndex]" :key="row.id">
               <td class="comp1-header right-align"><span>
@@ -875,9 +927,12 @@
             <tr>
               <td class="feature-name">
                 {{feature}}
-                <span style="cursor: pointer; margin-left: 4px;" :title="FeatureDescriptions[domain][index]">
-                  <i class="fa-regular fa-circle-question"></i>
-                </span>
+                <el-tooltip :content="FeatureDescriptions[domain][index]" placement="top" effect="light"
+                  :show-after="0">
+                  <span style="cursor: pointer; margin-left: 4px;">
+                    <i class="fa-regular fa-circle-question"></i>
+                  </span>
+                </el-tooltip>
               </td>
               <td class="right-align">{{Targets[domain][currentTargetIndex].feature_val[index]}}</td>
               <template v-for="(row, idx) in Comparables[domain][currentTargetIndex]" :key="row.id">
@@ -889,9 +944,11 @@
         </tbody>
       </table>
     </div>
-    <div style="margin-top: 20px; padding: 15px; background: #f8f9fa; border-radius: 6px; border: 1px solid #e9ecef; width: 300px;">
+    <div
+      style="margin-top: 20px; padding: 15px; background: #f8f9fa; border-radius: 6px; border: 1px solid #e9ecef; width: 300px;">
       <div style="display: flex; align-items: center; gap: 10px; cursor: pointer;" @click="toggleAnswer">
-        <span style="font-weight: 500; color: #495057;">Check the Answer <span style="font-size: 12px; color: #6c757d;">(Subject's Actual Value)</span></span>
+        <span style="font-weight: 500; color: #495057;">Check the Answer <span
+            style="font-size: 12px; color: #6c757d;">(Subject's Actual Value)</span></span>
         <i :class="showAnswer ? 'fa-solid fa-eye-slash' : 'fa-solid fa-eye'" style="color: #6c757d;"></i>
       </div>
       <div v-if="showAnswer"
@@ -925,7 +982,12 @@
 
   <script>
     const { createApp } = Vue;
+    const { ElTooltip } = ElementPlus;
+
     createApp({
+      components: {
+        ElTooltip
+      },
       data() {
         return {
           domain: 0,
@@ -1058,7 +1120,7 @@
             ],
 
             [
-            //'feature_val': [3.2, '1¾', 1.7, 8, 112, 3],
+              //'feature_val': [3.2, '1¾', 1.7, 8, 112, 3],
               {
                 'id': 0,
                 'feature_val': [3, 2, 1.8, 8, 90, 3],
@@ -1067,8 +1129,8 @@
                 'pred': 641.6,
                 'actual': 575,
                 'adjusted_step_number': 4,
-                'adjusted_order': [2, 4, 1,0],
-                'adjusted_price': [575, 680.6,680.6, 639.2],
+                'adjusted_order': [2, 4, 1, 0],
+                'adjusted_price': [575, 680.6, 680.6, 639.2],
                 'final_adjusted_price': 639.2,
               },
               {
