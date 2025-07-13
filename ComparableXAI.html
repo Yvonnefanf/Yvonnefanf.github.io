@@ -34,7 +34,7 @@
       font-size: 14px;
       font-family: 'Roboto Condensed', monospace;
       color: #212121;
-      
+
 
     }
 
@@ -119,7 +119,7 @@
     .adj-value {
       /* background-color: #f4fdf1; */
       background-color: #ffffff;
-      
+
     }
 
     .highlight-yellow {
@@ -442,19 +442,22 @@
       font-size: 12px;
       display: inline-block;
     }
+
     .trace-border-top {
       border-top: 2px solid #36a341;
     }
+
     .trace-border-bottom {
       border-bottom: 2px solid #36a341;
     }
-    .trace-border-right{
+
+    .trace-border-right {
       border-right: 2px solid #36a341;
     }
-    .trace-border-left{
+
+    .trace-border-left {
       border-left: 2px solid #36a341;
     }
-  
   </style>
 </head>
 
@@ -508,14 +511,16 @@
             <th class="comp1-header right-align subject" style="width: 50px;">Subject</th>
             <template v-for="(row, idx) in Comparables[domain][currentTargetIndex]" :key="row.id" class="comp1-header"
               style="position:relative;">
-              <th colspan="2" class="comp1-header border-btm right-align" :class="{'trace-border-left': currentOpenComp===idx, 'trace-border-top': currentOpenComp===idx}" style="position:relative;">
+              <th colspan="2" class="comp1-header border-btm right-align"
+                :class="{'trace-border-left': currentOpenComp===idx, 'trace-border-top': currentOpenComp===idx}"
+                style="position:relative;">
 
                 Comparable {{idx + 1}}
 
                 <!-- <div style="font-size: 12px; display:flex;align-items:center;justify-content:center;color:#800080">
                   AI Prediction ($): {{row.pred}}K
                 </div> -->
-                <el-tooltip :content="currentOpenComp==idx ? 'Hide Trace' : 'Show Trace'" placement="top" effect="light"
+                <el-tooltip :content="currentOpenComp==idx ? 'Hide Trace' : 'Show Trace'" placement="top" effect="dark"
                   :show-after="0" trigger="hover" :hide-after="0">
                   <button class="toggle-button" @click="toggleCols(`comp${idx+1}`,idx)">
 
@@ -534,7 +539,7 @@
               </th> -->
               <template v-for="i in row.adjusted_step_number">
                 <th class="border-btm comp-details trace-border-top" style="" colspan="2"
-                :class="{hidden: currentOpenComp!==idx, 'trace-border-right': i === row.adjusted_price.length}">
+                  :class="{hidden: currentOpenComp!==idx, 'trace-border-right': i === row.adjusted_price.length}">
                   {{i}}</th>
               </template>
 
@@ -563,7 +568,8 @@
             <td class="comp1-header"></td>
             <td class="subject"></td>
             <template v-for="(row, idx) in Comparables[domain][currentTargetIndex]" :key="row.id">
-              <th style="width: 40px;" class="comp-header right-align border-btm" :class="{'trace-border-left': currentOpenComp===idx}">Values</th>
+              <th style="width: 40px;" class="comp-header right-align border-btm"
+                :class="{'trace-border-left': currentOpenComp===idx}">Values</th>
               <th class="comp1-header right-align border-btm money" style="width: 60px;">
                 <span> $ Δ </span>
                 <!-- <button class="toggle-button" @click="toggleCols(`comp${idx+1}`,idx)">
@@ -575,7 +581,8 @@
                 <th class="adj-value border-btm right-align" style="font-weight: bold;"
                   :class="{hidden: currentOpenComp!==idx}">Values</th>
                 <th class="adj-price border-btm right-align money" style="font-weight: bold;"
-                :class="{hidden: currentOpenComp!==idx, 'trace-border-right': i === row.adjusted_price.length}">$ Δ</th>
+                  :class="{hidden: currentOpenComp!==idx, 'trace-border-right': i === row.adjusted_price.length}">$ Δ
+                </th>
               </template>
             </template>
           </tr>
@@ -584,7 +591,7 @@
           <tr v-for="(tb, index) in Features[domain]">
             <td class="feature-name">
               <span>{{ Features[domain][index] }}</span>
-              <el-tooltip :content="FeatureDescriptions[domain][index]" placement="right" effect="light" :show-after="0"
+              <el-tooltip :content="FeatureDescriptions[domain][index]" placement="right" effect="dark" :show-after="0"
                 trigger="hover" :hide-after="0">
                 <span class="tooltip-icon">
                   <i class="fa-regular fa-circle-question"></i>
@@ -620,30 +627,35 @@
 
               </td>
               <td class="comp1-header right-align money" :class="{'gray-font': row.delta_x[index]==0}">
-                {{row.delta_y[index]!==0? row.delta_y[index]+'K':'0' }}
+                {{row.delta_y[index]!==0? row.delta_y[index]+unit_list[domain]:'0' }}
               </td>
               <template v-for="i in row.adjusted_step_number">
                 <td class="right-align adj-value" :class="{hidden: currentOpenComp!==idx }"
-                  :style="{ color: index == row.adjusted_order[i-1] ? '#222' : '#ccc' }">
-                  <span v-if="row.adjusted_order.slice(0,i).includes(index)">
+                  :style="{ color: index == row.adjusted_order[i-1] ? '#222' : '#bcbcbc' }">
+                  <span v-if="row.adjusted_order.slice(0,i).includes(index)"  style="cursor: pointer;">
                     <!-- {{ row.feature_val[index] }} -->
                     <!-- <i class="fa-solid fa-arrow-right" style="font-size:10px;vertical-align:middle;"></i> -->
-                    {{ Targets[domain][currentTargetIndex].feature_val[index] }}
+                    <el-tooltip :content="row.feature_val[index]+' → '+Targets[domain][currentTargetIndex].feature_val[index]" placement="top"
+                      effect="dark" :show-after="0" trigger="hover" :hide-after="0">
+                      {{ Targets[domain][currentTargetIndex].feature_val[index] }}
+                    </el-tooltip>
                   </span>
                   <!-- <span v-else>
                     —
                   </span> -->
                 </td>
-                <td class="right-align adj-price money" :class="{hidden: currentOpenComp!==idx, 'trace-border-right': i === row.adjusted_price.length}" :style="{ color: index ==
-                 row.adjusted_order[i-1] ? '#2e8113' : '#ccc' }">{{
-                  row.adjusted_order.slice(0,i).includes(index)? row.delta_y[index]+'K' : ''}}</td>
+                <td class="right-align adj-price money"
+                  :class="{hidden: currentOpenComp!==idx, 'trace-border-right': i === row.adjusted_price.length}"
+                  :style="{ color: index ==
+                 row.adjusted_order[i-1] ? '#2e8113' : '#bcbcbc' }">{{
+                  row.adjusted_order.slice(0,i).includes(index)? row.delta_y[index]+unit_list[domain] : ''}}</td>
               </template>
             </template>
           </tr>
 
           <tr class="">
             <td class="feature-name money highlight-green">{{Labels[domain][0]}}
-              <el-tooltip :content="Labels_Descriptions[domain][0]" placement="top" effect="light" :show-after="0">
+              <el-tooltip :content="Labels_Descriptions[domain][0]" placement="top" effect="dark" :show-after="0">
                 <span class="tooltip-icon">
                   <i class="fa-regular fa-circle-question"></i>
                 </span>
@@ -654,7 +666,7 @@
               <div style="cursor: pointer;">
                 TBD
                 <el-tooltip content="Please estimate the value by referring to the adjusted values." placement="right"
-                  effect="light" :show-after="0" trigger="hover" :hide-after="0">
+                  effect="dark" :show-after="0" trigger="hover" :hide-after="0">
                   <span style="cursor: pointer; margin-left: 2px; font-size: 12px;">
                     <i class="fa-regular fa-circle-question"></i>
                   </span>
@@ -666,15 +678,16 @@
               <td colspan="2" class="comp1-header right-align money highlight-green"
                 :class="{ 'actual-price-highlight': highlightedActualPrice === idx, 'all-pred-actual-highlight': allPredAndActualHighlighted, 'trace-border-left': currentOpenComp===idx }">
                 <span>
-                  {{row.actual}}K
+                  {{row.actual}}{{unit_list[domain]}}
               </td>
               <!-- <td :colspan="row.adjusted_step_number*2" class="right-align money comp-details"
                 :class="{hidden: currentOpenComp!==idx}">
                 {{row.actual}}K</td> -->
               <template v-for="(ele, i) in row.adjusted_price">
                 <td :colspan="2" class="right-align money comp-details highlight-green"
-                :class="{hidden: currentOpenComp!==idx, 'trace-border-right': i === row.adjusted_price.length - 1}" style="position:relative;">
-                  <span>{{row.actual}}K</span>
+                  :class="{hidden: currentOpenComp!==idx, 'trace-border-right': i === row.adjusted_price.length - 1}"
+                  style="position:relative;">
+                  <span>{{row.actual}}{{unit_list[domain]}}</span>
                 </td>
               </template>
             </template>
@@ -700,7 +713,7 @@
           </tr> -->
           <tr>
             <td class="feature-name money border-top highlight-green2 ">{{Labels[domain][2]}}
-              <el-tooltip :content="Labels_Descriptions[domain][2]" placement="right" effect="light" :show-after="0"
+              <el-tooltip :content="Labels_Descriptions[domain][2]" placement="right" effect="dark" :show-after="0"
                 trigger="hover" :hide-after="0">
                 <span class="tooltip-icon">
                   <i class="fa-regular fa-circle-question"></i>
@@ -710,13 +723,15 @@
             <td class="right-align money subject highlight-green2 border-top">—</td>
             <template v-for="(row, idx) in Comparables[domain][currentTargetIndex]" :key="row.id">
               <td colspan="2" class="comp1-header right-align money border-top highlight-green2"
-                :class="{ 'adjusted-price-highlight': allAdjustedPricesHighlighted, 'trace-border-bottom': currentOpenComp===idx, 'trace-border-left': currentOpenComp===idx}" style="position:relative;">
-                <span>{{row.adjusted_price[row.adjusted_step_number - 1]}}K
+                :class="{ 'adjusted-price-highlight': allAdjustedPricesHighlighted, 'trace-border-bottom': currentOpenComp===idx, 'trace-border-left': currentOpenComp===idx}"
+                style="position:relative;">
+                <span>{{row.adjusted_price[row.adjusted_step_number - 1]}}{{unit_list[domain]}}
               </td>
               <template v-for="(ele, i) in row.adjusted_price">
                 <td :colspan="2" class="right-align money comp-details border-top highlight-green2 trace-border-bottom"
-                  :class="{hidden: currentOpenComp!==idx, 'trace-border-right': i === row.adjusted_price.length - 1}" style="position:relative;">
-                  <span>{{ele}}K</span>
+                  :class="{hidden: currentOpenComp!==idx, 'trace-border-right': i === row.adjusted_price.length - 1}"
+                  style="position:relative;">
+                  <span>{{ele}}{{unit_list[domain]}}</span>
                 </td>
               </template>
             </template>
@@ -738,7 +753,7 @@
 
           <tr>
             <td class="feature-name money ai-pred-bg">{{Labels[domain][1]}}
-              <el-tooltip :content="Labels_Descriptions[domain][1]" placement="right" effect="light" :show-after="0"
+              <el-tooltip :content="Labels_Descriptions[domain][1]" placement="right" effect="dark" :show-after="0"
                 trigger="hover" :hide-after="0">
                 <span class="tooltip-icon">
                   <i class="fa-regular fa-circle-question"></i>
@@ -748,7 +763,7 @@
               <span class="pred-description" @mouseenter="highlightAllPredAndActual()"
                 @mouseleave="unhighlightAllPredAndActual()"> Prediction Error
                 <el-tooltip content="The difference between the actual price and the predicted price." placement="right"
-                  effect="light" :show-after="0" trigger="hover" :hide-after="0">
+                  effect="dark" :show-after="0" trigger="hover" :hide-after="0">
                   <span class="tooltip-icon">
                     <i class="fa-regular fa-circle-question"></i>
                   </span>
@@ -756,7 +771,7 @@
               </span>
             </td>
             <td class="right-align money subject ai-pred-bg">
-              {{Targets[domain][currentTargetIndex].pred}}K <br />
+              {{Targets[domain][currentTargetIndex].pred}}{{unit_list[domain]}} <br />
               <span class="pred-description"> — </span>
             </td>
 
@@ -764,7 +779,7 @@
               <td colspan="2" class="comp1-header right-align money ai-pred-bg"
                 :class="{ 'pred-highlight': highlightedActualPrice === idx, 'all-pred-actual-highlight': allPredAndActualHighlighted }">
                 <span>
-                  {{row.pred}}K
+                  {{row.pred}}{{unit_list[domain]}}
                   <br />
                   <span class="pred-description highlight-green" @mouseenter="highlightActualPrice(idx)"
                     @mouseleave="unhighlightActualPrice(idx)">{{ getPredictionDifference(row) }}</span>
@@ -853,7 +868,7 @@
           <tr v-for="(tb, index) in Features[domain]">
             <td class="feature-name">
               {{ Features[domain][index] }}
-              <el-tooltip :content="FeatureDescriptions[domain][index]" placement="right" effect="light" :show-after="0"
+              <el-tooltip :content="FeatureDescriptions[domain][index]" placement="right" effect="dark" :show-after="0"
                 trigger="hover" :hide-after="0">
                 <span style="cursor: pointer; margin-left: 4px;">
                   <i class="fa-regular fa-circle-question"></i>
@@ -924,7 +939,7 @@
             <tr>
               <td class="feature-name">
                 {{feature}}
-                <el-tooltip :content="FeatureDescriptions[domain][index]" placement="top" effect="light"
+                <el-tooltip :content="FeatureDescriptions[domain][index]" placement="top" effect="dark"
                   :show-after="0">
                   <span style="cursor: pointer; margin-left: 4px;">
                     <i class="fa-regular fa-circle-question"></i>
@@ -988,7 +1003,8 @@
       data() {
         return {
           domain: 0,
-          domain_list: ['House Price', 'Salary'],
+          domain_list: ['House Price', 'Salary', 'Energy'],
+          unit_list: ['K', 'K', 'kWh'],
 
           currentTab: 0,
           currentOpenComp: null,
@@ -1017,7 +1033,9 @@
             //domain 1
             ['Actual Price ($)', 'AI Prediction ($)', 'Adjusted Price ($)'],
             //domain 2
-            ['Actual Salary ($)', 'AI Prediction ($)', 'Adjusted Salary ($)']
+            ['Actual Salary ($)', 'AI Prediction ($)', 'Adjusted Salary ($)'],
+            //domain 3
+            ['Actual Energy Usage (kWh)', 'AI Prediction (kWh)', 'Adjusted Energy Usage (kWh)']
           ],
           Labels_Descriptions: [
             //domain 1
@@ -1027,13 +1045,19 @@
             // domain 2
             ['The annual salary of each employee in US dollars. ',
               'The predicted salary of the employee in US dollars.',
-              'The adjusted salary of the employee in US dollars.']],
+              'The adjusted salary of the employee in US dollars.'],
+            //domain 3
+            ['The actual energy Usage of the building in kWh.',
+              'The predicted energy Usage of the building in kWh.',
+              'The adjusted energy Usage of the building in kWh.']],
           Features:
             [
               //domain 1
               ['Dist to Downtown (km)', '# Bathroom', 'Living Area (ksqft)', 'Grade', 'Age (years)', 'Condition'],
               //domain 2
-              ['Age (years)', 'Gender', 'Education Level', 'Job Title', 'Work Experience (years)']],
+              ['Age (years)', 'Gender', 'Education Level', 'Job Title', 'Work Experience (years)'],
+              //domain 3
+              ['Building Type', 'Square Footage', 'Number of Occupants', 'Appliances Used', 'Average Temperature (°C)', 'Day of the Week']],
           FeatureDescriptions: [
             //domain 1
             [
@@ -1051,6 +1075,15 @@
               'The education level of the employee.',
               'Job title of the employee.',
               'The number of years of work experience of the employee.'
+            ],
+            //domain 3
+            [
+              'The type of building.',
+              'The square footage of the building.',
+              'The number of occupants in the building.',
+              'The appliances used in the building.',
+              'The average temperature of the building in degrees Celsius.',
+              'The day of the week when the energy Usage was measured.'
             ]
           ],
           Targets: [
@@ -1082,6 +1115,14 @@
               'actual': 160
             },
             ],
+            //domain 3
+            [
+              {
+                'feature_val': ['Residential', 7063, 76, 10, 29.8, 'Weekday'],
+                'pred': 2713.9,
+                'actual': 2713.9
+              },
+            ]
           ],
           Comparables: [
             // domain 1
@@ -1254,6 +1295,20 @@
 
               ]
             ],
+            [[{
+
+              'id': 0,
+              'feature_val': ['Residential', 7063, 70, 10, 29.8, 'Weekday'],
+              'delta_x': [0, 0, +6, 0, 0, 0],
+              'delta_y': [0, 0, 2, 0, 0, 0],
+              'pred': 2700,
+              'actual': 2710,
+              'adjusted_step_number': 1,
+              'adjusted_order': [2],
+              'adjusted_price': [2716],
+              'final_adjusted_price': 2716,
+
+            }]]
 
 
           ],
