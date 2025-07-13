@@ -109,11 +109,11 @@
 
     .adj-value {
       width: 70px;
-      background-color: #fef6e4;
       font-weight: 400;
       padding-right: 10px;
     }
-    .adj-value-span{
+
+    .adj-value-span {
       display: inline-block;
       width: 70px;
       overflow: hidden;
@@ -577,8 +577,8 @@
             <template v-for="(row, idx) in Comparables[domain][currentTargetIndex]" :key="row.id">
               <th style="width: 40px;" class="comp-header right-align border-btm"
                 :class="{'trace-border-left': currentOpenComp===idx}">Values</th>
-              <th class="comp1-header right-align border-btm money" style="width: 60px;">
-                <span> $ Δ </span>
+              <th class="comp1-header right-align border-btm money highlight-green2" style="width: 60px;">
+                <span> {{unit_list_header[domain]}} Δ </span>
                 <!-- <button class="toggle-button" @click="toggleCols(`comp${idx+1}`,idx)">
                   <span v-if="currentOpenComp!=idx" class="toggle-text">{{ currentOpenComp ==idx ? ' ' : '...' }}</span>
                   <i class="toggle-text fa-solid fa-angle-left" v-if="currentOpenComp==idx"></i>
@@ -588,7 +588,8 @@
                 <th class="adj-value border-btm right-align" style="font-weight: bold;"
                   :class="{hidden: currentOpenComp!==idx}">Values</th>
                 <th class="adj-price border-btm right-align money" style="font-weight: bold;"
-                  :class="{hidden: currentOpenComp!==idx, 'trace-border-right': i === row.adjusted_price.length}">$ Δ
+                  :class="{hidden: currentOpenComp!==idx, 'trace-border-right': i === row.adjusted_price.length}">
+                  {{unit_list_header[domain]}} Δ
                 </th>
               </template>
             </template>
@@ -605,53 +606,67 @@
                 </span>
               </el-tooltip>
             </td>
-            <td class="right-align subject" :title="Targets[domain][currentTargetIndex].feature_val[index]">
+            <td class="right-align subject">
+              <el-tooltip v-if="Targets[domain][currentTargetIndex].feature_val[index].length>10" :content="Targets[domain][currentTargetIndex].feature_val[index]" placement="right"
+                effect="dark" :show-after="0" trigger="hover" :hide-after="0">
+                <div style=" display: inline-block;
+                max-width: 100px;
+                width: 100px;
+                overflow: hidden;
+                white-space: nowrap;
+                text-overflow: ellipsis;
+                vertical-align: top; cursor: pointer;">
+                  {{ Targets[domain][currentTargetIndex].feature_val[index] }}
 
-              <div style=" display: inline-block;
-                  max-width: 100px;
-                  width: 100px;
-                  overflow: hidden;
-                  white-space: nowrap;
-                  text-overflow: ellipsis;
-                  vertical-align: top;">
-                {{ Targets[domain][currentTargetIndex].feature_val[index] }}
+                </div>
+              </el-tooltip>
+              <template v-else>
+                <div style="cursor: default;">
+                  {{ Targets[domain][currentTargetIndex].feature_val[index] }}
+                </div>
+              </template>
 
-              </div>
             </td>
             <template v-for="(row, idx) in Comparables[domain][currentTargetIndex]" :key="row.id">
               <td class="comp1-header right-align" :title="row.feature_val[index]"
                 :class="{'gray-font': row.delta_x[index]==0, 'trace-border-left': currentOpenComp===idx}">
+                <el-tooltip v-if="row.feature_val[index].length>10" :content="row.feature_val[index]" placement="right"
+                effect="dark" :show-after="0" trigger="hover" :hide-after="0">
                 <div style=" display: inline-block;
                   max-width: 100px;
                   width: 100px;
                   overflow: hidden;
                   white-space: nowrap;
                   text-overflow: ellipsis;
-                  vertical-align: top;">
+                  vertical-align: top; cursor: pointer;">
                   {{ row.feature_val[index] }}
 
                 </div>
-
+                </el-tooltip>
+                <template v-else >
+                  <div style="cursor: default;">{{ row.feature_val[index] }} </div>
+                </template>
               </td>
-              <td class="comp1-header right-align money" :class="{'gray-font': row.delta_x[index]==0}">
+              <td class="comp1-header right-align money highlight-green2" :class="{'gray-font': row.delta_x[index]==0}">
                 {{row.delta_y[index]!==0? row.delta_y[index]+unit_list[domain]:'0' }}
               </td>
               <template v-for="i in row.adjusted_step_number">
                 <td class="right-align adj-value" :class="{hidden: currentOpenComp!==idx }"
-                  :style="{ color: index == row.adjusted_order[i-1] ? '#222' : '#bcbcbc' }" style="cursor: pointer;">
+                  :style="{ color: index == row.adjusted_order[i-1] ? '#222' : '#bcbcbc', cursor: index == row.adjusted_order[i-1] ? 'pointer' : 'default' }">
                   <!-- <span v-if="row.adjusted_order.slice(0,i).includes(index)"  style="cursor: pointer;"> -->
-                    <span class="adj-value-span">
-                    
+                  <span class="adj-value-span">
+
                     <!-- {{ row.feature_val[index] }} -->
                     <!-- <i class="fa-solid fa-arrow-right" style="font-size:10px;vertical-align:middle;"></i> -->
-                    <el-tooltip v-if="index == row.adjusted_order[i-1]" :content="row.feature_val[index]+' → '+Targets[domain][currentTargetIndex].feature_val[index]" placement="top"
-                      effect="dark" :show-after="0" trigger="hover" :hide-after="0">
+                    <el-tooltip v-if="index == row.adjusted_order[i-1]"
+                      :content="row.feature_val[index]+' → '+Targets[domain][currentTargetIndex].feature_val[index]"
+                      placement="top" effect="dark" :show-after="0" trigger="hover" :hide-after="0">
                       {{ Targets[domain][currentTargetIndex].feature_val[index] }}
                     </el-tooltip>
                     <template v-else>
                       {{ Targets[domain][currentTargetIndex].feature_val[index] }}
                     </template>
-                    
+
                   </span>
                   <!-- <span v-else>
                     —
@@ -952,8 +967,7 @@
             <tr>
               <td class="feature-name">
                 {{feature}}
-                <el-tooltip :content="FeatureDescriptions[domain][index]" placement="top" effect="dark"
-                  :show-after="0">
+                <el-tooltip :content="FeatureDescriptions[domain][index]" placement="top" effect="dark" :show-after="0">
                   <span style="cursor: pointer; margin-left: 4px;">
                     <i class="fa-regular fa-circle-question"></i>
                   </span>
@@ -1018,6 +1032,7 @@
           domain: 0,
           domain_list: ['House Price', 'Salary', 'Energy'],
           unit_list: ['K', 'K', 'kWh'],
+          unit_list_header: ['$', '$', ''],
 
           currentTab: 0,
           currentOpenComp: null,
@@ -1070,7 +1085,7 @@
               //domain 2
               ['Age (years)', 'Gender', 'Education Level', 'Job Title', 'Work Experience (years)'],
               //domain 3
-              ['Building Type', 'Square Footage', 'Number of Occupants', 'Appliances Used', 'Average Temperature (°C)', 'Day of the Week']],
+              ['Building Type', 'Building Size (sqft) ', 'Number of Occupants', 'Appliance Count', 'Average Temperature (°C)', 'Day of the Week']],
           FeatureDescriptions: [
             //domain 1
             [
