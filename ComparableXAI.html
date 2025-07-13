@@ -113,6 +113,13 @@
       font-weight: 400;
       padding-right: 10px;
     }
+    .adj-value-span{
+      display: inline-block;
+      width: 70px;
+      overflow: hidden;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+    }
 
 
     .comp-details,
@@ -631,9 +638,9 @@
               </td>
               <template v-for="i in row.adjusted_step_number">
                 <td class="right-align adj-value" :class="{hidden: currentOpenComp!==idx }"
-                  :style="{ color: index == row.adjusted_order[i-1] ? '#222' : '#bcbcbc' }">
+                  :style="{ color: index == row.adjusted_order[i-1] ? '#222' : '#bcbcbc' }" style="cursor: pointer;">
                   <!-- <span v-if="row.adjusted_order.slice(0,i).includes(index)"  style="cursor: pointer;"> -->
-                    <span style="cursor: pointer;">
+                    <span class="adj-value-span">
                     
                     <!-- {{ row.feature_val[index] }} -->
                     <!-- <i class="fa-solid fa-arrow-right" style="font-size:10px;vertical-align:middle;"></i> -->
