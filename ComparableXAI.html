@@ -686,7 +686,7 @@
 
           <tr class="">
             <td class="feature-name money highlight-green">{{Labels[domain][0]}}
-              <el-tooltip :content="Labels_Descriptions[domain][0]" placement="top" effect="dark" :show-after="0">
+              <el-tooltip :content="Labels_Descriptions[domain][0]" placement="right" effect="dark" :show-after="0">
                 <span class="tooltip-icon">
                   <i class="fa-regular fa-circle-question"></i>
                 </span>
@@ -793,7 +793,7 @@
               <br />
               <span class="pred-description" @mouseenter="highlightAllPredAndActual()"
                 @mouseleave="unhighlightAllPredAndActual()">Prediction Error
-                <el-tooltip content="The difference between the actual price and the predicted price." placement="right"
+                <el-tooltip content="The difference between the actual value and the predicted value." placement="right"
                   effect="dark" :show-after="0" trigger="hover" :hide-after="0">
                   <span class="tooltip-icon">
                     <i class="fa-regular fa-circle-question"></i>
@@ -1071,8 +1071,8 @@
           Labels_Descriptions: [
             //domain 1
             ['The actual sale price of the comparable house.',
-              'The price of the comparable house after all adjustments.',
-              'the price of the house predicted by the AI model.'],
+              'The price of the house predicted by the AI model.',
+              'The price of the comparable house after all adjustments.'],
             // domain 2
             ['The annual salary of each employee in US dollars. ',
               'The predicted salary of the employee in US dollars.',
