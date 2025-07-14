@@ -448,8 +448,8 @@
 
     .tooltip-icon {
       cursor: pointer;
-      margin-left: 4px;
-      font-size: 12px;
+      margin-left: 2px;
+      font-size: 10px;
       display: inline-block;
     }
 
@@ -702,9 +702,9 @@
               @mouseleave="unhighlightAllAdjustedPrices()">
               <div style="cursor: pointer;">
                 TBD
-                <el-tooltip :content="weightedAverageTooltipContent" placement="right"
+                <el-tooltip content="Please estimate the value by referring to the adjusted values and consolidated estimate." placement="right"
                   effect="dark" :show-after="0" trigger="hover" :hide-after="0">
-                  <span style="cursor: pointer; margin-left: 2px; font-size: 12px;">
+                  <span style="cursor: pointer; font-size: 10px;">
                     <i class="fa-regular fa-circle-question"></i>
                   </span>
                 </el-tooltip>
@@ -811,7 +811,16 @@
                 </span>
               </el-tooltip>
             </td>
-            <td class="right-align subject money">{{weightedAverageValue}}{{unit_list[domain]}}</td>
+            <td class="right-align subject money">
+               {{weightedAverageValue}}{{unit_list[domain]}}
+               <el-tooltip :content="weightedAverageTooltipContent" placement="right" effect="dark" :show-after="0"
+                trigger="hover" :hide-after="0">
+                <span class="tooltip-icon" style="margin-left: 0px;">
+                  <i class="fa-regular fa-circle-question"></i>
+                </span>
+              </el-tooltip>
+              </td>
+
             <template v-for="(row, idx) in Comparables[domain][currentTargetIndex]" :key="row.id">
               <td colspan="2" class="comp1-header right-align"
                 :class="{ 'adjusted-price-highlight': allAdjustedPricesHighlighted}"
