@@ -607,8 +607,9 @@
               </el-tooltip>
             </td>
             <td class="right-align subject">
-              <el-tooltip v-if="Targets[domain][currentTargetIndex].feature_val[index].length>10" :content="Targets[domain][currentTargetIndex].feature_val[index]" placement="right"
-                effect="dark" :show-after="0" trigger="hover" :hide-after="0">
+              <el-tooltip v-if="Targets[domain][currentTargetIndex].feature_val[index].length>10"
+                :content="Targets[domain][currentTargetIndex].feature_val[index]" placement="right" effect="dark"
+                :show-after="0" trigger="hover" :hide-after="0">
                 <div style=" display: inline-block;
                 max-width: 100px;
                 width: 100px;
@@ -631,19 +632,19 @@
               <td class="comp1-header right-align" :title="row.feature_val[index]"
                 :class="{'gray-font': row.delta_x[index]==0, 'trace-border-left': currentOpenComp===idx}">
                 <el-tooltip v-if="row.feature_val[index].length>10" :content="row.feature_val[index]" placement="right"
-                effect="dark" :show-after="0" trigger="hover" :hide-after="0">
-                <div style=" display: inline-block;
+                  effect="dark" :show-after="0" trigger="hover" :hide-after="0">
+                  <div style=" display: inline-block;
                   max-width: 100px;
                   width: 100px;
                   overflow: hidden;
                   white-space: nowrap;
                   text-overflow: ellipsis;
                   vertical-align: top; cursor: pointer;">
-                  {{ row.feature_val[index] }}
+                    {{ row.feature_val[index] }}
 
-                </div>
+                  </div>
                 </el-tooltip>
-                <template v-else >
+                <template v-else>
                   <div style="cursor: default;">{{ row.feature_val[index] }} </div>
                 </template>
               </td>
@@ -659,7 +660,9 @@
                     <!-- {{ row.feature_val[index] }} -->
                     <!-- <i class="fa-solid fa-arrow-right" style="font-size:10px;vertical-align:middle;"></i> -->
                     <el-tooltip v-if="index == row.adjusted_order[i-1]"
-                      :content="row.feature_val[index]+' → '+Targets[domain][currentTargetIndex].feature_val[index]"
+                      :content="numberical_feature[domain][index] ? 
+                        row.feature_val[index]+' → '+Targets[domain][currentTargetIndex].feature_val[index]+' (Δ: '+(row.delta_x[index] >= 0 ? '+' : '')+row.delta_x[index]+')' :
+                        row.feature_val[index]+' → '+Targets[domain][currentTargetIndex].feature_val[index]"
                       placement="top" effect="dark" :show-after="0" trigger="hover" :hide-after="0">
                       {{ Targets[domain][currentTargetIndex].feature_val[index] }}
                     </el-tooltip>
@@ -1085,7 +1088,15 @@
               //domain 2
               ['Age (years)', 'Gender', 'Education Level', 'Job Title', 'Work Experience (years)'],
               //domain 3
-              ['Building Type', 'Building Size (sqft) ', 'Number of Occupants', 'Appliance Count', 'Average Temperature (°C)', 'Day of the Week']],
+              ['Building Type', 'Building Size (sqft) ', 'Number of Occupants', '# Appliance Used', 'Average Temperature (°C)', 'Day of the Week']],
+          numberical_feature: [
+            //domain 1
+            [1, 1, 1, 1, 1, 1],
+            //domain 2
+            [1, 0, 1, 0, 1],
+            //domain 3
+            [0, 1, 1, 1, 1, 0]
+          ],
           FeatureDescriptions: [
             //domain 1
             [
