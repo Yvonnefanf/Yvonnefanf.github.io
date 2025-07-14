@@ -700,9 +700,9 @@
             <td class="right-align subject money highlight-green" @mouseenter="highlightAllAdjustedPrices()"
               @mouseleave="unhighlightAllAdjustedPrices()">
               <div style="cursor: pointer;">
-                TBD
+                {{weightedAverageValue}}{{unit_list[domain]}}
                 <el-tooltip
-                  content="Please estimate the value by referring to the adjusted values and consolidated estimate."
+                  :content="weightedAverageTooltipContent"
                   placement="right" effect="dark" :show-after="0" trigger="hover" :hide-after="0">
                   <span style="cursor: pointer; font-size: 10px;">
                     <i class="fa-regular fa-circle-question"></i>
@@ -776,7 +776,32 @@
             </template>
           </tr>
           <!--  Reconsolidation -->
+          
           <tr>
+            <td class="feature-name">Similarity Score
+              <el-tooltip content="The similarity score between the comparable and the subject." placement="right"
+                effect="dark" :show-after="0" trigger="hover" :hide-after="0">
+                <span class="tooltip-icon">
+                  <i class="fa-regular fa-circle-question"></i>
+                </span>
+              </el-tooltip>
+            </td>
+            <td class="right-align subject">—</td>
+            <template v-for="(row, idx) in Comparables[domain][currentTargetIndex]" :key="row.id">
+              <td colspan="2" class="comp1-header right-align"
+                :class="{ 'adjusted-price-highlight': allAdjustedPricesHighlighted}" style="position:relative;">
+                <span>{{ similarityScores[idx] }}%
+              </td>
+              <template v-for="(ele, i) in row.adjusted_price">
+                <td :colspan="2" class="right-align comp-details" :class="{hidden: currentOpenComp!==idx}"
+                  style="position:relative;">
+                  <span></span>
+                </td>
+              </template>
+            </template>
+          </tr>
+
+          <!-- <tr>
             <td class="feature-name money highlight-green2">Consolidated Estimate
               <el-tooltip
                 content="The estimated value of the subject after weigthed average the comparables' adjusted values."
@@ -807,30 +832,7 @@
                 </td>
               </template>
             </template>
-          </tr>
-          <tr>
-            <td class="feature-name">Similarity Score
-              <el-tooltip content="The similarity score between the comparable and the subject." placement="right"
-                effect="dark" :show-after="0" trigger="hover" :hide-after="0">
-                <span class="tooltip-icon">
-                  <i class="fa-regular fa-circle-question"></i>
-                </span>
-              </el-tooltip>
-            </td>
-            <td class="right-align subject">—</td>
-            <template v-for="(row, idx) in Comparables[domain][currentTargetIndex]" :key="row.id">
-              <td colspan="2" class="comp1-header right-align"
-                :class="{ 'adjusted-price-highlight': allAdjustedPricesHighlighted}" style="position:relative;">
-                <span>{{ similarityScores[idx] }}%
-              </td>
-              <template v-for="(ele, i) in row.adjusted_price">
-                <td :colspan="2" class="right-align comp-details" :class="{hidden: currentOpenComp!==idx}"
-                  style="position:relative;">
-                  <span></span>
-                </td>
-              </template>
-            </template>
-          </tr>
+          </tr> -->
 
 
 
@@ -1022,9 +1024,8 @@
             </td>
             <td class="right-align subject money highlight-green" @mouseenter="highlightAllAdjustedPrices()"
               @mouseleave="unhighlightAllAdjustedPrices()">
-              <div style="cursor: pointer;">
-                TBD
-                <el-tooltip content="Please estimate the value by referring to the adjusted values." placement="right"
+              <div style="cursor: pointer;">{{weightedAverageValue}}{{unit_list[domain]}}
+                <el-tooltip :content="weightedAverageTooltipContent" placement="right"
                   effect="dark" :show-after="0" trigger="hover" :hide-after="0">
                   <span style="cursor: pointer; margin-left: 2px; font-size: 12px;">
                     <i class="fa-regular fa-circle-question"></i>
