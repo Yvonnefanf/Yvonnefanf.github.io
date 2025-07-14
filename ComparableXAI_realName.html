@@ -1620,22 +1620,24 @@
           return `${formula} = ${avg}${this.unit_list[this.domain]}`;
         },
         similarityScores() {
-          // Get subject and comparables for current domain/target
           const subject = this.Targets[this.domain][this.currentTargetIndex];
           const comparables = this.Comparables[this.domain][this.currentTargetIndex];
           if (!subject || !comparables) return [];
         
-          // For each comparable, calculate a raw similarity score
           const scores = comparables.map(comp => {
             let score = 0;
             for (let i = 0; i < comp.feature_val.length; i++) {
               const subjVal = subject.feature_val[i];
               const compVal = comp.feature_val[i];
-              // Numeric feature: use inverse difference (closer = higher)
               if (this.numberical_feature[this.domain][i]) {
-                const diff = Math.abs(Number(subjVal) - Number(compVal));
-                // Add 1 to denominator to avoid division by zero
-                score += 1 / (1 + diff);
+                // 只在都能转成数字时才加分
+                const subjNum = Number(subjVal);
+                const compNum = Number(compVal);
+                if (!isNaN(subjNum) && !isNaN(compNum)) {
+                  const diff = Math.abs(subjNum - compNum);
+                  score += 1 / (1 + diff);
+                }
+                // 否则不给分
               } else {
                 // Categorical: 1 if equal, 0 if not
                 score += subjVal === compVal ? 1 : 0;
@@ -1644,7 +1646,6 @@
             return score;
           });
         
-          // Normalize so sum = 100%
           const total = scores.reduce((a, b) => a + b, 0);
           return scores.map(s => total ? Math.round((s / total) * 100) : 0);
         },
