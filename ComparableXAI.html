@@ -669,10 +669,13 @@
                       placement="top" effect="dark" :show-after="0" trigger="hover" :hide-after="0">
                       {{ Targets[domain][currentTargetIndex].feature_val[index] }}
                     </el-tooltip>
-                    <template v-else>
+                    <template v-else-if="row.adjusted_order.slice(0,i).includes(index)">
                       {{ Targets[domain][currentTargetIndex].feature_val[index] }}
                     </template>
-
+                    <template v-else>
+                      {{Comparables[domain][currentTargetIndex][idx].feature_val[index]}}
+                    </template>
+                      
                   </span>
                   <!-- <span v-else>
                     —
