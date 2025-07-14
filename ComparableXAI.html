@@ -108,14 +108,14 @@
     }
 
     .adj-value {
-      width: 70px;
+      width: 60px;
       font-weight: 400;
       padding-right: 10px;
     }
 
     .adj-value-span {
       display: inline-block;
-      width: 70px;
+      width: 60px;
       overflow: hidden;
       white-space: nowrap;
       text-overflow: ellipsis;
@@ -575,7 +575,7 @@
             <td class="comp1-header"></td>
             <td class="subject"></td>
             <template v-for="(row, idx) in Comparables[domain][currentTargetIndex]" :key="row.id">
-              <th style="width: 40px;" class="comp-header right-align border-btm"
+              <th style="width: 60px;" class="comp-header right-align border-btm"
                 :class="{'trace-border-left': currentOpenComp===idx}">Values</th>
               <th class="comp1-header right-align border-btm money highlight-green2" style="width: 60px;">
                 <span> {{unit_list_header[domain]}} Δ </span>
@@ -611,8 +611,8 @@
                 :content="Targets[domain][currentTargetIndex].feature_val[index]" placement="right" effect="dark"
                 :show-after="0" trigger="hover" :hide-after="0">
                 <div style=" display: inline-block;
-                max-width: 100px;
-                width: 100px;
+                max-width: 60px;
+                width: 60px;
                 overflow: hidden;
                 white-space: nowrap;
                 text-overflow: ellipsis;
@@ -634,8 +634,8 @@
                 <el-tooltip v-if="row.feature_val[index].length>10" :content="row.feature_val[index]" placement="right"
                   effect="dark" :show-after="0" trigger="hover" :hide-after="0">
                   <div style=" display: inline-block;
-                  max-width: 100px;
-                  width: 100px;
+                  max-width: 60px;
+                  width: 60px;
                   overflow: hidden;
                   white-space: nowrap;
                   text-overflow: ellipsis;
