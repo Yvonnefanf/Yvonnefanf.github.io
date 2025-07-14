@@ -294,7 +294,7 @@
     }
 
     .tab-content {
-      height: 420px;
+      height: 450px;
       padding: 4px 0 20px 20px;
       border-bottom: 1px solid #e5e7eb;
       border-top: 1px solid #e5e7eb;
@@ -801,6 +801,33 @@
               </template>
             </template>
           </tr>
+
+          <tr>
+            <td class="feature-name money">Consolidated Estimate
+              <el-tooltip content="The estimated value of the subject after weigthed average the comparables' adjusted values." placement="right" effect="dark" :show-after="0"
+                trigger="hover" :hide-after="0">
+                <span class="tooltip-icon">
+                  <i class="fa-regular fa-circle-question"></i>
+                </span>
+              </el-tooltip>
+            </td>
+            <td class="right-align subject money">{{weightedAverageValue}}{{unit_list[domain]}}</td>
+            <template v-for="(row, idx) in Comparables[domain][currentTargetIndex]" :key="row.id">
+              <td colspan="2" class="comp1-header right-align"
+                :class="{ 'adjusted-price-highlight': allAdjustedPricesHighlighted}"
+                style="position:relative;">
+                <span>
+              </td>
+              <template v-for="(ele, i) in row.adjusted_price">
+                <td :colspan="2" class="right-align comp-details"
+                  :class="{hidden: currentOpenComp!==idx}"
+                  style="position:relative;">
+                  <span></span>
+                </td>
+              </template>
+            </template>
+          </tr>
+         
           <tr>
             <td style="height:20px;" class="feature-name money">
             </td>
@@ -1618,6 +1645,22 @@
           if (totalWeight === 0) return formula;
           const avg = (sum / totalWeight).toFixed(2);
           return `${formula} = ${avg}${this.unit_list[this.domain]}`;
+        },
+        weightedAverageValue() {
+          const comparables = this.Comparables[this.domain][this.currentTargetIndex];
+          if (!comparables || comparables.length === 0) return '-';
+          let sum = 0;
+          let totalWeight = 0;
+          for (let idx = 0; idx < comparables.length; idx++) {
+            const weight = this.similarityScores[idx] || 0;
+            const price = comparables[idx].adjusted_price && comparables[idx].adjusted_price.length > 0
+              ? comparables[idx].adjusted_price[comparables[idx].adjusted_step_number - 1]
+              : 0;
+            sum += weight * price;
+            totalWeight += weight;
+          }
+          if (totalWeight === 0) return '-';
+          return (sum / totalWeight).toFixed(2);
         },
         similarityScores() {
           const subject = this.Targets[this.domain][this.currentTargetIndex];
