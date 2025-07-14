@@ -236,13 +236,14 @@
     .left-align {
       text-align: left;
     }
-    .plain-xai-table{
+
+    .plain-xai-table {
       border: none;
     }
 
     .plain-xai-table th,
     .plain-xai-table td {
-     
+
       padding: 6px 12px;
 
     }
@@ -610,9 +611,8 @@
               </el-tooltip>
             </td>
             <td class="right-align subject">
-              <el-tooltip
-                :content="Targets[domain][currentTargetIndex].feature_val[index]" placement="right" effect="dark"
-                :show-after="0" trigger="hover" :hide-after="0">
+              <el-tooltip :content="Targets[domain][currentTargetIndex].feature_val[index]" placement="right"
+                effect="dark" :show-after="0" trigger="hover" :hide-after="0">
                 <div style=" display: inline-block;
                 max-width: 62px;
                 width: 62px;
@@ -634,8 +634,8 @@
             <template v-for="(row, idx) in Comparables[domain][currentTargetIndex]" :key="row.id">
               <td class="comp1-header right-align" :title="row.feature_val[index]"
                 :class="{'gray-font': row.delta_x[index]==0, 'trace-border-left': currentOpenComp===idx}">
-                <el-tooltip :content="row.feature_val[index]" placement="right"
-                  effect="dark" :show-after="0" trigger="hover" :hide-after="0">
+                <el-tooltip :content="row.feature_val[index]" placement="right" effect="dark" :show-after="0"
+                  trigger="hover" :hide-after="0">
                   <div style=" display: inline-block;
                   max-width: 62px;
                   width: 62px;
@@ -662,8 +662,7 @@
 
                     <!-- {{ row.feature_val[index] }} -->
                     <!-- <i class="fa-solid fa-arrow-right" style="font-size:10px;vertical-align:middle;"></i> -->
-                    <el-tooltip v-if="index == row.adjusted_order[i-1]"
-                      :content="numberical_feature[domain][index] ? 
+                    <el-tooltip v-if="index == row.adjusted_order[i-1]" :content="numberical_feature[domain][index] ? 
                         row.feature_val[index]+' → '+Targets[domain][currentTargetIndex].feature_val[index]+' (Δ: '+(row.delta_x[index] >= 0 ? '+' : '')+row.delta_x[index]+')' :
                         row.feature_val[index]+' → '+Targets[domain][currentTargetIndex].feature_val[index]"
                       placement="top" effect="dark" :show-after="0" trigger="hover" :hide-after="0">
@@ -675,7 +674,7 @@
                     <template v-else>
                       {{Comparables[domain][currentTargetIndex][idx].feature_val[index]}}
                     </template>
-                      
+
                   </span>
                   <!-- <span v-else>
                     —
@@ -702,8 +701,9 @@
               @mouseleave="unhighlightAllAdjustedPrices()">
               <div style="cursor: pointer;">
                 TBD
-                <el-tooltip content="Please estimate the value by referring to the adjusted values and consolidated estimate." placement="right"
-                  effect="dark" :show-after="0" trigger="hover" :hide-after="0">
+                <el-tooltip
+                  content="Please estimate the value by referring to the adjusted values and consolidated estimate."
+                  placement="right" effect="dark" :show-after="0" trigger="hover" :hide-after="0">
                   <span style="cursor: pointer; font-size: 10px;">
                     <i class="fa-regular fa-circle-question"></i>
                   </span>
@@ -730,7 +730,7 @@
             </template>
           </tr>
 
-          
+
           <!-- <tr>
             <td class="feature-name money">Net Adjustment ($)</td>
             <td class="right-align subject"></td>
@@ -777,9 +777,41 @@
           </tr>
           <!--  Reconsolidation -->
           <tr>
-            <td class="feature-name">Similarity Score
-              <el-tooltip content="The similarity score between the comparable and the subject." placement="right" effect="dark" :show-after="0"
+            <td class="feature-name money highlight-green2">Consolidated Estimate
+              <el-tooltip
+                content="The estimated value of the subject after weigthed average the comparables' adjusted values."
+                placement="right" effect="dark" :show-after="0" trigger="hover" :hide-after="0">
+                <span class="tooltip-icon">
+                  <i class="fa-regular fa-circle-question"></i>
+                </span>
+              </el-tooltip>
+            </td>
+            <td class="right-align subject money highlight-green2">
+              {{weightedAverageValue}}{{unit_list[domain]}}
+              <el-tooltip :content="weightedAverageTooltipContent" placement="right" effect="dark" :show-after="0"
                 trigger="hover" :hide-after="0">
+                <span class="tooltip-icon" style="margin-left: 0px;">
+                  <i class="fa-regular fa-circle-question"></i>
+                </span>
+              </el-tooltip>
+            </td>
+
+            <template v-for="(row, idx) in Comparables[domain][currentTargetIndex]" :key="row.id">
+              <td colspan="2" class="comp1-header right-align money highlight-green2" style="position:relative;">
+                —
+              </td>
+              <template v-for="(ele, i) in row.adjusted_price">
+                <td :colspan="2" class="right-align comp-details highlight-green2" :class="{hidden: currentOpenComp!==idx}"
+                  style="position:relative;">
+                  <span></span>
+                </td>
+              </template>
+            </template>
+          </tr>
+          <tr>
+            <td class="feature-name">Similarity Score
+              <el-tooltip content="The similarity score between the comparable and the subject." placement="right"
+                effect="dark" :show-after="0" trigger="hover" :hide-after="0">
                 <span class="tooltip-icon">
                   <i class="fa-regular fa-circle-question"></i>
                 </span>
@@ -788,13 +820,11 @@
             <td class="right-align subject">—</td>
             <template v-for="(row, idx) in Comparables[domain][currentTargetIndex]" :key="row.id">
               <td colspan="2" class="comp1-header right-align"
-                :class="{ 'adjusted-price-highlight': allAdjustedPricesHighlighted}"
-                style="position:relative;">
+                :class="{ 'adjusted-price-highlight': allAdjustedPricesHighlighted}" style="position:relative;">
                 <span>{{ similarityScores[idx] }}%
               </td>
               <template v-for="(ele, i) in row.adjusted_price">
-                <td :colspan="2" class="right-align comp-details border-top"
-                  :class="{hidden: currentOpenComp!==idx}"
+                <td :colspan="2" class="right-align comp-details" :class="{hidden: currentOpenComp!==idx}"
                   style="position:relative;">
                   <span></span>
                 </td>
@@ -802,41 +832,8 @@
             </template>
           </tr>
 
-          <tr>
-            <td class="feature-name money">Consolidated Estimate
-              <el-tooltip content="The estimated value of the subject after weigthed average the comparables' adjusted values." placement="right" effect="dark" :show-after="0"
-                trigger="hover" :hide-after="0">
-                <span class="tooltip-icon">
-                  <i class="fa-regular fa-circle-question"></i>
-                </span>
-              </el-tooltip>
-            </td>
-            <td class="right-align subject money">
-               {{weightedAverageValue}}{{unit_list[domain]}}
-               <el-tooltip :content="weightedAverageTooltipContent" placement="right" effect="dark" :show-after="0"
-                trigger="hover" :hide-after="0">
-                <span class="tooltip-icon" style="margin-left: 0px;">
-                  <i class="fa-regular fa-circle-question"></i>
-                </span>
-              </el-tooltip>
-              </td>
 
-            <template v-for="(row, idx) in Comparables[domain][currentTargetIndex]" :key="row.id">
-              <td colspan="2" class="comp1-header right-align"
-                :class="{ 'adjusted-price-highlight': allAdjustedPricesHighlighted}"
-                style="position:relative;">
-                <span>
-              </td>
-              <template v-for="(ele, i) in row.adjusted_price">
-                <td :colspan="2" class="right-align comp-details"
-                  :class="{hidden: currentOpenComp!==idx}"
-                  style="position:relative;">
-                  <span></span>
-                </td>
-              </template>
-            </template>
-          </tr>
-         
+
           <tr>
             <td style="height:20px;" class="feature-name money">
             </td>
@@ -882,8 +879,9 @@
                 <span>
                   {{row.pred}}{{unit_list[domain]}}
                   <br />
-                  <el-tooltip :content="row.pred + unit_list[domain] + ' is ' + getPredictionDifference(row) + ' than the actual value of ' + row.actual + unit_list[domain]" placement="bottom" effect="dark" :show-after="0"
-                    trigger="hover" :hide-after="0">
+                  <el-tooltip
+                    :content="row.pred + unit_list[domain] + ' is ' + getPredictionDifference(row) + ' than the actual value of ' + row.actual + unit_list[domain]"
+                    placement="bottom" effect="dark" :show-after="0" trigger="hover" :hide-after="0">
                     <span class="pred-description highlight-green" @mouseenter="highlightActualPrice(idx)"
                       @mouseleave="unhighlightActualPrice(idx)">{{ getPredictionDifference(row) }}</span>
                   </el-tooltip>
@@ -990,8 +988,8 @@
             <template v-for="(row, idx) in Comparables[domain][currentTargetIndex]" :key="row.id">
               <td class="comp1-header right-align" :title="row.feature_val[index]"
                 :class="{'gray-font': row.delta_x[index]==0, 'trace-border-left': currentOpenComp===idx}">
-                <el-tooltip :content="row.feature_val[index]" placement="right"
-                  effect="dark" :show-after="0" trigger="hover" :hide-after="0">
+                <el-tooltip :content="row.feature_val[index]" placement="right" effect="dark" :show-after="0"
+                  trigger="hover" :hide-after="0">
                   <div style=" display: inline-block;
                   max-width: 62px;
                   width: 62px;
@@ -1010,7 +1008,7 @@
               <td class="comp1-header right-align money highlight-green2" :class="{'gray-font': row.delta_x[index]==0}">
                 {{row.delta_y[index]!==0? row.delta_y[index]+unit_list[domain]:'0' }}
               </td>
-              
+
             </template>
           </tr>
 
@@ -1041,10 +1039,10 @@
                 <span>
                   {{row.actual}}{{unit_list[domain]}}
               </td>
-             
+
             </template>
           </tr>
-      
+
           <tr>
             <td class="feature-name money border-top highlight-green2 ">{{Labels[domain][2]}}
               <el-tooltip :content="Labels_Descriptions[domain][2]" placement="right" effect="dark" :show-after="0"
@@ -1061,7 +1059,7 @@
                 style="position:relative;">
                 <span>{{row.adjusted_price[row.adjusted_step_number - 1]}}{{unit_list[domain]}}
               </td>
-        
+
             </template>
           </tr>
           <tr>
@@ -1109,13 +1107,14 @@
                 <span>
                   {{row.pred}}{{unit_list[domain]}}
                   <br />
-                  <el-tooltip :content="row.pred + unit_list[domain] + ' is ' + getPredictionDifference(row) + ' than the actual value of ' + row.actual + unit_list[domain]" placement="bottom" effect="dark" :show-after="0"
-                    trigger="hover" :hide-after="0">
+                  <el-tooltip
+                    :content="row.pred + unit_list[domain] + ' is ' + getPredictionDifference(row) + ' than the actual value of ' + row.actual + unit_list[domain]"
+                    placement="bottom" effect="dark" :show-after="0" trigger="hover" :hide-after="0">
                     <span class="pred-description highlight-green" @mouseenter="highlightActualPrice(idx)"
                       @mouseleave="unhighlightActualPrice(idx)">{{ getPredictionDifference(row) }}</span>
                   </el-tooltip>
               </td>
-                <!-- {{row.pred}}K -->
+              <!-- {{row.pred}}K -->
               </td>
             </template>
           </tr>
@@ -1135,14 +1134,15 @@
             </template>
 
           </tr>
-        
+
         </thead>
         <tbody>
           <template v-for="(feature, index) in Features[domain]">
             <tr>
               <td class="feature-name">
                 {{feature}}
-                <el-tooltip :content="FeatureDescriptions[domain][index]" placement="right" effect="dark" :show-after="0">
+                <el-tooltip :content="FeatureDescriptions[domain][index]" placement="right" effect="dark"
+                  :show-after="0">
                   <span style="cursor: pointer; margin-left: 4px;">
                     <i class="fa-regular fa-circle-question"></i>
                   </span>
@@ -1153,7 +1153,7 @@
                 <td class="right-align">{{row.feature_val[index]}}</td>
               </template>
             </tr>
-            
+
           </template>
           <tr>
             <td style="width: 140px;" class="feature-name money highlight-green">{{Labels[domain][0]}}
@@ -1208,8 +1208,9 @@
             <template v-for="(row, idx) in Comparables[domain][currentTargetIndex]" :key="row.id">
               <td class="right-align money">{{row.pred}}{{unit_list[domain]}}
                 <br />
-                <el-tooltip :content="row.pred + unit_list[domain] + ' is ' + getPredictionDifference(row) + ' than the actual value of ' + row.actual + unit_list[domain]" placement="bottom" effect="dark" :show-after="0"
-                  trigger="hover" :hide-after="0">
+                <el-tooltip
+                  :content="row.pred + unit_list[domain] + ' is ' + getPredictionDifference(row) + ' than the actual value of ' + row.actual + unit_list[domain]"
+                  placement="bottom" effect="dark" :show-after="0" trigger="hover" :hide-after="0">
                   <span class="pred-description highlight-green" @mouseenter="highlightActualPrice(idx)"
                     @mouseleave="unhighlightActualPrice(idx)">{{ getPredictionDifference(row) }}</span>
                 </el-tooltip>
@@ -1675,7 +1676,7 @@
           const subject = this.Targets[this.domain][this.currentTargetIndex];
           const comparables = this.Comparables[this.domain][this.currentTargetIndex];
           if (!subject || !comparables) return [];
-        
+
           const scores = comparables.map(comp => {
             let score = 0;
             for (let i = 0; i < comp.feature_val.length; i++) {
@@ -1697,7 +1698,7 @@
             }
             return score;
           });
-        
+
           const total = scores.reduce((a, b) => a + b, 0);
           return scores.map(s => total ? Math.round((s / total) * 100) : 0);
         },
