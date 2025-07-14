@@ -294,7 +294,7 @@
     }
 
     .tab-content {
-      height: 400px;
+      height: 420px;
       padding: 4px 0 20px 20px;
       border-bottom: 1px solid #e5e7eb;
       border-top: 1px solid #e5e7eb;
@@ -702,7 +702,7 @@
               @mouseleave="unhighlightAllAdjustedPrices()">
               <div style="cursor: pointer;">
                 TBD
-                <el-tooltip content="Please estimate the value by referring to the adjusted values." placement="right"
+                <el-tooltip :content="weightedAverageTooltipContent" placement="right"
                   effect="dark" :show-after="0" trigger="hover" :hide-after="0">
                   <span style="cursor: pointer; margin-left: 2px; font-size: 12px;">
                     <i class="fa-regular fa-circle-question"></i>
@@ -729,6 +729,8 @@
               </template>
             </template>
           </tr>
+
+          
           <!-- <tr>
             <td class="feature-name money">Net Adjustment ($)</td>
             <td class="right-align subject"></td>
@@ -769,6 +771,32 @@
                   :class="{hidden: currentOpenComp!==idx, 'trace-border-right': i === row.adjusted_price.length - 1}"
                   style="position:relative;">
                   <span>{{ele}}{{unit_list[domain]}}</span>
+                </td>
+              </template>
+            </template>
+          </tr>
+          <!--  Reconsolidation -->
+          <tr>
+            <td class="feature-name">Similarity Score
+              <el-tooltip content="The similarity score between the comparable and the subject." placement="right" effect="dark" :show-after="0"
+                trigger="hover" :hide-after="0">
+                <span class="tooltip-icon">
+                  <i class="fa-regular fa-circle-question"></i>
+                </span>
+              </el-tooltip>
+            </td>
+            <td class="right-align subject">—</td>
+            <template v-for="(row, idx) in Comparables[domain][currentTargetIndex]" :key="row.id">
+              <td colspan="2" class="comp1-header right-align"
+                :class="{ 'adjusted-price-highlight': allAdjustedPricesHighlighted}"
+                style="position:relative;">
+                <span>{{ similarityScores[idx] }}%
+              </td>
+              <template v-for="(ele, i) in row.adjusted_price">
+                <td :colspan="2" class="right-align comp-details border-top"
+                  :class="{hidden: currentOpenComp!==idx}"
+                  style="position:relative;">
+                  <span></span>
                 </td>
               </template>
             </template>
@@ -1571,6 +1599,56 @@
         }
       },
       computed: {
+        weightedAverageTooltipContent() {
+          const comparables = this.Comparables[this.domain][this.currentTargetIndex];
+          if (!comparables || comparables.length === 0) return '';
+          let formula = '';
+          let sum = 0;
+          let totalWeight = 0;
+          for (let idx = 0; idx < comparables.length; idx++) {
+            const weight = this.similarityScores[idx] || 0;
+            const price = comparables[idx].adjusted_price && comparables[idx].adjusted_price.length > 0
+              ? comparables[idx].adjusted_price[comparables[idx].adjusted_step_number - 1]
+              : 0;
+            formula += `${weight}% × ${price}${this.unit_list[this.domain]}`;
+            if (idx < comparables.length - 1) formula += ' + ';
+            sum += weight * price;
+            totalWeight += weight;
+          }
+          if (totalWeight === 0) return formula;
+          const avg = (sum / totalWeight).toFixed(2);
+          return `${formula} = ${avg}${this.unit_list[this.domain]}`;
+        },
+        similarityScores() {
+          const subject = this.Targets[this.domain][this.currentTargetIndex];
+          const comparables = this.Comparables[this.domain][this.currentTargetIndex];
+          if (!subject || !comparables) return [];
+        
+          const scores = comparables.map(comp => {
+            let score = 0;
+            for (let i = 0; i < comp.feature_val.length; i++) {
+              const subjVal = subject.feature_val[i];
+              const compVal = comp.feature_val[i];
+              if (this.numberical_feature[this.domain][i]) {
+                // 只在都能转成数字时才加分
+                const subjNum = Number(subjVal);
+                const compNum = Number(compVal);
+                if (!isNaN(subjNum) && !isNaN(compNum)) {
+                  const diff = Math.abs(subjNum - compNum);
+                  score += 1 / (1 + diff);
+                }
+                // 否则不给分
+              } else {
+                // Categorical: 1 if equal, 0 if not
+                score += subjVal === compVal ? 1 : 0;
+              }
+            }
+            return score;
+          });
+        
+          const total = scores.reduce((a, b) => a + b, 0);
+          return scores.map(s => total ? Math.round((s / total) * 100) : 0);
+        },
         currentSliderRange() {
           return this.slider_ranges[this.domain];
         },
