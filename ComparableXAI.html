@@ -717,16 +717,18 @@
                 <span>
                   {{row.actual}}{{unit_list[domain]}}
               </td>
-              <!-- <td :colspan="row.adjusted_step_number*2" class="right-align money comp-details"
-                :class="{hidden: currentOpenComp!==idx}">
-                {{row.actual}}K</td> -->
-              <template v-for="(ele, i) in row.adjusted_price">
+              <td :colspan="row.adjusted_step_number*2" class="right-align money comp-details highlight-green trace-border-right"
+              :class="{hidden: currentOpenComp!==idx}"
+              style="position:relative;">
+                <!-- {{row.actual}}{{unit_list[domain]}} -->
+              </td>
+              <!-- <template v-for="(ele, i) in row.adjusted_price">
                 <td :colspan="2" class="right-align money comp-details highlight-green"
                   :class="{hidden: currentOpenComp!==idx, 'trace-border-right': i === row.adjusted_price.length - 1}"
                   style="position:relative;">
                   <span>{{row.actual}}{{unit_list[domain]}}</span>
                 </td>
-              </template>
+              </template> -->
             </template>
           </tr>
 
