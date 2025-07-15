@@ -1654,7 +1654,7 @@
             totalWeight += weight;
           }
           if (totalWeight === 0) return formula;
-          const avg = (sum / totalWeight).toFixed(2);
+          const avg = (sum / totalWeight).toFixed(1);
           return `${formula} = ${avg}${this.unit_list[this.domain]}`;
         },
         weightedAverageValue() {
@@ -1671,7 +1671,7 @@
             totalWeight += weight;
           }
           if (totalWeight === 0) return '-';
-          return (sum / totalWeight).toFixed(2);
+          return (sum / totalWeight).toFixed(1);
         },
         similarityScores() {
           const subject = this.Targets[this.domain][this.currentTargetIndex];
