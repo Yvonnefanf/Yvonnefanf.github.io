@@ -34,9 +34,8 @@
       font-size: 14px;
       font-family: 'Roboto Condensed', monospace;
       color: #212121;
-
-
     }
+
 
     th,
     td {
@@ -47,9 +46,8 @@
       opacity: 1;
       overflow: hidden;
       white-space: nowrap;
-
-
     }
+
 
     th {
       font-size: 14px;
@@ -61,10 +59,7 @@
     th,
     td {
       border: none;
-
     }
-
-
 
     .hidden {
       max-width: 0 !important;
@@ -121,12 +116,9 @@
       text-overflow: ellipsis;
     }
 
-
     .comp-details,
     .adj-value {
-      /* background-color: #f4fdf1; */
       background-color: #ffffff;
-
     }
 
     .highlight-yellow {
@@ -179,11 +171,9 @@
     }
 
     .money {
-      /* font-family: 'Roboto Mono', monospace; */
       font-family: 'Roboto Condensed', monospace;
       font-size: 14px;
       font-variant-numeric: tabular-nums;
-      /* 等宽数字对齐 */
       letter-spacing: 0.5px;
       font-weight: 1200;
       color: #2e8113;
@@ -354,7 +344,6 @@
     }
 
     .slider-label {
-
       font-weight: 500;
       color: #495057;
       margin-bottom: 8px;
@@ -456,24 +445,27 @@
 
     .trace-border-top {
       border-top: 2px solid #36a341;
+      box-sizing: border-box;
     }
 
     .trace-border-bottom {
       border-bottom: 2px solid #36a341;
+      box-sizing: border-box;
     }
 
     .trace-border-right {
       border-right: 2px solid #36a341;
+      box-sizing: border-box;
     }
 
     .trace-border-left {
       border-left: 2px solid #36a341;
+      box-sizing: border-box;
     }
   </style>
 </head>
 
 <body>
-
   <div id="app">
     <div style="display: flex; align-items: center; gap: 20px; margin-bottom: 20px;">
       <div>
@@ -501,21 +493,6 @@
     <div class="tab-content" v-if="currentTab === 0">
       <table>
         <thead>
-          <!-- <tr>
-            <th rowspan="1" style="width: 100px;"></th>
-            <th class="comp1-header right-align subject" style="width: 50px;"></th>
-            <template v-for="(row, idx) in Comparables[domain][currentTargetIndex]" :key="row.id" class="comp1-header"
-              style="position:relative;">
-              <th colspan="2" class="comp1-header right-align" style="position:relative;">
-              </th>
-
-              <th :colspan="row.adjusted_step_number * 2" class="comp-details border-btm"
-                style="padding-right: 10px; text-align: center;" colspan="2" :class="{hidden: currentOpenComp!==idx}">
-                Comparable {{idx + 1}} Adjustment Trace</th>
-
-
-            </template>
-          </tr> -->
           <!-- Header row -->
           <tr style="border-top: 2px solid transparent;">
             <th rowspan="1" style="width: 100px;"></th>
@@ -528,9 +505,6 @@
 
                 Comparable {{idx + 1}}
 
-                <!-- <div style="font-size: 12px; display:flex;align-items:center;justify-content:center;color:#800080">
-                  AI Prediction ($): {{row.pred}}K
-                </div> -->
                 <el-tooltip :content="currentOpenComp==idx ? 'Hide Trace' : 'Show Trace'" placement="top" effect="dark"
                   :show-after="0" trigger="hover" :hide-after="0">
                   <button class="toggle-button" @click="toggleCols(`comp${idx+1}`,idx)">
@@ -544,49 +518,25 @@
                 </el-tooltip>
               </th>
 
-              <!-- <th class="border-btm comp-details" :colspan="row.adjusted_step_number * 2"
-              :class="{hidden: currentOpenComp!==idx}">
-              Comparable {{idx + 1}} Adjustment Trace
-              </th> -->
               <template v-for="i in row.adjusted_step_number">
                 <th class="border-btm comp-details trace-border-top" style="" colspan="2"
                   :class="{hidden: currentOpenComp!==idx, 'trace-border-right': i === row.adjusted_price.length}">
-                  {{i}}</th>
+                  {{ i === row.adjusted_price.length ? 'Subject' : i }}
+                </th>
               </template>
 
-              <!-- <th class="border-btm comp-details" :colspan="row.adjusted_step_number * 2"
-                :class="{hidden: currentOpenComp!==idx}">
-                Comparable {{idx + 1}} Adjustment Trace
-              </th> -->
             </template>
           </tr>
-          <!-- AI prediction row -->
-          <!-- <tr>
-            <td class="feature-name money">AI Prediction ($)</td>
-            <td class="right-align money subject">{{Targets[currentTargetIndex].pred}}K </td>
-            <template v-for="(row, idx) in Comparables[currentTargetIndex]" :key="row.id">
-              <td colspan="2" class="comp1-header right-align money"><span>
-                  {{row.pred}}K
-              </td>
-              <td :colspan="row.adjusted_step_number*2" class="right-align comp-details"
-                :class="{hidden: currentOpenComp!==idx}"> 
-              </td>
-            </template>
-          </tr> -->
-          <!-- header -->
 
+          <!-- header -->
           <tr>
             <td class="comp1-header"></td>
             <td class="subject"></td>
             <template v-for="(row, idx) in Comparables[domain][currentTargetIndex]" :key="row.id">
-              <th style="width: 62px;" class="comp-header right-align border-btm"
+              <th style="width: 60px;" class="comp-header right-align border-btm"
                 :class="{'trace-border-left': currentOpenComp===idx}">Values</th>
               <th class="comp1-header right-align border-btm money highlight-green2" style="width: 62px;">
                 <span> {{unit_list_header[domain]}} Δ </span>
-                <!-- <button class="toggle-button" @click="toggleCols(`comp${idx+1}`,idx)">
-                  <span v-if="currentOpenComp!=idx" class="toggle-text">{{ currentOpenComp ==idx ? ' ' : '...' }}</span>
-                  <i class="toggle-text fa-solid fa-angle-left" v-if="currentOpenComp==idx"></i>
-                </button> -->
               </th>
               <template v-for="i in row.adjusted_step_number">
                 <th class="adj-value border-btm right-align" style="font-weight: bold;"
@@ -621,14 +571,8 @@
                 text-overflow: ellipsis;
                 vertical-align: top; cursor: pointer;">
                   {{ Targets[domain][currentTargetIndex].feature_val[index] }}
-
                 </div>
               </el-tooltip>
-              <!-- <template v-else>
-                <div style="cursor: default;">
-                  {{ Targets[domain][currentTargetIndex].feature_val[index] }}
-                </div>
-              </template> -->
 
             </td>
             <template v-for="(row, idx) in Comparables[domain][currentTargetIndex]" :key="row.id">
@@ -644,12 +588,8 @@
                   text-overflow: ellipsis;
                   vertical-align: top; cursor: pointer;">
                     {{ row.feature_val[index] }}
-
                   </div>
                 </el-tooltip>
-                <!-- <template v-else>
-                  <div style="cursor: default;">{{ row.feature_val[index] }} </div>
-                </template> -->
               </td>
               <td class="comp1-header right-align money highlight-green2" :class="{'gray-font': row.delta_x[index]==0}">
                 {{row.delta_y[index]!==0? row.delta_y[index]+unit_list[domain]:'0' }}
@@ -659,9 +599,6 @@
                   :style="{ color: index == row.adjusted_order[i-1] ? '#222' : '#bcbcbc', cursor: index == row.adjusted_order[i-1] ? 'pointer' : 'default' }">
                   <!-- <span v-if="row.adjusted_order.slice(0,i).includes(index)"  style="cursor: pointer;"> -->
                   <span class="adj-value-span">
-
-                    <!-- {{ row.feature_val[index] }} -->
-                    <!-- <i class="fa-solid fa-arrow-right" style="font-size:10px;vertical-align:middle;"></i> -->
                     <el-tooltip v-if="index == row.adjusted_order[i-1]" :content="numberical_feature[domain][index] ? 
                         row.feature_val[index]+' → '+Targets[domain][currentTargetIndex].feature_val[index]+' (Δ: '+(row.delta_x[index] >= 0 ? '+' : '')+row.delta_x[index]+')' :
                         row.feature_val[index]+' → '+Targets[domain][currentTargetIndex].feature_val[index]"
@@ -674,16 +611,12 @@
                     <template v-else>
                       {{Comparables[domain][currentTargetIndex][idx].feature_val[index]}}
                     </template>
-
                   </span>
-                  <!-- <span v-else>
-                    —
-                  </span> -->
                 </td>
                 <td class="right-align adj-price money"
                   :class="{hidden: currentOpenComp!==idx, 'trace-border-right': i === row.adjusted_price.length}"
                   :style="{ color: index ==
-                 row.adjusted_order[i-1] ? '#2e8113' : '#bcbcbc' }">{{
+                    row.adjusted_order[i-1] ? '#2e8113' : '#bcbcbc' }">{{
                   row.adjusted_order.slice(0,i).includes(index)? row.delta_y[index]+unit_list[domain] : ''}}</td>
               </template>
             </template>
@@ -701,9 +634,8 @@
               @mouseleave="unhighlightAllAdjustedPrices()">
               <div style="cursor: pointer;">
                 {{weightedAverageValue}}{{unit_list[domain]}}
-                <el-tooltip
-                  :content="weightedAverageTooltipContent"
-                  placement="right" effect="dark" :show-after="0" trigger="hover" :hide-after="0">
+                <el-tooltip :content="weightedAverageTooltipContent" placement="right" effect="dark" :show-after="0"
+                  trigger="hover" :hide-after="0">
                   <span style="cursor: pointer; font-size: 10px;">
                     <i class="fa-regular fa-circle-question"></i>
                   </span>
@@ -717,9 +649,6 @@
                 <span>
                   {{row.actual}}{{unit_list[domain]}}
               </td>
-              <!-- <td :colspan="row.adjusted_step_number*2" class="right-align money comp-details"
-                :class="{hidden: currentOpenComp!==idx}">
-                {{row.actual}}K</td> -->
               <template v-for="(ele, i) in row.adjusted_price">
                 <td :colspan="2" class="right-align money comp-details highlight-green"
                   :class="{hidden: currentOpenComp!==idx, 'trace-border-right': i === row.adjusted_price.length - 1}"
@@ -730,26 +659,6 @@
             </template>
           </tr>
 
-
-          <!-- <tr>
-            <td class="feature-name money">Net Adjustment ($)</td>
-            <td class="right-align subject"></td>
-            <template v-for="(row, idx) in Comparables[currentTargetIndex]" :key="row.id">
-              <td class="comp1-header right-align money border-wider">
-              </td>
-              <td class="comp1-header right-align money border-wider" style="position:relative;">
-                <span>{{row.net_adjustment}}K
-              </td>
-
-              <template v-for="(ele, i) in row.net_adjustments">
-                <td :colspan="2" class="right-align money comp-details border-wider"
-                  :class="{hidden: currentOpenComp!==idx}" style="position:relative;">
-
-                  <span>{{ele}}K</span>
-                </td>
-              </template>
-            </template>
-          </tr> -->
           <tr>
             <td class="feature-name money border-top highlight-green2 ">{{Labels[domain][2]}}
               <el-tooltip :content="Labels_Descriptions[domain][2]" placement="right" effect="dark" :show-after="0"
@@ -775,8 +684,8 @@
               </template>
             </template>
           </tr>
+
           <!--  Reconsolidation -->
-          
           <tr>
             <td class="feature-name">Similarity Score
               <el-tooltip content="The similarity score between the comparable and the subject." placement="right"
@@ -800,41 +709,6 @@
               </template>
             </template>
           </tr>
-
-          <!-- <tr>
-            <td class="feature-name money highlight-green2">Consolidated Estimate
-              <el-tooltip
-                content="The estimated value of the subject after weigthed average the comparables' adjusted values."
-                placement="right" effect="dark" :show-after="0" trigger="hover" :hide-after="0">
-                <span class="tooltip-icon">
-                  <i class="fa-regular fa-circle-question"></i>
-                </span>
-              </el-tooltip>
-            </td>
-            <td class="right-align subject money highlight-green2">
-              {{weightedAverageValue}}{{unit_list[domain]}}
-              <el-tooltip :content="weightedAverageTooltipContent" placement="right" effect="dark" :show-after="0"
-                trigger="hover" :hide-after="0">
-                <span class="tooltip-icon" style="margin-left: 0px;">
-                  <i class="fa-regular fa-circle-question"></i>
-                </span>
-              </el-tooltip>
-            </td>
-
-            <template v-for="(row, idx) in Comparables[domain][currentTargetIndex]" :key="row.id">
-              <td colspan="2" class="comp1-header right-align money highlight-green2" style="position:relative;">
-                —
-              </td>
-              <template v-for="(ele, i) in row.adjusted_price">
-                <td :colspan="2" class="right-align comp-details highlight-green2" :class="{hidden: currentOpenComp!==idx}"
-                  style="position:relative;">
-                  <span></span>
-                </td>
-              </template>
-            </template>
-          </tr> -->
-
-
 
           <tr>
             <td style="height:20px;" class="feature-name money">
@@ -902,31 +776,16 @@
           <span>Sum of $ Δ + Actual Price ($) = Adjusted Price ($)</span>
         </span>
       </div> -->
-
       <!-- Subject Actual Price Slider -->
-
     </div>
+
+
+
 
     <!-- NO Trace Version -->
     <div class="tab-content" v-else-if="currentTab === 1">
-
       <table>
         <thead>
-          <!-- <tr>
-            <th rowspan="1" style="width: 100px;"></th>
-            <th class="comp1-header right-align subject" style="width: 50px;"></th>
-            <template v-for="(row, idx) in Comparables[domain][currentTargetIndex]" :key="row.id" class="comp1-header"
-              style="position:relative;">
-              <th colspan="2" class="comp1-header right-align" style="position:relative;">
-              </th>
-
-              <th :colspan="row.adjusted_step_number * 2" class="comp-details border-btm"
-                style="padding-right: 10px; text-align: center;" colspan="2" :class="{hidden: currentOpenComp!==idx}">
-                Comparable {{idx + 1}} Adjustment Trace</th>
-
-
-            </template>
-          </tr> -->
           <!-- Header row -->
           <tr style="border-top: 2px solid transparent;">
             <th rowspan="1" style="width: 100px;"></th>
@@ -1025,8 +884,8 @@
             <td class="right-align subject money highlight-green" @mouseenter="highlightAllAdjustedPrices()"
               @mouseleave="unhighlightAllAdjustedPrices()">
               <div style="cursor: pointer;">{{weightedAverageValue}}{{unit_list[domain]}}
-                <el-tooltip :content="weightedAverageTooltipContent" placement="right"
-                  effect="dark" :show-after="0" trigger="hover" :hide-after="0">
+                <el-tooltip :content="weightedAverageTooltipContent" placement="right" effect="dark" :show-after="0"
+                  trigger="hover" :hide-after="0">
                   <span style="cursor: pointer; margin-left: 2px; font-size: 12px;">
                     <i class="fa-regular fa-circle-question"></i>
                   </span>
@@ -1121,8 +980,6 @@
           </tr>
         </tbody>
       </table>
-
-
     </div>
     <div class="tab-content" v-else class="tab-content">
       <table class="plain-xai-table">
@@ -1258,6 +1115,7 @@
       </div>
     </div> -->
   </div>
+
 
   <script>
     const { createApp } = Vue;
