@@ -632,7 +632,7 @@
 
             </td>
             <template v-for="(row, idx) in Comparables[domain][currentTargetIndex]" :key="row.id">
-              <td class="comp1-header right-align" :title="row.feature_val[index]"
+              <td class="comp1-header right-align"
                 :class="{'gray-font': row.delta_x[index]==0, 'trace-border-left': currentOpenComp===idx}">
                 <el-tooltip :content="row.feature_val[index]" placement="right" effect="dark" :show-after="0"
                   trigger="hover" :hide-after="0">
@@ -988,7 +988,7 @@
 
             </td>
             <template v-for="(row, idx) in Comparables[domain][currentTargetIndex]" :key="row.id">
-              <td class="comp1-header right-align" :title="row.feature_val[index]"
+              <td class="comp1-header right-align"
                 :class="{'gray-font': row.delta_x[index]==0, 'trace-border-left': currentOpenComp===idx}">
                 <el-tooltip :content="row.feature_val[index]" placement="right" effect="dark" :show-after="0"
                   trigger="hover" :hide-after="0">
