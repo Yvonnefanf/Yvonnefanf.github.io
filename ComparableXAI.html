@@ -551,7 +551,7 @@
               <template v-for="i in row.adjusted_step_number">
                 <th class="border-btm comp-details trace-border-top" style="" colspan="2"
                   :class="{hidden: currentOpenComp!==idx, 'trace-border-right': i === row.adjusted_price.length}">
-                  {{ i === row.adjusted_price.length ? 'Subject' : i }}</th>
+                  {{ i === row.adjusted_price.length ? '≈ Subject' : i }}</th>
               </template>
 
               <!-- <th class="border-btm comp-details" :colspan="row.adjusted_step_number * 2"
