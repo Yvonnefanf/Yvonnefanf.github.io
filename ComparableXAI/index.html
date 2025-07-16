@@ -19,9 +19,9 @@
   <div class="control">
     <label for="domain">Domain:</label>
     <select id="domain">
-      <option value="0">House Price</option>
-      <option value="1">Salary</option>
-      <option value="2">Energy</option>
+      <option value="house">House Price</option>
+      <option value="salary">Salary</option>
+      <option value="energy">Energy</option>
     </select>
     <label for="tab">XAI Type:</label>
     <select id="tab">
@@ -35,17 +35,19 @@
   </div>
   <div class="url-display">
     Iframe URL:&nbsp;
-    <a id="frameUrlLink" href="iframe.html?domain=0&tab=0&instance=0" target="_blank">
-      https://yvonnefanf.github.io/ComparableXAI/iframe.html?domain=0&tab=0&instance=0</a>
+    <a id="frameUrlLink" href="iframe.html?domain=house&tab=0&instance=0" target="_blank">
+      https://yvonnefanf.github.io/ComparableXAI/iframe.html?domain=house&tab=0&instance=0</a>
   </div>
 
-  <iframe id="xaiFrame" src="iframe.html?domain=0&tab=0&instance=0" width="100%" height="800" frameborder="0"></iframe>
+  <iframe id="xaiFrame" src="iframe.html?domain=house&tab=0&instance=0" width="100%" height="800" frameborder="0"></iframe>
 
 
 
   <script>
+    // const domainMap = { house: 0, salary: 1, energy: 2 };
+
     function updateFrame() {
-      const d = document.getElementById('domain').value;
+      const d = document.getElementById('domain').value; // now a string
       const t = document.getElementById('tab').value;
       const i = document.getElementById('instance').value;
       const url = `https://yvonnefanf.github.io/ComparableXAI/iframe.html?domain=${d}&tab=${t}&instance=${i}`;
