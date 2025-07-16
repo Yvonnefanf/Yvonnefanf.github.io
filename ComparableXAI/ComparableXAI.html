@@ -1,0 +1,1890 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>Comparable XAI</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Space+Mono&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Roboto+Condensed&display=swap" rel="stylesheet">
+
+  <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono&display=swap" rel="stylesheet">
+
+  <script src="https://unpkg.com/vue@3/dist/vue.global.prod.js"></script>
+
+  <!-- Element UI CSS and JS -->
+  <link rel="stylesheet" href="https://unpkg.com/element-plus/dist/index.css">
+  <script src="https://unpkg.com/element-plus/dist/index.full.js"></script>
+
+  <!-- No internet open 👇-->
+  <!-- <link rel="stylesheet" href="./min.css">
+  <script src="./min.js"></script> -->
+
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 20px;
+    }
+
+    table {
+      /* width: 100%; */
+      border-collapse: collapse;
+      margin-bottom: 10px;
+      font-size: 14px;
+      font-family: 'Roboto Condensed', monospace;
+      color: #212121;
+
+
+    }
+
+    th,
+    td {
+      border: 1px solid #ccc;
+      padding: 6px;
+      transition: max-width 0.4s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.4s cubic-bezier(0.4, 0, 0.2, 1), padding 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+      max-width: 200px;
+      opacity: 1;
+      overflow: hidden;
+      white-space: nowrap;
+
+
+    }
+
+    th {
+      font-size: 14px;
+      font-family: sans-serif;
+      /*background-color: #f0f8ff;*/
+    }
+
+    table,
+    th,
+    td {
+      border: none;
+
+    }
+
+
+
+    .hidden {
+      max-width: 0 !important;
+      opacity: 0 !important;
+      padding-left: 0 !important;
+      padding-right: 0 !important;
+      border-width: 0 !important;
+      pointer-events: none;
+    }
+
+    .comp1,
+    .comp2 {
+      width: 40px;
+      background-color: #fef6e4;
+      transition: max-width 0.4s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.4s cubic-bezier(0.4, 0, 0.2, 1), padding 0.4s cubic-bezier(0.4, 0, 0.2, 1), border-width 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .comp-header {
+      font-size: 14px;
+
+    }
+
+    .highlight-blue {
+      background-color: #e8f3fd;
+    }
+
+    .highlight-green2,
+    .adj-price {
+      background-color: #e4fcdc !important;
+    }
+
+
+    .highlight-green {
+      background-color: #baf2a7 !important;
+    }
+
+    .adj-price {
+      width: 62px;
+      padding-right: 10px;
+      border-right: 1px solid #36a341;
+    }
+    .green-right-border{
+      border-right: 1px solid #36a341;
+    }
+
+    .adj-value {
+      width: 42px;
+      font-weight: 400;
+      padding-right: 10px;
+    }
+
+    .adj-value-span {
+      display: inline-block;
+      width: 62px;
+      overflow: hidden;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+    }
+
+
+    .comp-details,
+    .adj-value {
+      /* background-color: #f4fdf1; */
+      background-color: #ffffff;
+
+    }
+
+    .highlight-yellow {
+      background-color: #fef6e4;
+    }
+
+    .sub-header {
+      background-color: #f0f0f0;
+      font-weight: normal;
+      font-size: 0.9em;
+    }
+
+    .clickable-header {
+      cursor: pointer;
+      user-select: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      font-weight: bold;
+      color: #0074d9;
+      transition: color 0.2s;
+    }
+
+    .clickable-header:hover {
+      color: #005fa3;
+      text-decoration: underline;
+    }
+
+    .arrow {
+      transition: transform 0.2s;
+      display: inline-block;
+    }
+
+    .arrow.open {
+      transform: rotate(180deg);
+    }
+
+    .toggle-text {
+      width: 12px;
+      line-height: 16px;
+    }
+
+
+
+    .adj-flex {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      width: 100%;
+    }
+
+    .money {
+      /* font-family: 'Roboto Mono', monospace; */
+      font-family: 'Roboto Condensed', monospace;
+      font-size: 14px;
+      font-variant-numeric: tabular-nums;
+      /* 等宽数字对齐 */
+      letter-spacing: 0.5px;
+      font-weight: 1200;
+      color: #2e8113;
+
+    }
+
+    .adj-grey {
+      color: #ccc;
+      font-size: 1em;
+      width: 30px;
+      text-align: right;
+    }
+
+
+    .gray-bg {
+      background-color: #ededed !important;
+    }
+
+    .adj-black {
+      color: #222;
+      font-weight: 500;
+      font-size: 1em;
+      width: 40px;
+      text-align: left;
+    }
+
+    .plain-xai-table {
+      border-collapse: collapse;
+      margin-top: 10px;
+      font-size: 14px;
+      min-width: 650px;
+    }
+
+    th {
+      font-family: sans-serif;
+    }
+
+    .feature-name {
+      font-size: 14px;
+      text-align: left;
+      font-weight: 400;
+
+      font-family: sans-serif;
+    }
+
+    .right-align {
+      text-align: right;
+    }
+
+    .left-align {
+      text-align: left;
+    }
+
+    .plain-xai-table {
+      border: none;
+    }
+
+    .plain-xai-table th,
+    .plain-xai-table td {
+
+      padding: 6px 12px;
+
+    }
+
+    .plain-xai-table th {
+      font-weight: bold;
+    }
+
+    .plain-xai-table tr td:first-child {
+
+      font-weight: 500;
+    }
+
+    .gray-bg {
+      background-color: #ededed !important;
+      color: #ccc;
+    }
+
+    .gray-font {
+      color: #ccc;
+    }
+
+    .nav-btn {
+      background: #0074d9;
+      color: #fff;
+      border: none;
+      border-radius: 6px;
+      padding: 4px 10px;
+      font-size: 14px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: background 0.18s, color 0.18s, box-shadow 0.18s;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      box-shadow: 0 2px 8px 0 #0074d91a;
+    }
+
+    .nav-btn:disabled {
+      background: #e5e7eb;
+      color: #aaa;
+      cursor: not-allowed;
+      box-shadow: none;
+    }
+
+    .nav-btn:not(:disabled):hover {
+      background: #005fa3;
+      color: #fff;
+    }
+
+    .tab-content {
+      height: 450px;
+      padding: 20px 0 20px 20px;
+      border-bottom: 1px solid #e5e7eb;
+      border-top: 1px solid #e5e7eb;
+    }
+
+    .border-btm {
+      border-bottom: 1px solid #666;
+    }
+
+    .border-top {
+      border-top: 1px solid #666;
+    }
+
+    .toggle-button {
+      cursor: pointer;
+      margin: 2px 0;
+    }
+
+    .toggle-button:hover {
+      background: #cbf4be;
+    }
+
+    .subject {
+      padding-right: 20px;
+    }
+
+    .detail-header-bg {
+      background-attachment: #cbf4be !important;
+    }
+
+    .border-wider {
+      border-top: 2px solid #a4a4a4;
+    }
+
+    .ai-pred-bg {
+      /*background-color: #cbf4be;*/
+      background-color: #ffffff;
+
+    }
+
+    .pred-description {
+      color: #666;
+      padding: 2px 0 2px 0px;
+      margin-top: 4px;
+      display: inline-block;
+      cursor: pointer;
+    }
+
+    /* Slider styles */
+    .slider-container {
+      margin-top: 15px;
+      padding: 15px;
+      border-radius: 6px;
+      border: 1px dashed #222;
+      max-width: 600px;
+    }
+
+    .slider-label {
+
+      font-weight: 500;
+      color: #495057;
+      margin-bottom: 8px;
+      display: block;
+    }
+
+    .slider-track {
+      position: relative;
+      height: 4px;
+      background: #e9ecef;
+      border-radius: 2px;
+      margin: 15px 0;
+    }
+
+    .slider-fill {
+      position: absolute;
+      height: 100%;
+      background: #28a745;
+      border-radius: 2px;
+      top: 0;
+    }
+
+    .slider-handle {
+      position: absolute;
+      width: 16px;
+      height: 16px;
+      background: #fff;
+      border: 2px solid #2e8113;
+      border-radius: 50%;
+      top: -6px;
+      cursor: pointer;
+      transition: box-shadow 0.2s;
+    }
+
+    .slider-handle:hover {
+      box-shadow: 0 2px 8px rgba(40, 167, 69, 0.3);
+    }
+
+    .slider-handle.active {
+      box-shadow: 0 0 0 3px rgba(40, 167, 69, 0.2);
+    }
+
+    .slider-values {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+
+      color: #6c757d;
+      margin-top: 8px;
+    }
+
+    .disabled-input {
+      background-color: #f8f9fa;
+      border: 1px solid #dee2e6;
+      color: #2e8113;
+      padding: 2px 6px;
+      border-radius: 4px;
+
+      font-family: 'Roboto Condensed', monospace;
+      width: 50px;
+      text-align: right;
+      cursor: not-allowed;
+    }
+
+    .actual-price-highlight {
+      /*font-size: 18px !important;*/
+      font-weight: bold !important;
+      text-decoration: underline !important;
+      transition: all 0.3s ease;
+    }
+
+    .pred-highlight {
+      /*font-size: 18px !important;*/
+      font-weight: bold !important;
+      text-decoration: underline !important;
+      transition: all 0.3s ease;
+    }
+
+    .adjusted-price-highlight {
+      /*font-size: 18px !important;*/
+      font-weight: bold !important;
+      text-decoration: underline !important;
+      transition: all 0.3s ease;
+    }
+
+    .all-pred-actual-highlight {
+      /*font-size: 18px !important;*/
+      font-weight: bold !important;
+      text-decoration: underline !important;
+      transition: all 0.3s ease;
+    }
+
+    .tooltip-icon {
+      cursor: pointer;
+      margin-left: 2px;
+      font-size: 10px;
+      display: inline-block;
+    }
+
+    .trace-border-top {
+      border-top: 2px solid #36a341;
+    }
+
+    .trace-border-bottom {
+      border-bottom: 2px solid #36a341;
+    }
+
+    .trace-border-right {
+      border-right: 2px solid #36a341;
+    }
+
+    .trace-border-left {
+      border-left: 2px solid #36a341;
+    }
+  </style>
+</head>
+
+<body>
+
+  <div id="app">
+    <div style="display: flex; align-items: center; gap: 20px; margin-bottom: 20px;">
+      <div>
+        Domain:
+        <select v-model="domain">
+          <option v-for="(item,index) in domain_list" :value="index">{{item}}</option>
+        </select>
+      </div>
+      <div>
+        XAI Type:
+        <select v-model="currentTab">
+          <option v-for="(tab, idx) in tabs" :key="tab" :value="idx">{{ tab }}</option>
+        </select>
+      </div>
+      <div style="display: flex; align-items: center; gap: 16px;">
+        <button class="nav-btn" @click="prevTarget" :disabled="currentTargetIndex===0">
+          <i class="fa fa-angle-left"></i> Prev
+        </button>
+        <span>Instance {{ currentTargetIndex + 1 }} / {{ Targets[domain].length }}</span>
+        <button class="nav-btn" @click="nextTarget" :disabled="currentTargetIndex===Targets[domain].length-1">
+          Next <i class="fa fa-angle-right"></i>
+        </button>
+      </div>
+    </div>
+    <div class="tab-content" v-if="currentTab === 0">
+      <table>
+        <thead>
+          <!-- <tr>
+            <th rowspan="1" style="width: 100px;"></th>
+            <th class="comp1-header right-align subject" style="width: 50px;"></th>
+            <template v-for="(row, idx) in Comparables[domain][currentTargetIndex]" :key="row.id" class="comp1-header"
+              style="position:relative;">
+              <th colspan="2" class="comp1-header right-align" style="position:relative;">
+              </th>
+
+              <th :colspan="row.adjusted_step_number * 2" class="comp-details border-btm"
+                style="padding-right: 10px; text-align: center;" colspan="2" :class="{hidden: currentOpenComp!==idx}">
+                Comparable {{idx + 1}} Adjustment Trace</th>
+
+
+            </template>
+          </tr> -->
+          <!-- Header row -->
+          <tr style="border-top:2px solid transparent">
+            <th rowspan="1" style="width: 100px;"></th>
+            <th class="comp1-header right-align subject" style="width: 50px;">Subject</th>
+            <template v-for="(row, idx) in Comparables[domain][currentTargetIndex]" :key="row.id" class="comp1-header"
+              style="position:relative;">
+              <th colspan="2" class="comp1-header right-align border-btm"
+                :class="{'trace-border-left': currentOpenComp===idx, 'trace-border-top': currentOpenComp===idx, 'green-right-border': currentOpenComp===idx}"
+                style="position:relative;">
+
+                Comparable {{idx + 1}}
+
+                <!-- <div style="font-size: 12px; display:flex;align-items:center;justify-content:center;color:#800080">
+                  AI Prediction ($): {{row.pred}}K
+                </div> -->
+                <el-tooltip :content="currentOpenComp==idx ? 'Hide Trace' : 'Show Trace'" placement="top" effect="dark"
+                  :show-after="0" trigger="hover" :hide-after="0">
+                  <button class="toggle-button" @click="toggleCols(`comp${idx+1}`,idx)">
+
+                    <span v-if="currentOpenComp!=idx" class="toggle-text">{{ currentOpenComp ==idx ? ' ' : '...'
+                      }}</span>
+
+                    <i class="toggle-text fa-solid fa-angle-left" v-if="currentOpenComp==idx"></i>
+
+                  </button>
+                </el-tooltip>
+              </th>
+
+              <!-- <th class="border-btm comp-details" :colspan="row.adjusted_step_number * 2"
+              :class="{hidden: currentOpenComp!==idx}">
+              Comparable {{idx + 1}} Adjustment Trace
+              </th> -->
+              <template v-for="i in row.adjusted_step_number">
+                <th class="border-btm comp-details trace-border-top green-right-border" style="" colspan="2"
+                  :class="{hidden: currentOpenComp!==idx, 
+                  'trace-border-right': i === row.adjusted_price.length}">
+                  {{ i === row.adjusted_price.length ? '≈ Subject' : i }}</th>
+              </template>
+
+              <!-- <th class="border-btm comp-details" :colspan="row.adjusted_step_number * 2"
+                :class="{hidden: currentOpenComp!==idx}">
+                Comparable {{idx + 1}} Adjustment Trace
+              </th> -->
+            </template>
+          </tr>
+          <!-- AI prediction row -->
+          <!-- <tr>
+            <td class="feature-name money">AI Prediction ($)</td>
+            <td class="right-align money subject">{{Targets[currentTargetIndex].pred}}K </td>
+            <template v-for="(row, idx) in Comparables[currentTargetIndex]" :key="row.id">
+              <td colspan="2" class="comp1-header right-align money"><span>
+                  {{row.pred}}K
+              </td>
+              <td :colspan="row.adjusted_step_number*2" class="right-align comp-details"
+                :class="{hidden: currentOpenComp!==idx}"> 
+              </td>
+            </template>
+          </tr> -->
+          <!-- header -->
+
+          <tr>
+            <td class="comp1-header"></td>
+            <td class="subject"></td>
+            <template v-for="(row, idx) in Comparables[domain][currentTargetIndex]" :key="row.id">
+              <th style="width: 62px;" class="comp-header right-align border-btm"
+                :class="{'trace-border-left': currentOpenComp===idx}">Values</th>
+              <th :class="{'adj-price' : currentOpenComp===idx }"
+              class="comp1-header right-align border-btm money highlight-green2" 
+              style="width: 62px;">
+                <span> {{unit_list_header[domain]}} Δ </span>
+                <!-- <button class="toggle-button" @click="toggleCols(`comp${idx+1}`,idx)">
+                  <span v-if="currentOpenComp!=idx" class="toggle-text">{{ currentOpenComp ==idx ? ' ' : '...' }}</span>
+                  <i class="toggle-text fa-solid fa-angle-left" v-if="currentOpenComp==idx"></i>
+                </button> -->
+              </th>
+              <template v-for="i in row.adjusted_step_number">
+                <th class="adj-value border-btm right-align" style="font-weight: bold;"
+                  :class="{hidden: currentOpenComp!==idx}">Values</th>
+                <th class="adj-price border-btm right-align money" style="font-weight: bold;"
+                  :class="{hidden: currentOpenComp!==idx, 
+                  'trace-border-right': i === row.adjusted_price.length}">
+                  {{unit_list_header[domain]}} Δ
+                </th>
+              </template>
+            </template>
+          </tr>
+        </thead>
+        <tbody>
+          <tr v-for="(tb, index) in Features[domain]">
+            <td class="feature-name">
+              <span>{{ Features[domain][index] }}</span>
+              <el-tooltip :content="FeatureDescriptions[domain][index]" placement="right" effect="dark" :show-after="0"
+                trigger="hover" :hide-after="0">
+                <span class="tooltip-icon">
+                  <i class="fa-regular fa-circle-question"></i>
+                </span>
+              </el-tooltip>
+            </td>
+            <td class="right-align subject">
+              <el-tooltip :content="Targets[domain][currentTargetIndex].feature_val[index]" placement="right"
+                effect="dark" :show-after="0" trigger="hover" :hide-after="0">
+                <div style=" display: inline-block;
+                max-width: 62px;
+                width: 62px;
+                overflow: hidden;
+                white-space: nowrap;
+                text-overflow: ellipsis;
+                vertical-align: top; cursor: pointer;">
+                  {{ Targets[domain][currentTargetIndex].feature_val[index] }}
+
+                </div>
+              </el-tooltip>
+              <!-- <template v-else>
+                <div style="cursor: default;">
+                  {{ Targets[domain][currentTargetIndex].feature_val[index] }}
+                </div>
+              </template> -->
+
+            </td>
+            <template v-for="(row, idx) in Comparables[domain][currentTargetIndex]" :key="row.id">
+              <td class="comp1-header right-align"
+                :class="{'gray-font': row.delta_x[index]==0, 'trace-border-left': currentOpenComp===idx}">
+                <el-tooltip :content="row.feature_val[index]" placement="right" effect="dark" :show-after="0"
+                  trigger="hover" :hide-after="0">
+                  <div style=" display: inline-block;
+                  max-width: 62px;
+                  width: 62px;
+                  overflow: hidden;
+                  white-space: nowrap;
+                  text-overflow: ellipsis;
+                  vertical-align: top; cursor: pointer;">
+                    {{ row.feature_val[index] }}
+
+                  </div>
+                </el-tooltip>
+                <!-- <template v-else>
+                  <div style="cursor: default;">{{ row.feature_val[index] }} </div>
+                </template> -->
+              </td>
+              <td class="comp1-header right-align money highlight-green2" 
+              :class="{'gray-font': row.delta_x[index]==0, 'adj-price' : currentOpenComp==idx }"
+              >
+                {{row.delta_y[index]!==0? row.delta_y[index]+unit_list[domain]:'0' }}
+              </td>
+              <template v-for="i in row.adjusted_step_number">
+                <td class="right-align adj-value" :class="{hidden: currentOpenComp!==idx }"
+                  :style="{ color: index == row.adjusted_order[i-1] ? '#222' : '#bcbcbc', cursor: index == row.adjusted_order[i-1] ? 'pointer' : 'default' }">
+                  <!-- <span v-if="row.adjusted_order.slice(0,i).includes(index)"  style="cursor: pointer;"> -->
+                  <span class="adj-value-span">
+
+                    <!-- {{ row.feature_val[index] }} -->
+                    <!-- <i class="fa-solid fa-arrow-right" style="font-size:10px;vertical-align:middle;"></i> -->
+                    <el-tooltip v-if="index == row.adjusted_order[i-1]" :content="numberical_feature[domain][index] ? 
+                        row.feature_val[index]+' → '+Targets[domain][currentTargetIndex].feature_val[index]+' (Δ: '+(row.delta_x[index] >= 0 ? '+' : '')+row.delta_x[index]+')' :
+                        row.feature_val[index]+' → '+Targets[domain][currentTargetIndex].feature_val[index]"
+                      placement="top" effect="dark" :show-after="0" trigger="hover" :hide-after="0">
+                      {{ Targets[domain][currentTargetIndex].feature_val[index] }}
+                    </el-tooltip>
+                    <template v-else-if="row.adjusted_order.slice(0,i).includes(index)">
+                      {{ Targets[domain][currentTargetIndex].feature_val[index] }}
+                    </template>
+                    <template v-else>
+                      {{Comparables[domain][currentTargetIndex][idx].feature_val[index]}}
+                    </template>
+
+                  </span>
+                  <!-- <span v-else>
+                    —
+                  </span> -->
+                </td>
+                <td class="right-align adj-price money"
+                  :class="{hidden: currentOpenComp!==idx, 'trace-border-right': i === row.adjusted_price.length}"
+                  :style="{ color: index ==
+                 row.adjusted_order[i-1] ? '#2e8113' : '#bcbcbc' }">{{
+                  row.adjusted_order.slice(0,i).includes(index)? row.delta_y[index]+unit_list[domain] : ''}}</td>
+              </template>
+            </template>
+          </tr>
+
+          <tr class="">
+            <td class="feature-name money highlight-green">{{Labels[domain][0]}}
+              <el-tooltip :content="Labels_Descriptions[domain][0]" placement="right" effect="dark" :show-after="0">
+                <span class="tooltip-icon">
+                  <i class="fa-regular fa-circle-question"></i>
+                </span>
+              </el-tooltip>
+            </td>
+            <td class="right-align subject money highlight-green" @mouseenter="highlightAllAdjustedPrices()"
+              @mouseleave="unhighlightAllAdjustedPrices()">
+              <div style="cursor: pointer;">
+                {{weightedAverageValue}}{{unit_list[domain]}}
+                <el-tooltip
+                  :content="weightedAverageTooltipContent"
+                  placement="right" effect="dark" :show-after="0" trigger="hover" :hide-after="0">
+                  <span style="cursor: pointer;">
+                    <!--<i class="fa-regular fa-circle-question"></i>--> ?
+                  </span>
+                </el-tooltip>
+                </span>
+              </div>
+            </td>
+            <template v-for="(row, idx) in Comparables[domain][currentTargetIndex]" :key="row.id">
+              <td colspan="2" class="comp1-header right-align money highlight-green"
+                :class="{ 'actual-price-highlight': highlightedActualPrice === idx, 'all-pred-actual-highlight': allPredAndActualHighlighted, 'trace-border-left': currentOpenComp===idx }">
+                <span>
+                  {{row.actual}}{{unit_list[domain]}}
+              </td>
+              <td :colspan="row.adjusted_step_number*2" class="right-align money comp-details highlight-green trace-border-right"
+              :class="{hidden: currentOpenComp!==idx}"
+              style="position:relative;">
+                <!-- {{row.actual}}{{unit_list[domain]}} -->
+              </td>
+              <!-- <template v-for="(ele, i) in row.adjusted_price">
+                <td :colspan="2" class="right-align money comp-details highlight-green"
+                  :class="{hidden: currentOpenComp!==idx, 'trace-border-right': i === row.adjusted_price.length - 1}"
+                  style="position:relative;">
+                  <span>{{row.actual}}{{unit_list[domain]}}</span>
+                </td>
+              </template> -->
+            </template>
+          </tr>
+
+
+          <!-- <tr>
+            <td class="feature-name money">Net Adjustment ($)</td>
+            <td class="right-align subject"></td>
+            <template v-for="(row, idx) in Comparables[currentTargetIndex]" :key="row.id">
+              <td class="comp1-header right-align money border-wider">
+              </td>
+              <td class="comp1-header right-align money border-wider" style="position:relative;">
+                <span>{{row.net_adjustment}}K
+              </td>
+
+              <template v-for="(ele, i) in row.net_adjustments">
+                <td :colspan="2" class="right-align money comp-details border-wider"
+                  :class="{hidden: currentOpenComp!==idx}" style="position:relative;">
+
+                  <span>{{ele}}K</span>
+                </td>
+              </template>
+            </template>
+          </tr> -->
+          <tr>
+            <td class="feature-name money border-top highlight-green2 ">{{Labels[domain][2]}}
+              <el-tooltip :content="Labels_Descriptions[domain][2]" placement="right" effect="dark" :show-after="0"
+                trigger="hover" :hide-after="0">
+                <span class="tooltip-icon">
+                  <i class="fa-regular fa-circle-question"></i>
+                </span>
+              </el-tooltip>
+            </td>
+            <td class="right-align money subject highlight-green2 border-top">—</td>
+            <template v-for="(row, idx) in Comparables[domain][currentTargetIndex]" :key="row.id">
+              <td colspan="2" class="comp1-header right-align money border-top highlight-green2"
+                :class="{ 'adjusted-price-highlight': allAdjustedPricesHighlighted, 'trace-border-bottom': currentOpenComp===idx, 'trace-border-left': currentOpenComp===idx}"
+                style="position:relative;">
+                <span>{{row.adjusted_price[row.adjusted_step_number - 1]}}{{unit_list[domain]}}
+              </td>
+              <template v-for="(ele, i) in row.adjusted_price">
+                <td :colspan="2" class="right-align money comp-details border-top highlight-green2 trace-border-bottom"
+                  :class="{hidden: currentOpenComp!==idx, 'trace-border-right': i === row.adjusted_price.length - 1}"
+                  style="position:relative;">
+                  <span>{{ele}}{{unit_list[domain]}}</span>
+                </td>
+              </template>
+            </template>
+          </tr>
+          <!--  Reconsolidation -->
+          
+          <tr>
+            <td class="feature-name">Similarity Score
+              <el-tooltip content="The similarity score between the comparable and the subject." placement="right"
+                effect="dark" :show-after="0" trigger="hover" :hide-after="0">
+                <span class="tooltip-icon">
+                  <i class="fa-regular fa-circle-question"></i>
+                </span>
+              </el-tooltip>
+            </td>
+            <td class="right-align subject">—</td>
+            <template v-for="(row, idx) in Comparables[domain][currentTargetIndex]" :key="row.id">
+              <td colspan="2" class="comp1-header right-align"
+                :class="{ 'adjusted-price-highlight': allAdjustedPricesHighlighted}" style="position:relative;">
+                <span>{{ similarityScores[idx] }}%
+              </td>
+              <template v-for="(ele, i) in row.adjusted_price">
+                <td :colspan="2" class="right-align comp-details" :class="{hidden: currentOpenComp!==idx}"
+                  style="position:relative;">
+                  <span></span>
+                </td>
+              </template>
+            </template>
+          </tr>
+
+          <!-- <tr>
+            <td class="feature-name money highlight-green2">Consolidated Estimate
+              <el-tooltip
+                content="The estimated value of the subject after weigthed average the comparables' adjusted values."
+                placement="right" effect="dark" :show-after="0" trigger="hover" :hide-after="0">
+                <span class="tooltip-icon">
+                  <i class="fa-regular fa-circle-question"></i>
+                </span>
+              </el-tooltip>
+            </td>
+            <td class="right-align subject money highlight-green2">
+              {{weightedAverageValue}}{{unit_list[domain]}}
+              <el-tooltip :content="weightedAverageTooltipContent" placement="right" effect="dark" :show-after="0"
+                trigger="hover" :hide-after="0">
+                <span class="tooltip-icon" style="margin-left: 0px;">
+                  <i class="fa-regular fa-circle-question"></i>
+                </span>
+              </el-tooltip>
+            </td>
+
+            <template v-for="(row, idx) in Comparables[domain][currentTargetIndex]" :key="row.id">
+              <td colspan="2" class="comp1-header right-align money highlight-green2" style="position:relative;">
+                —
+              </td>
+              <template v-for="(ele, i) in row.adjusted_price">
+                <td :colspan="2" class="right-align comp-details highlight-green2" :class="{hidden: currentOpenComp!==idx}"
+                  style="position:relative;">
+                  <span></span>
+                </td>
+              </template>
+            </template>
+          </tr> -->
+
+
+
+          <tr>
+            <td style="height:20px;" class="feature-name money">
+            </td>
+            <td class="right-align money subject">
+            </td>
+            <template v-for="(row, idx) in Comparables[domain][currentTargetIndex]" :key="row.id">
+              <td colspan="2" class="comp1-header right-align money"><span>
+
+              </td>
+              <td :colspan="row.adjusted_step_number*2" class="right-align" :class="{hidden: currentOpenComp!==idx}">
+
+              </td>
+            </template>
+          </tr>
+
+          <tr>
+            <td class="feature-name money ai-pred-bg">{{Labels[domain][1]}}
+              <el-tooltip :content="Labels_Descriptions[domain][1]" placement="right" effect="dark" :show-after="0"
+                trigger="hover" :hide-after="0">
+                <span class="tooltip-icon">
+                  <i class="fa-regular fa-circle-question"></i>
+                </span>
+              </el-tooltip>
+              <br />
+              <span class="pred-description" @mouseenter="highlightAllPredAndActual()"
+                @mouseleave="unhighlightAllPredAndActual()">Prediction Error
+                <el-tooltip content="The difference between the actual value and the predicted value." placement="right"
+                  effect="dark" :show-after="0" trigger="hover" :hide-after="0">
+                  <span class="tooltip-icon">
+                    <i class="fa-regular fa-circle-question"></i>
+                  </span>
+                </el-tooltip>
+              </span>
+            </td>
+            <td class="right-align money subject ai-pred-bg">
+              {{Targets[domain][currentTargetIndex].pred}}{{unit_list[domain]}} <br />
+              <span class="pred-description"> — </span>
+            </td>
+
+            <template v-for="(row, idx) in Comparables[domain][currentTargetIndex]" :key="row.id">
+              <td colspan="2" class="comp1-header right-align money ai-pred-bg"
+                :class="{ 'pred-highlight': highlightedActualPrice === idx, 'all-pred-actual-highlight': allPredAndActualHighlighted }">
+                <span>
+                  {{row.pred}}{{unit_list[domain]}}
+                  <br />
+                  <el-tooltip
+                    :content="row.pred + unit_list[domain] + ' is ' + getPredictionDifference(row) + ' than the actual value of ' + row.actual + unit_list[domain]"
+                    placement="bottom" effect="dark" :show-after="0" trigger="hover" :hide-after="0">
+                    <span class="pred-description highlight-green" @mouseenter="highlightActualPrice(idx)"
+                      @mouseleave="unhighlightActualPrice(idx)">{{ getPredictionDifference(row) }}</span>
+                  </el-tooltip>
+              </td>
+              <td :colspan="row.adjusted_step_number*2" class="right-align ai-pred-bg"
+                :class="{hidden: currentOpenComp!==idx}">
+                <!-- {{row.pred}}K -->
+              </td>
+            </template>
+          </tr>
+        </tbody>
+      </table>
+      <!-- 说明行 -->
+      <!-- <div style=" color:rgb(129 129 129); font-size:12px; margin-top:24px;">
+        <span style="">
+          <span>Sum of $ Δ + Actual Price ($) = Adjusted Price ($)</span>
+        </span>
+      </div> -->
+
+      <!-- Subject Actual Price Slider -->
+
+    </div>
+
+    <!-- NO Trace Version -->
+    <div class="tab-content" v-else-if="currentTab === 1">
+
+      <table>
+        <thead>
+          <!-- <tr>
+            <th rowspan="1" style="width: 100px;"></th>
+            <th class="comp1-header right-align subject" style="width: 50px;"></th>
+            <template v-for="(row, idx) in Comparables[domain][currentTargetIndex]" :key="row.id" class="comp1-header"
+              style="position:relative;">
+              <th colspan="2" class="comp1-header right-align" style="position:relative;">
+              </th>
+
+              <th :colspan="row.adjusted_step_number * 2" class="comp-details border-btm"
+                style="padding-right: 10px; text-align: center;" colspan="2" :class="{hidden: currentOpenComp!==idx}">
+                Comparable {{idx + 1}} Adjustment Trace</th>
+
+
+            </template>
+          </tr> -->
+          <!-- Header row -->
+          <tr style="border-top: 2px solid transparent;">
+            <th rowspan="1" style="width: 100px;"></th>
+            <th class="comp1-header right-align subject" style="width: 50px;">Subject</th>
+            <template v-for="(row, idx) in Comparables[domain][currentTargetIndex]" :key="row.id" class="comp1-header"
+              style="position:relative;">
+              <th colspan="2" class="comp1-header border-btm right-align"
+                :class="{'trace-border-left': currentOpenComp===idx, 'trace-border-top': currentOpenComp===idx}"
+                style="position:relative;">
+
+                Comparable {{idx + 1}}
+              </th>
+            </template>
+          </tr>
+
+          <tr>
+            <td class="comp1-header"></td>
+            <td class="subject"></td>
+            <template v-for="(row, idx) in Comparables[domain][currentTargetIndex]" :key="row.id">
+              <th style="width: 62px;" class="comp-header right-align border-btm"
+                :class="{'trace-border-left': currentOpenComp===idx}">Values</th>
+              <th class="comp1-header right-align border-btm money highlight-green2" style="width: 62px;">
+                <span> {{unit_list_header[domain]}} Δ </span>
+              </th>
+            </template>
+          </tr>
+        </thead>
+        <tbody>
+          <tr v-for="(tb, index) in Features[domain]">
+            <td class="feature-name">
+              <span>{{ Features[domain][index] }}</span>
+              <el-tooltip :content="FeatureDescriptions[domain][index]" placement="right" effect="dark" :show-after="0"
+                trigger="hover" :hide-after="0">
+                <span class="tooltip-icon">
+                  <i class="fa-regular fa-circle-question"></i>
+                </span>
+              </el-tooltip>
+            </td>
+            <td class="right-align subject">
+              <el-tooltip v-if="Targets[domain][currentTargetIndex].feature_val[index].length>10"
+                :content="Targets[domain][currentTargetIndex].feature_val[index]" placement="right" effect="dark"
+                :show-after="0" trigger="hover" :hide-after="0">
+                <div style=" display: inline-block;
+                max-width: 62px;
+                width: 62px;
+                overflow: hidden;
+                white-space: nowrap;
+                text-overflow: ellipsis;
+                vertical-align: top; cursor: pointer;">
+                  {{ Targets[domain][currentTargetIndex].feature_val[index] }}
+
+                </div>
+              </el-tooltip>
+              <template v-else>
+                <div style="cursor: default;">
+                  {{ Targets[domain][currentTargetIndex].feature_val[index] }}
+                </div>
+              </template>
+
+            </td>
+            <template v-for="(row, idx) in Comparables[domain][currentTargetIndex]" :key="row.id">
+              <td class="comp1-header right-align"
+                :class="{'gray-font': row.delta_x[index]==0, 'trace-border-left': currentOpenComp===idx}">
+                <el-tooltip :content="row.feature_val[index]" placement="right" effect="dark" :show-after="0"
+                  trigger="hover" :hide-after="0">
+                  <div style=" display: inline-block;
+                  max-width: 62px;
+                  width: 62px;
+                  overflow: hidden;
+                  white-space: nowrap;
+                  text-overflow: ellipsis;
+                  vertical-align: top; cursor: pointer;">
+                    {{ row.feature_val[index] }}
+
+                  </div>
+                </el-tooltip>
+                <!-- <template v-else>
+                  <div style="cursor: default;">{{ row.feature_val[index] }} </div>
+                </template> -->
+              </td>
+              <td class="comp1-header right-align money highlight-green2" :class="{'gray-font': row.delta_x[index]==0}">
+                {{row.delta_y[index]!==0? row.delta_y[index]+unit_list[domain]:'0' }}
+              </td>
+
+            </template>
+          </tr>
+
+          <tr class="">
+            <td class="feature-name money highlight-green">{{Labels[domain][0]}}
+              <el-tooltip :content="Labels_Descriptions[domain][0]" placement="right" effect="dark" :show-after="0">
+                <span class="tooltip-icon">
+                  <i class="fa-regular fa-circle-question"></i>
+                </span>
+              </el-tooltip>
+            </td>
+            <td class="right-align subject money highlight-green" @mouseenter="highlightAllAdjustedPrices()"
+              @mouseleave="unhighlightAllAdjustedPrices()">
+              <div style="cursor: pointer;">{{weightedAverageValue}}{{unit_list[domain]}}
+                <el-tooltip :content="weightedAverageTooltipContent" placement="right"
+                  effect="dark" :show-after="0" trigger="hover" :hide-after="0">
+                  <span style="cursor: pointer; margin-left: 2px; font-size: 12px;">
+                    <i class="fa-regular fa-circle-question"></i>
+                  </span>
+                </el-tooltip>
+                </span>
+              </div>
+            </td>
+            <template v-for="(row, idx) in Comparables[domain][currentTargetIndex]" :key="row.id">
+              <td colspan="2" class="comp1-header right-align money highlight-green"
+                :class="{ 'actual-price-highlight': highlightedActualPrice === idx, 'all-pred-actual-highlight': allPredAndActualHighlighted, 'trace-border-left': currentOpenComp===idx }">
+                <span>
+                  {{row.actual}}{{unit_list[domain]}}
+              </td>
+
+            </template>
+          </tr>
+
+          <tr>
+            <td class="feature-name money border-top highlight-green2 ">{{Labels[domain][2]}}
+              <el-tooltip :content="Labels_Descriptions[domain][2]" placement="right" effect="dark" :show-after="0"
+                trigger="hover" :hide-after="0">
+                <span class="tooltip-icon">
+                  <i class="fa-regular fa-circle-question"></i>
+                </span>
+              </el-tooltip>
+            </td>
+            <td class="right-align money subject highlight-green2 border-top">—</td>
+            <template v-for="(row, idx) in Comparables[domain][currentTargetIndex]" :key="row.id">
+              <td colspan="2" class="comp1-header right-align money border-top highlight-green2"
+                :class="{ 'adjusted-price-highlight': allAdjustedPricesHighlighted, 'trace-border-bottom': currentOpenComp===idx, 'trace-border-left': currentOpenComp===idx}"
+                style="position:relative;">
+                <span>{{row.adjusted_price[row.adjusted_step_number - 1]}}{{unit_list[domain]}}
+              </td>
+
+            </template>
+          </tr>
+          <tr>
+            <td style="height:20px;" class="feature-name money">
+            </td>
+            <td class="right-align money subject">
+            </td>
+            <template v-for="(row, idx) in Comparables[domain][currentTargetIndex]" :key="row.id">
+              <td colspan="2" class="comp1-header right-align money"><span>
+
+              </td>
+              <td :colspan="row.adjusted_step_number*2" class="right-align" :class="{hidden: currentOpenComp!==idx}">
+
+              </td>
+            </template>
+          </tr>
+
+          <tr>
+            <td class="feature-name money ai-pred-bg">{{Labels[domain][1]}}
+              <el-tooltip :content="Labels_Descriptions[domain][1]" placement="right" effect="dark" :show-after="0"
+                trigger="hover" :hide-after="0">
+                <span class="tooltip-icon">
+                  <i class="fa-regular fa-circle-question"></i>
+                </span>
+              </el-tooltip>
+              <br />
+              <span class="pred-description" @mouseenter="highlightAllPredAndActual()"
+                @mouseleave="unhighlightAllPredAndActual()">Prediction Error
+                <el-tooltip content="The difference between the actual value and the predicted value." placement="right"
+                  effect="dark" :show-after="0" trigger="hover" :hide-after="0">
+                  <span class="tooltip-icon">
+                    <i class="fa-regular fa-circle-question"></i>
+                  </span>
+                </el-tooltip>
+              </span>
+            </td>
+            <td class="right-align money subject ai-pred-bg">
+              {{Targets[domain][currentTargetIndex].pred}}{{unit_list[domain]}} <br />
+              <span class="pred-description"> — </span>
+            </td>
+
+            <template v-for="(row, idx) in Comparables[domain][currentTargetIndex]" :key="row.id">
+              <td colspan="2" class="comp1-header right-align money ai-pred-bg"
+                :class="{ 'pred-highlight': highlightedActualPrice === idx, 'all-pred-actual-highlight': allPredAndActualHighlighted }">
+                <span>
+                  {{row.pred}}{{unit_list[domain]}}
+                  <br />
+                  <el-tooltip
+                    :content="row.pred + unit_list[domain] + ' is ' + getPredictionDifference(row) + ' than the actual value of ' + row.actual + unit_list[domain]"
+                    placement="bottom" effect="dark" :show-after="0" trigger="hover" :hide-after="0">
+                    <span class="pred-description highlight-green" @mouseenter="highlightActualPrice(idx)"
+                      @mouseleave="unhighlightActualPrice(idx)">{{ getPredictionDifference(row) }}</span>
+                  </el-tooltip>
+              </td>
+              <!-- {{row.pred}}K -->
+              </td>
+            </template>
+          </tr>
+        </tbody>
+      </table>
+
+
+    </div>
+    <div class="tab-content" v-else class="tab-content">
+      <table class="plain-xai-table">
+        <thead>
+          <tr>
+            <th></th>
+            <th class="subject right-align border-btm" style="width: 62px;">Subject</th>
+            <template v-for="(row, idx) in Comparables[currentTargetIndex]" :key="row.id">
+              <th style="width: 62px;" class="right-align border-btm">Comparable {{idx+1}}</th>
+            </template>
+
+          </tr>
+
+        </thead>
+        <tbody>
+          <template v-for="(feature, index) in Features[domain]">
+            <tr>
+              <td class="feature-name">
+                {{feature}}
+                <el-tooltip :content="FeatureDescriptions[domain][index]" placement="right" effect="dark"
+                  :show-after="0">
+                  <span style="cursor: pointer; margin-left: 4px;">
+                    <i class="fa-regular fa-circle-question"></i>
+                  </span>
+                </el-tooltip>
+              </td>
+              <td class="right-align">{{Targets[domain][currentTargetIndex].feature_val[index]}}</td>
+              <template v-for="(row, idx) in Comparables[domain][currentTargetIndex]" :key="row.id">
+                <td class="right-align">{{row.feature_val[index]}}</td>
+              </template>
+            </tr>
+
+          </template>
+          <tr>
+            <td style="width: 140px;" class="feature-name money highlight-green">{{Labels[domain][0]}}
+              <el-tooltip :content="Labels_Descriptions[domain][0]" placement="right" effect="dark" :show-after="0"
+                trigger="hover" :hide-after="0">
+                <span class="tooltip-icon">
+                  <i class="fa-regular fa-circle-question"></i>
+                </span>
+              </el-tooltip>
+            </td>
+            <td class="right-align money highlight-green">TBD</td>
+            <template v-for="(row, idx) in Comparables[domain][currentTargetIndex]" :key="row.id">
+              <td class="right-align money highlight-green">{{row.actual}}{{unit_list[domain]}}</td>
+            </template>
+          </tr>
+
+          <tr>
+            <td style="height:8px;" class="feature-name money">
+            </td>
+            <td class="right-align money subject">
+            </td>
+            <template v-for="(row, idx) in Comparables[domain][currentTargetIndex]" :key="row.id">
+              <td colspan="2" class="comp1-header right-align money"><span>
+
+              </td>
+              <td :colspan="row.adjusted_step_number*2" class="right-align" :class="{hidden: currentOpenComp!==idx}">
+
+              </td>
+            </template>
+          </tr>
+
+          <tr>
+            <td style="width: 140px;" class="feature-name money">{{Labels[domain][1]}}
+              <el-tooltip :content="Labels_Descriptions[domain][1]" placement="right" effect="dark" :show-after="0"
+                trigger="hover" :hide-after="0">
+                <span class="tooltip-icon">
+                  <i class="fa-regular fa-circle-question"></i>
+                </span>
+              </el-tooltip>
+              <br />
+              <span class="pred-description" @mouseenter="highlightAllPredAndActual()"
+                @mouseleave="unhighlightAllPredAndActual()">Prediction Error
+                <el-tooltip content="The difference between the actual value and the predicted value." placement="right"
+                  effect="dark" :show-after="0" trigger="hover" :hide-after="0">
+                  <span class="tooltip-icon">
+                    <i class="fa-regular fa-circle-question"></i>
+                  </span>
+                </el-tooltip>
+              </span>
+            </td>
+            <td class="right-align money">{{Targets[domain][currentTargetIndex].pred}}{{unit_list[domain]}}</td>
+            <template v-for="(row, idx) in Comparables[domain][currentTargetIndex]" :key="row.id">
+              <td class="right-align money">{{row.pred}}{{unit_list[domain]}}
+                <br />
+                <el-tooltip
+                  :content="row.pred + unit_list[domain] + ' is ' + getPredictionDifference(row) + ' than the actual value of ' + row.actual + unit_list[domain]"
+                  placement="bottom" effect="dark" :show-after="0" trigger="hover" :hide-after="0">
+                  <span class="pred-description highlight-green" @mouseenter="highlightActualPrice(idx)"
+                    @mouseleave="unhighlightActualPrice(idx)">{{ getPredictionDifference(row) }}</span>
+                </el-tooltip>
+              </td>
+            </template>
+
+          </tr>
+
+        </tbody>
+      </table>
+    </div>
+    <div
+      style="margin-top: 20px; padding: 15px; background: #f8f9fa; border-radius: 6px; border: 1px solid #e9ecef; width: 300px;">
+      <div style="display: flex; align-items: center; gap: 10px; cursor: pointer;" @click="toggleAnswer">
+        <span style="font-weight: 500; color: #495057;">Check the Answer <span
+            style="font-size: 12px; color: #6c757d;">(For internal testing)</span></span>
+        <i :class="showAnswer ? 'fa-solid fa-eye-slash' : 'fa-solid fa-eye'" style="color: #6c757d;"></i>
+      </div>
+      <div v-if="showAnswer"
+        style="margin-top: 10px; padding: 10px; background: #e4fcdc; border-radius: 4px; border-left: 4px solid #28a745;">
+        <span style="font-weight: 500; color: #155724;">Subject Actual Value: </span>
+        <span class="money" style="font-size: 16px; font-weight: bold;">{{ subjectActualValue }}{{ subjectActualValue
+          !== '-' ? 'K' : '' }}</span>
+      </div>
+    </div>
+    <!-- <h3>User Estimation</h3>
+    <div class="slider-container highlight-green">
+      <label class="slider-label">Subject Actual Price Range ($)</label>
+      <div class="slider-track" @mousedown="startSliderDrag" @mousemove="onSliderDrag" @mouseup="stopSliderDrag"
+        @mouseleave="stopSliderDrag">
+        <div class="slider-fill"
+          :style="{ left: minSliderPercent + '%', width: (maxSliderPercent - minSliderPercent) + '%' }"></div>
+        <div class="slider-handle" :class="{ active: draggingHandle === 'min' }"
+          :style="{ left: minSliderPercent + '%' }" @mousedown="startHandleDrag('min', $event)"></div>
+        <div class="slider-handle" :class="{ active: draggingHandle === 'max' }"
+          :style="{ left: maxSliderPercent + '%' }" @mousedown="startHandleDrag('max', $event)"></div>
+      </div>
+      <div class="slider-values">
+        <span style="color: #6c757d; font-size: 11px;">{{ currentSliderRange.min }}K</span>
+        <span> <span>Your Estimation:</span> <span class="money">{{ minSliderValue }}K - {{ maxSliderValue
+            }}K</span></span>
+      
+        <span style="color: #6c757d; font-size: 11px;">{{ currentSliderRange.max }}K</span>
+      </div>
+    </div> -->
+  </div>
+
+  <script>
+    const { createApp } = Vue;
+    const { ElTooltip } = ElementPlus;
+
+    createApp({
+      components: {
+        ElTooltip
+      },
+      data() {
+        return {
+          domain: 0,
+          domain_list: ['House Price', 'Salary', 'Energy'],
+          unit_list: ['K', 'K', 'kWh'],
+          unit_list_header: ['$', '$', ''],
+
+          currentTab: 0,
+          currentOpenComp: null,
+          currentTargetIndex: 0,
+          // Slider data
+          slider_min: 200,
+          slider_max: 500,
+          minSliderValue: 350,
+          maxSliderValue: 450,
+          draggingHandle: null,
+          isDragging: false,
+          highlightedActualPrice: null,
+          allAdjustedPricesHighlighted: false,
+          allPredAndActualHighlighted: false,
+          showAnswer: false,
+          slider_ranges: [
+            { min: 200, max: 500 }, // domain 0
+            { min: 30, max: 200 }   // domain 1
+          ],
+          tabs: [
+            'Comparable XAI',
+            'Comparable XAI (No Trace)',
+            'Plain Example-based XAI'
+          ],
+          Labels: [
+            //domain 1
+            ['Actual Price ($)', 'AI Prediction ($)', 'Adjusted Price ($)'],
+            //domain 2
+            ['Actual Salary ($)', 'AI Prediction ($)', 'Adjusted Salary ($)'],
+            //domain 3
+            ['Actual Energy Usage (kWh)', 'AI Prediction (kWh)', 'Adjusted Usage (kWh)']
+          ],
+          Labels_Descriptions: [
+            //domain 1
+            ['The actual sale price of the comparable house.',
+              'The price of the house predicted by the AI model.',
+              'The price of the comparable house after all adjustments.'],
+            // domain 2
+            ['The annual salary of each employee in US dollars. ',
+              'The predicted salary of the employee in US dollars.',
+              'The adjusted salary of the employee in US dollars.'],
+            //domain 3
+            ['The actual energy Usage of the building in kWh.',
+              'The predicted energy Usage of the building in kWh.',
+              'The adjusted energy Usage of the building in kWh.']],
+          Features:
+            [
+              //domain 1
+              ['Dist to Downtown (km)', '# Bathroom', 'Living Area (ksqft)', 'Grade', 'Age (years)', 'Condition'],
+              //domain 2
+              ['Age (years)', 'Gender', 'Education Level', 'Job Title', 'Work Experience (years)'],
+              //domain 3
+              ['Building Type', 'Building Size (sqft) ', 'Number of Occupants', '# Appliance Used', 'Average Temperature (°C)', 'Day of the Week']],
+          numberical_feature: [
+            //domain 1
+            [1, 1, 1, 1, 1, 1],
+            //domain 2
+            [1, 0, 1, 0, 1],
+            //domain 3
+            [0, 1, 1, 1, 1, 0]
+          ],
+          FeatureDescriptions: [
+            //domain 1
+            [
+              'Distance from the property to the city center in kilometers.',
+              'The number of bathrooms in the house.',
+              'Indoor living space in thousands of square feet.',
+              'A rating of the overall quality and design of the house, based on King County\'s grading system.',
+              'The year the house was originally built.',
+              'A rating of the overall condition of the house (e.g., from 1 to 5, with 5 being the best).'
+            ],
+            //domain 2
+            [
+              'The age of the employee in years.',
+              'The gender of the employee.',
+              'The education level of the employee.',
+              'Job title of the employee.',
+              'The number of years of work experience of the employee.'
+            ],
+            //domain 3
+            [
+              'The type of building.',
+              'The total square footage of the building.',
+              'The number of occupants in the building.',
+              'The number of appliances used in the building.',
+              'The average temperature of the building or climate area (in Celsius).',
+              'The day on which the energy usage was measured, indicating whether it falls on a weekday or weekend.'
+            ]
+          ],
+          Targets: [
+            // domain 1
+            [{
+              'feature_val': [12.4, 1, 1.4, 7, 68, 4],
+              'pred': 389,
+              'actual': 395
+            },
+            {
+              'feature_val': [3.1, '1¾', 1.7, 8, 112, 3],
+              'pred': 719.9,
+              'actual': 625
+            }],
+            //domain 2
+            [{
+              'feature_val': [31, 'Male', "Bachelor's", 'Junior Operations Analyst', 3],
+              'pred': 48.3,
+              'actual': 50
+            },
+            {
+              'feature_val': [35, 'Male', "Master's", 'Senior Product Manager', 10],
+              'pred': 110,
+              'actual': 120
+            },
+            {
+              'feature_val': [46, 'Male', "phD", 'Senior Data Scientist', 18],
+              'pred': 157.8,
+              'actual': 160
+            },
+            ],
+            //domain 3
+            [
+              {
+                'feature_val': ['Residential', 7063, 76, 10, 29.8, 'Weekday'],
+                'pred': 2713.9,
+                'actual': 2713.9
+              },
+            ]
+          ],
+          Comparables: [
+            // domain 1
+            [[
+              {
+                'id': 0,
+                'feature_val': [12.1, 2, 1.1, 7, 68, 5],
+                'delta_x': [+0.3, -1, +0.3, 0, 0, -1],
+                'delta_y': [-3, -6, +30, 0, 0, -3],
+                'pred': 373,
+                'actual': 390,
+                'adjusted_step_number': 4,
+                'adjusted_order': [1, 2, 0, 5],
+                'adjusted_price': [384, 414, 411, 408],
+                'final_adjusted_price': 408,
+                'net_adjustments': [-6, 24, 21, 18],
+                'net_adjustment': 18
+              },
+              {
+                'id': 1,
+                'feature_val': [10.5, 1, 0.7, 6, 73, 3],
+                'delta_x': [+1.8, 0, +0.7, +1, -7, +1],
+                'delta_y': [-113, 0, +135, +97, +7, +22],
+                'pred': 232,
+                'actual': 245,
+                'adjusted_step_number': 5,
+                'adjusted_order': [0, 2, 3, 4, 5],
+                'adjusted_price': [132, 267, 364, 371, 393],
+                'final_adjusted_price': 393,
+                'net_adjustments': [-113, 22, 119, 126, 148],
+                'net_adjustment': 148
+              }
+            ],
+
+            [
+              //'feature_val': [3.2, '1¾', 1.7, 8, 112, 3],
+              {
+                'id': 0,
+                'feature_val': [3, 2, 1.8, 8, 90, 3],
+                'delta_x': [-0.1, '¼', -0.1, 0, +22, 0],
+                'delta_y': [-41.4, 0, 0, 0, +105.6, 0],
+                'pred': 641.6,
+                'actual': 575,
+                'adjusted_step_number': 4,
+                'adjusted_order': [2, 4, 1, 0],
+                'adjusted_price': [575, 680.6, 680.6, 639.2],
+                'final_adjusted_price': 639.2,
+              },
+              {
+                'id': 1,
+                'feature_val': [7, 2.5, 1.6, 8, 7, 3],
+                'delta_x': [-3.8, -0.5, +0.1, 0, +83, 0],
+                'delta_y': [+29.6, -18.5, +57.9, 0, +82, 0],
+                'pred': 517.6,
+                'actual': 525,
+                'adjusted_step_number': 4,
+                'adjusted_order': [2, 0, 4, 1],
+                'adjusted_price': [582.9, 612.5, +694.5, 676],
+                'final_adjusted_price': 639.2,
+              }
+            ]],
+            [
+              //domain 2 instance 1
+              [
+                //domain 2 instance 1 comp 1
+                {
+                  'id': 0,
+                  'feature_val': [31.0, 'Male', "Bachelor's", 'Junior Project Manager', 3.0],
+
+                  'delta_x': [0, 0, 0, 1, 0],
+                  'delta_y': [0, 0, 0, -4.2, 0],
+                  'pred': 52.5,
+                  'actual': 55,
+                  'adjusted_step_number': 1,
+                  'adjusted_order': [3],
+                  'adjusted_price': [50.8],
+                  'final_adjusted_price': 50.8,
+                  //'net_adjustments': [-6, 24, 21, 18],
+                  //'net_adjustment': 18
+                },
+                //domain 2 instance 1 comp 2
+                {
+                  'id': 0,
+                  'feature_val': [30, 'Female', "Bachelor's", 'Digital Content Producer', 3],
+                  'delta_x': [1, 1, 0, 1, 0],
+                  'delta_y': [+2.6, +0.4, 0, -2.9, 0],
+                  'pred': 48.5,
+                  'actual': 50,
+                  'adjusted_step_number': 3,
+                  'adjusted_order': [1, 0, 3],
+                  'adjusted_price': [50.4, 53, 50.1],
+                  'final_adjusted_price': 50.1,
+
+                  'net_adjustments': [-6, 24, 21, 18],
+                  'net_adjustment': 18
+                },
+              ],
+              //domain 2 instance 2
+              [
+                //domain 2 instance 2 comp 1
+                {
+                  'id': 0,
+
+                  'feature_val': [36.0, 'Male', "Master's", 'Senior Business Development Manager', 11],
+                  'delta_x': [1, 0, 0, 1, 1],
+                  'delta_y': [-7.7, 0, 0, +0.6, -2.8],
+                  'pred': 119.6,
+                  'actual': 120,
+                  'adjusted_step_number': 3,
+                  'adjusted_order': [0, 3, 4],
+                  'adjusted_price': [112.3, 112.9, 110.1],
+                  'final_adjusted_price': 110.1,
+
+                },
+                /*{
+                  'id': 1,
+                  'feature_val': [35.0, 'Male', "Master's", 'Business Development Manager', 8.0],
+                  'delta_x': [0, 0, 0, 1, 2],
+                  'delta_y': [0, 0, 0, +12.5, +9.6],
+                  'pred': 91.5,
+                  'actual': 90,
+                  'adjusted_step_number': 2,
+                  'adjusted_order': [3, 4],
+                  'adjusted_price': [102.5, 112.1],
+                  'final_adjusted_price': 112.1,
+                },*/
+                //domain 2 instance 2 comp 2
+                {
+                  'id': 1,
+                  'feature_val': [35, 'Male', "Master's", 'Product Manager', 7.0],
+                  'delta_x': [0, 0, 0, 1, 3],
+                  'delta_y': [0, 0, 0, -0.1, +8.7],
+                  'pred': 103.7,
+                  'actual': 105,
+                  'adjusted_step_number': 2,
+                  'adjusted_order': [3, 4],
+                  'adjusted_price': [103.6, 112.3],
+                  'final_adjusted_price': 112.3,
+                }
+              ],
+              //domain 2 instance 3
+              [
+                //domain 2 instance 3 comp 1
+                //'feature_val': [46, 'Male', "phD", 'Senior Data Scientist', 18],
+                {
+                  'id': 0,
+                  'feature_val': [46, 'Male', 'PhD', 'Senior Manager', 20],
+                  'delta_x': [0, 0, 0, 1, -2],
+                  'delta_y': [0, 0, 0, -7.6, -2.2],
+                  'pred': 168.5,
+                  'actual': 170,
+                  'adjusted_step_number': 2,
+                  'adjusted_order': [4, 3],
+                  'adjusted_price': [167.8, 160.2],
+                  'final_adjusted_price': 160.2,
+                },
+
+                {
+                  'id': 1,
+                  'feature_val': [47, 'Male', 'PhD', 'Director of Engineering', 20],
+                  'delta_x': [-1, 0, 0, 1, -2],
+                  'delta_y': [-15.6, 0, 0, -4.4, -2.4],
+                  'pred': 178.4,
+                  'actual': 180,
+                  'adjusted_step_number': 3,
+                  'adjusted_order': [4, 0, 3],
+                  'adjusted_price': [177.6, 162, 157.6],
+                  'final_adjusted_price': 157.6,
+                },
+
+              ]
+            ],
+            [[{
+
+              'id': 0,
+              'feature_val': ['Residential', 7063, 70, 10, 29.8, 'Weekday'],
+              'delta_x': [0, 0, +6, 0, 0, 0],
+              'delta_y': [0, 0, 2, 0, 0, 0],
+              'pred': 2700,
+              'actual': 2710,
+              'adjusted_step_number': 1,
+              'adjusted_order': [2],
+              'adjusted_price': [2716],
+              'final_adjusted_price': 2716,
+
+            }]]
+
+
+          ],
+          Comparables_no_trace: [
+            [
+              {
+                'id': 0,
+                'feature_val': [12.1, 2, 1.1, 7, 68, 5],
+                'delta_x': [+0.3, -1, +0.3, 0, 0, -1],
+                'delta_y': [+11, -6, -10, 0, 0, +1.5],
+                'pred': 373,
+                'actual': 390,
+                'adjusted_step_number': 4,
+                'adjusted_price': 386
+              },
+              {
+                'id': 1,
+                'feature_val': [10.5, 1, 0.7, 6, 73, 3],
+                'delta_x': [+1.8, 0, +0.7, +1, -7, +1],
+                'delta_y': [-67, 0, +154, +150, +6, +35],
+                'pred': 232,
+                'actual': 245,
+                'adjusted_step_number': 5,
+                'adjusted_price': 524
+              }
+            ],
+            [
+              {
+                'id': 0,
+                'feature_val': [0, 0, 0, 0, 0, 0],
+                'delta_x': [0, 0, 0, 0, 0, 0],
+                'delta_y': [0, 0, 0, 0, 0, 0],
+                'pred': 0,
+                'actual': 0,
+                'adjusted_step_number': 3,
+                'adjusted_price': 0
+              },
+              {
+                'id': 1,
+                'feature_val': [0, 0, 0, 0, 0, 0],
+                'delta_x': [0, 0, 0, 0, 0, 0],
+                'delta_y': [0, 0, 0, 0, 0, 0],
+                'pred': 0,
+                'actual': 0,
+                'adjusted_step_number': 4,
+                'adjusted_price': 0
+              }
+            ]
+          ]
+        }
+      },
+      computed: {
+        weightedAverageTooltipContent() {
+          const comparables = this.Comparables[this.domain][this.currentTargetIndex];
+          if (!comparables || comparables.length === 0) return '';
+          let formula = '';
+          let sum = 0;
+          let totalWeight = 0;
+          for (let idx = 0; idx < comparables.length; idx++) {
+            const weight = this.similarityScores[idx] || 0;
+            const price = comparables[idx].adjusted_price && comparables[idx].adjusted_price.length > 0
+              ? comparables[idx].adjusted_price[comparables[idx].adjusted_step_number - 1]
+              : 0;
+            formula += `${weight}% × ${price}${this.unit_list[this.domain]}`;
+            if (idx < comparables.length - 1) formula += ' + ';
+            sum += weight * price;
+            totalWeight += weight;
+          }
+          if (totalWeight === 0) return formula;
+          const avg = (sum / totalWeight).toFixed(1);
+          return `${formula} = ${avg}${this.unit_list[this.domain]}`;
+        },
+        weightedAverageValue() {
+          const comparables = this.Comparables[this.domain][this.currentTargetIndex];
+          if (!comparables || comparables.length === 0) return '-';
+          let sum = 0;
+          let totalWeight = 0;
+          for (let idx = 0; idx < comparables.length; idx++) {
+            const weight = this.similarityScores[idx] || 0;
+            const price = comparables[idx].adjusted_price && comparables[idx].adjusted_price.length > 0
+              ? comparables[idx].adjusted_price[comparables[idx].adjusted_step_number - 1]
+              : 0;
+            sum += weight * price;
+            totalWeight += weight;
+          }
+          if (totalWeight === 0) return '-';
+          return (sum / totalWeight).toFixed(1);
+        },
+        similarityScores() {
+          const subject = this.Targets[this.domain][this.currentTargetIndex];
+          const comparables = this.Comparables[this.domain][this.currentTargetIndex];
+          if (!subject || !comparables) return [];
+
+          const scores = comparables.map(comp => {
+            let score = 0;
+            for (let i = 0; i < comp.feature_val.length; i++) {
+              const subjVal = subject.feature_val[i];
+              const compVal = comp.feature_val[i];
+              if (this.numberical_feature[this.domain][i]) {
+                // 只在都能转成数字时才加分
+                const subjNum = Number(subjVal);
+                const compNum = Number(compVal);
+                if (!isNaN(subjNum) && !isNaN(compNum)) {
+                  const diff = Math.abs(subjNum - compNum);
+                  score += 1 / (1 + diff);
+                }
+                // 否则不给分
+              } else {
+                // Categorical: 1 if equal, 0 if not
+                score += subjVal === compVal ? 1 : 0;
+              }
+            }
+            return score;
+          });
+
+          const total = scores.reduce((a, b) => a + b, 0);
+          return scores.map(s => total ? Math.round((s / total) * 100) : 0);
+        },
+        currentSliderRange() {
+          return this.slider_ranges[this.domain];
+        },
+        minSliderPercent() {
+          const range = this.currentSliderRange;
+          return ((this.minSliderValue - range.min) / (range.max - range.min)) * 100;
+        },
+        maxSliderPercent() {
+          const range = this.currentSliderRange;
+          return ((this.maxSliderValue - range.min) / (range.max - range.min)) * 100;
+        },
+        currentComparableFinalPrices() {
+          const comparables = this.Comparables[this.domain][this.currentTargetIndex];
+          if (!comparables || comparables.length === 0) return [];
+
+          const finalPrices = [];
+          comparables.forEach(comp => {
+            if (comp.final_adjusted_price) {
+              finalPrices.push(comp.final_adjusted_price);
+            }
+          });
+
+          return finalPrices;
+        },
+        comparablePriceRange() {
+          const prices = this.currentComparableFinalPrices;
+          if (prices.length === 0) return { min: 350, max: 450 };
+
+          const min = Math.min(...prices);
+          const max = Math.max(...prices);
+          return { min, max };
+        },
+        subjectActualValue() {
+          const target = this.Targets[this.domain][this.currentTargetIndex];
+          return target && target.actual ? target.actual : '-';
+        }
+      },
+      mounted() {
+        this.updateSliderFromComparables();
+      },
+      watch: {
+        domain() {
+          this.currentTargetIndex = 0;
+          this.updateSliderFromComparables();
+          this.showAnswer = false;
+        },
+        currentTargetIndex() {
+          this.updateSliderFromComparables();
+          this.showAnswer = false;
+        }
+      },
+      methods: {
+        updateSliderFromComparables() {
+          const range = this.comparablePriceRange;
+          const sliderRange = this.currentSliderRange;
+          // Map the comparable price range to current slider range
+          const comparableMin = range.min;
+          const comparableMax = range.max;
+
+          // If comparable prices are all 0, use default range within current slider range
+          if (comparableMin === 0 && comparableMax === 0) {
+            const defaultRange = sliderRange.max - sliderRange.min;
+            this.minSliderValue = Math.round(sliderRange.min + defaultRange * 0.3);
+            this.maxSliderValue = Math.round(sliderRange.min + defaultRange * 0.7);
+          } else {
+            // Map comparable prices to current slider range
+            // Scale the comparable range to fit within current slider range
+            const scale = Math.min(sliderRange.max / comparableMax, 1); // Ensure we don't exceed slider max
+            this.minSliderValue = Math.round(comparableMin * scale);
+            this.maxSliderValue = Math.round(comparableMax * scale);
+          }
+        },
+        highlightActualPrice(idx) {
+          this.highlightedActualPrice = idx;
+        },
+        unhighlightActualPrice() {
+          this.highlightedActualPrice = null;
+        },
+        highlightAllAdjustedPrices() {
+          this.allAdjustedPricesHighlighted = true;
+        },
+        unhighlightAllAdjustedPrices() {
+          this.allAdjustedPricesHighlighted = false;
+        },
+        highlightAllPredAndActual() {
+          this.allPredAndActualHighlighted = true;
+        },
+        unhighlightAllPredAndActual() {
+          this.allPredAndActualHighlighted = false;
+        },
+        toggleAnswer() {
+          this.showAnswer = !this.showAnswer;
+        },
+        toggleCols(group, idx) {
+          if (this.currentOpenComp == idx) {
+            this.currentOpenComp = null
+          } else {
+            this.currentOpenComp = idx
+          }
+          console.log("group", group)
+        },
+        nextTarget() {
+          if (this.currentTargetIndex < this.Targets[this.domain].length - 1) {
+            this.currentTargetIndex++;
+            this.currentOpenComp = null;
+          }
+        },
+        prevTarget() {
+          if (this.currentTargetIndex > 0) {
+            this.currentTargetIndex--;
+            this.currentOpenComp = null;
+          }
+        },
+        getPredictionDifference(row) {
+          if (row.pred === 0 || row.actual === 0) {
+            return "—";
+          }
+
+          const difference = row.pred - row.actual;
+          const percentage = Math.abs((difference / row.actual) * 100);
+          const roundedPercentage = Math.round(percentage * 10) / 10; // Round to 1 decimal place
+
+          if (difference > 0) {
+            return `${roundedPercentage}% Higher`;
+          } else if (difference < 0) {
+            return `${roundedPercentage}% Lower`;
+          } else {
+            return "0% (Same)";
+          }
+        },
+        startHandleDrag(handle, event) {
+          event.preventDefault();
+          this.draggingHandle = handle;
+          this.isDragging = true;
+        },
+        startSliderDrag(event) {
+          if (!this.isDragging) {
+            this.updateSliderValue(event);
+          }
+        },
+        onSliderDrag(event) {
+          if (this.isDragging) {
+            this.updateSliderValue(event);
+          }
+        },
+        stopSliderDrag() {
+          this.isDragging = false;
+          this.draggingHandle = null;
+        },
+        updateSliderValue(event) {
+          const rect = event.currentTarget.getBoundingClientRect();
+          const x = event.clientX - rect.left;
+          const percent = Math.max(0, Math.min(100, (x / rect.width) * 100));
+          const range = this.currentSliderRange;
+          const value = Math.round(range.min + (percent / 100) * (range.max - range.min));
+
+          if (this.draggingHandle === 'min') {
+            this.minSliderValue = Math.min(value, this.maxSliderValue - 10);
+          } else if (this.draggingHandle === 'max') {
+            this.maxSliderValue = Math.max(value, this.minSliderValue + 10);
+          } else {
+            // Click on track - move both handles
+            const currentRange = this.maxSliderValue - this.minSliderValue;
+            this.minSliderValue = Math.max(range.min, value - currentRange / 2);
+            this.maxSliderValue = Math.min(range.max, this.minSliderValue + currentRange);
+          }
+        }
+      }
+    }).mount('#app');
+  </script>
+
+</body>
+
+</html>
