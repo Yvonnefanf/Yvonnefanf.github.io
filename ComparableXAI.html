@@ -94,7 +94,6 @@
     .highlight-green2,
     .adj-price {
       background-color: #e4fcdc !important;
-
     }
 
 
@@ -105,10 +104,14 @@
     .adj-price {
       width: 62px;
       padding-right: 10px;
+      border-right: 1px solid #36a341;
+    }
+    .green-right-border{
+      border-right: 1px solid #36a341;
     }
 
     .adj-value {
-      width: 62px;
+      width: 42px;
       font-weight: 400;
       padding-right: 10px;
     }
@@ -517,13 +520,13 @@
             </template>
           </tr> -->
           <!-- Header row -->
-          <tr style="border-top: 2px solid transparent;">
+          <tr style="border-top:2px solid transparent">
             <th rowspan="1" style="width: 100px;"></th>
             <th class="comp1-header right-align subject" style="width: 50px;">Subject</th>
             <template v-for="(row, idx) in Comparables[domain][currentTargetIndex]" :key="row.id" class="comp1-header"
               style="position:relative;">
-              <th colspan="2" class="comp1-header border-btm right-align"
-                :class="{'trace-border-left': currentOpenComp===idx, 'trace-border-top': currentOpenComp===idx}"
+              <th colspan="2" class="comp1-header right-align border-btm"
+                :class="{'trace-border-left': currentOpenComp===idx, 'trace-border-top': currentOpenComp===idx, 'green-right-border': currentOpenComp===idx}"
                 style="position:relative;">
 
                 Comparable {{idx + 1}}
@@ -549,8 +552,9 @@
               Comparable {{idx + 1}} Adjustment Trace
               </th> -->
               <template v-for="i in row.adjusted_step_number">
-                <th class="border-btm comp-details trace-border-top" style="" colspan="2"
-                  :class="{hidden: currentOpenComp!==idx, 'trace-border-right': i === row.adjusted_price.length}">
+                <th class="border-btm comp-details trace-border-top green-right-border" style="" colspan="2"
+                  :class="{hidden: currentOpenComp!==idx, 
+                  'trace-border-right': i === row.adjusted_price.length}">
                   {{ i === row.adjusted_price.length ? '≈ Subject' : i }}</th>
               </template>
 
@@ -581,7 +585,9 @@
             <template v-for="(row, idx) in Comparables[domain][currentTargetIndex]" :key="row.id">
               <th style="width: 62px;" class="comp-header right-align border-btm"
                 :class="{'trace-border-left': currentOpenComp===idx}">Values</th>
-              <th class="comp1-header right-align border-btm money highlight-green2" style="width: 62px;">
+              <th :class="{'adj-price' : currentOpenComp===idx }"
+              class="comp1-header right-align border-btm money highlight-green2" 
+              style="width: 62px;">
                 <span> {{unit_list_header[domain]}} Δ </span>
                 <!-- <button class="toggle-button" @click="toggleCols(`comp${idx+1}`,idx)">
                   <span v-if="currentOpenComp!=idx" class="toggle-text">{{ currentOpenComp ==idx ? ' ' : '...' }}</span>
@@ -592,7 +598,8 @@
                 <th class="adj-value border-btm right-align" style="font-weight: bold;"
                   :class="{hidden: currentOpenComp!==idx}">Values</th>
                 <th class="adj-price border-btm right-align money" style="font-weight: bold;"
-                  :class="{hidden: currentOpenComp!==idx, 'trace-border-right': i === row.adjusted_price.length}">
+                  :class="{hidden: currentOpenComp!==idx, 
+                  'trace-border-right': i === row.adjusted_price.length}">
                   {{unit_list_header[domain]}} Δ
                 </th>
               </template>
@@ -651,7 +658,9 @@
                   <div style="cursor: default;">{{ row.feature_val[index] }} </div>
                 </template> -->
               </td>
-              <td class="comp1-header right-align money highlight-green2" :class="{'gray-font': row.delta_x[index]==0}">
+              <td class="comp1-header right-align money highlight-green2" 
+              :class="{'gray-font': row.delta_x[index]==0, 'adj-price' : currentOpenComp==idx }"
+              >
                 {{row.delta_y[index]!==0? row.delta_y[index]+unit_list[domain]:'0' }}
               </td>
               <template v-for="i in row.adjusted_step_number">
