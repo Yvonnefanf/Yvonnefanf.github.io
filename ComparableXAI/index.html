@@ -35,7 +35,8 @@
   </div>
   <div class="url-display">
     Iframe URL:&nbsp;
-    <a id="frameUrlLink" href="iframe.html?domain=0&tab=0&instance=0" target="_blank">iframe.html?domain=0&tab=0&instance=0</a>
+    <a id="frameUrlLink" href="iframe.html?domain=0&tab=0&instance=0" target="_blank">
+      https://yvonnefanf.github.io/ComparableXAI/iframe.html?domain=0&tab=0&instance=0</a>
   </div>
 
   <iframe id="xaiFrame" src="iframe.html?domain=0&tab=0&instance=0" width="100%" height="800" frameborder="0"></iframe>
@@ -47,7 +48,7 @@
       const d = document.getElementById('domain').value;
       const t = document.getElementById('tab').value;
       const i = document.getElementById('instance').value;
-      const url = `iframe.html?domain=${d}&tab=${t}&instance=${i}`;
+      const url = `https://yvonnefanf.github.io/ComparableXAI/iframe.html?domain=${d}&tab=${t}&instance=${i}`;
       const frame = document.getElementById('xaiFrame');
       frame.src = url;
       const link = document.getElementById('frameUrlLink');
