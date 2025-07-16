@@ -478,29 +478,6 @@
 <body>
 
   <div id="app">
-    <div style="display: flex; align-items: center; gap: 20px; margin-bottom: 20px;">
-      <div>
-        Domain:
-        <select v-model="domain">
-          <option v-for="(item,index) in domain_list" :value="index">{{item}}</option>
-        </select>
-      </div>
-      <div>
-        XAI Type:
-        <select v-model="currentTab">
-          <option v-for="(tab, idx) in tabs" :key="tab" :value="idx">{{ tab }}</option>
-        </select>
-      </div>
-      <div style="display: flex; align-items: center; gap: 16px;">
-        <button class="nav-btn" @click="prevTarget" :disabled="currentTargetIndex===0">
-          <i class="fa fa-angle-left"></i> Prev
-        </button>
-        <span>Instance {{ currentTargetIndex + 1 }} / {{ Targets[domain].length }}</span>
-        <button class="nav-btn" @click="nextTarget" :disabled="currentTargetIndex===Targets[domain].length-1">
-          Next <i class="fa fa-angle-right"></i>
-        </button>
-      </div>
-    </div>
     <div class="tab-content" v-if="currentTab === 0">
       <table>
         <thead>
@@ -1271,6 +1248,17 @@
   </div>
 
   <script>
+
+    // parse query params
+    function getParam(key, defaultValue) {
+      const params = new URLSearchParams(window.location.search);
+      return params.has(key) ? Number(params.get(key)) : defaultValue;
+    }
+    const initDomain = getParam('domain', 0);
+    const initTab = getParam('tab', 0);
+    const initInstance = getParam('instance', 0);
+
+    
     const { createApp } = Vue;
     const { ElTooltip } = ElementPlus;
 
@@ -1280,14 +1268,15 @@
       },
       data() {
         return {
-          domain: 0,
+          domain: initDomain,
+          currentTab: initTab,
+          currentTargetIndex: initInstance,
           domain_list: ['House Price', 'Salary', 'Energy'],
           unit_list: ['K', 'K', 'kWh'],
           unit_list_header: ['$', '$', ''],
 
-          currentTab: 0,
+          
           currentOpenComp: null,
-          currentTargetIndex: 0,
           // Slider data
           slider_min: 200,
           slider_max: 500,
