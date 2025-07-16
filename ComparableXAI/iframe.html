@@ -473,6 +473,7 @@
       border-left: 2px solid #36a341;
     }
   </style>
+  <script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js"></script>
 </head>
 
 <body>
@@ -1319,50 +1320,11 @@
             ['The actual energy Usage of the building in kWh.',
               'The predicted energy Usage of the building in kWh.',
               'The adjusted energy Usage of the building in kWh.']],
-          Features:
-            [
-              //domain 1
-              ['Dist to Downtown (km)', '# Bathroom', 'Living Area (ksqft)', 'Grade', 'Age (years)', 'Condition'],
-              //domain 2
-              ['Age (years)', 'Gender', 'Education Level', 'Job Title', 'Work Experience (years)'],
-              //domain 3
-              ['Building Type', 'Building Size (sqft) ', 'Number of Occupants', '# Appliance Used', 'Average Temperature (°C)', 'Day of the Week']],
-          numberical_feature: [
-            //domain 1
-            [1, 1, 1, 1, 1, 1],
-            //domain 2
-            [1, 0, 1, 0, 1],
-            //domain 3
-            [0, 1, 1, 1, 1, 0]
-          ],
-          FeatureDescriptions: [
-            //domain 1
-            [
-              'Distance from the property to the city center in kilometers.',
-              'The number of bathrooms in the house.',
-              'Indoor living space in thousands of square feet.',
-              'A rating of the overall quality and design of the house, based on King County\'s grading system.',
-              'The year the house was originally built.',
-              'A rating of the overall condition of the house (e.g., from 1 to 5, with 5 being the best).'
-            ],
-            //domain 2
-            [
-              'The age of the employee in years.',
-              'The gender of the employee.',
-              'The education level of the employee.',
-              'Job title of the employee.',
-              'The number of years of work experience of the employee.'
-            ],
-            //domain 3
-            [
-              'The type of building.',
-              'The total square footage of the building.',
-              'The number of occupants in the building.',
-              'The number of appliances used in the building.',
-              'The average temperature of the building or climate area (in Celsius).',
-              'The day on which the energy usage was measured, indicating whether it falls on a weekday or weekend.'
-            ]
-          ],
+          // --- CHANGED: initialize as empty, will be loaded from CSV ---
+          Features: [],
+          FeatureDescriptions: [],
+          numberical_feature: [],
+          // --- END CHANGED ---
           Targets: [
             // domain 1
             [{
@@ -1745,6 +1707,7 @@
         }
       },
       mounted() {
+        this.loadMetadata(); // <-- CHANGED: load features from CSV
         this.updateSliderFromComparables();
       },
       watch: {
@@ -1873,7 +1836,33 @@
             this.minSliderValue = Math.max(range.min, value - currentRange / 2);
             this.maxSliderValue = Math.min(range.max, this.minSliderValue + currentRange);
           }
-        }
+        },
+        // --- CHANGED: Add CSV loading methods ---
+        loadMetadata() {
+          Papa.parse('ComparableXAI/data/metadata.csv', {
+            download: true,
+            header: true,
+            complete: (results) => {
+              this.processMetadata(results.data);
+            }
+          });
+        },
+        processMetadata(data) {
+          const features = [];
+          const descriptions = [];
+          const numericals = [];
+          let maxDomain = Math.max(...data.map(row => Number(row.domainId)));
+          for (let d = 0; d <= maxDomain; d++) {
+            const domainRows = data.filter(row => Number(row.domainId) === d);
+            features[d] = domainRows.map(row => row.featureName);
+            descriptions[d] = domainRows.map(row => row.Description);
+            numericals[d] = domainRows.map(row => Number(row.is_numerical));
+          }
+          this.Features = features;
+          this.FeatureDescriptions = descriptions;
+          this.numberical_feature = numericals;
+        },
+        // --- END CHANGED ---
       }
     }).mount('#app');
   </script>

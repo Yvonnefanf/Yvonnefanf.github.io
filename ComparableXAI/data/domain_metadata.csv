@@ -1,0 +1,4 @@
+domainId,domainName,units,headerUnits
+0,House Price,K,$
+1,Salary,K,$
+2,Energy,kWh,
