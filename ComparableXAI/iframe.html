@@ -683,18 +683,18 @@
             <td class="right-align subject money highlight-green" @mouseenter="highlightAllAdjustedPrices()"
               @mouseleave="unhighlightAllAdjustedPrices()">
               <div style="cursor: pointer;">
-                {{weightedAverageValue}}{{unit_list[domainIdx]}}
+                
                 <el-tooltip :content="weightedAverageTooltipContent" placement="right" effect="dark" :show-after="0"
                   trigger="hover" :hide-after="0">
                   <span style="cursor: pointer;">
-                    <!--<i class="fa-regular fa-circle-question"></i>-->?
+                    {{weightedAverageValue}}{{unit_list[domainIdx]}} ?
                   </span>
                 </el-tooltip>
                 <el-tooltip content="Warning: the Decision Tool may be wrong, so consider this value carefully."
                   placement="right" effect="dark" :show-after="0" trigger="hover" :hide-after="0">
-                  <span style="cursor: pointer; margin-left: 2px; font-size: 14px; color:#bd3030">
-                   
-                    <i class="fa-solid fa-circle-exclamation"></i>
+                  <span style="cursor: pointer; margin-left: 4px; color:#bd3030">
+                    <i class="fa-solid fa-exclamation"></i>
+                    <!-- <i class="fa-solid fa-circle-exclamation"></i> -->
                   </span>
                 </el-tooltip>
                 </span>
@@ -1015,19 +1015,21 @@
             </td>
             <td class="right-align subject money highlight-green" @mouseenter="highlightAllAdjustedPrices()"
               @mouseleave="unhighlightAllAdjustedPrices()">
-              <div style="cursor: pointer;">{{weightedAverageValue}}{{unit_list[domainIdx]}}
+              <div style="cursor: pointer;">
+                <!-- {{weightedAverageValue}}{{unit_list[domainIdx]}} -->
                 <el-tooltip :content="weightedAverageTooltipContent" placement="right" effect="dark" :show-after="0"
                   trigger="hover" :hide-after="0">
                   <span style="cursor: pointer; margin-left: 2px; font-size: 12px;">
-                    ?
+                    {{weightedAverageValue}}{{unit_list[domainIdx]}} ?
                   </span>
                 </el-tooltip>
                 <el-tooltip content="Warning: the Decision Tool may be wrong, so consider this value carefully."
-                  placement="right" effect="dark" :show-after="0" trigger="hover" :hide-after="0">
-                  <span style="cursor: pointer; margin-left: 2px; font-size: 14px; color:#bd3030">
-                    <i class="fa-solid fa-circle-exclamation"></i>
-                  </span>
-                </el-tooltip>
+                placement="right" effect="dark" :show-after="0" trigger="hover" :hide-after="0">
+                <span style="cursor: pointer; margin-left: 4px; color:#bd3030">
+                  <i class="fa-solid fa-exclamation"></i>
+                  <!-- <i class="fa-solid fa-circle-exclamation"></i> -->
+                </span>
+              </el-tooltip>
                 </span>
               </div>
             </td>
