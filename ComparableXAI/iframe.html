@@ -683,7 +683,7 @@
             <td class="right-align subject money highlight-green" @mouseenter="highlightAllAdjustedPrices()"
               @mouseleave="unhighlightAllAdjustedPrices()">
               <div style="cursor: pointer;">
-                
+
                 <el-tooltip :content="weightedAverageTooltipContent" placement="right" effect="dark" :show-after="0"
                   trigger="hover" :hide-after="0">
                   <span style="cursor: pointer;">
@@ -851,11 +851,11 @@
                 </span>
               </el-tooltip>
               <el-tooltip content="Warning: the Decision Tool may be wrong, so consider this value carefully."
-              placement="top" effect="dark" :show-after="0" trigger="hover" :hide-after="0">
-              <span style="cursor: pointer; margin-left: 6px; font-size:12px;  color:#bd3030">
-                <i class="fa-solid fa-exclamation"></i>
-                <!-- <i class="fa-solid fa-circle-exclamation"></i> -->
-              </span>
+                placement="top" effect="dark" :show-after="0" trigger="hover" :hide-after="0">
+                <span style="cursor: pointer; margin-left: 6px; font-size:12px;  color:#bd3030">
+                  <i class="fa-solid fa-exclamation"></i>
+                  <!-- <i class="fa-solid fa-circle-exclamation"></i> -->
+                </span>
               </el-tooltip>
               <br />
               <span class="pred-description" @mouseenter="highlightAllPredAndActual()"
@@ -866,7 +866,7 @@
                     <i class="fa-regular fa-circle-question"></i>
                   </span>
                 </el-tooltip>
-                
+
               </span>
             </td>
             <td class="right-align money subject ai-pred-bg">
@@ -1032,12 +1032,12 @@
                   </span>
                 </el-tooltip>
                 <el-tooltip content="Warning: the Decision Tool may be wrong, so consider this value carefully."
-                placement="right" effect="dark" :show-after="0" trigger="hover" :hide-after="0">
-                <span style="cursor: pointer; margin-left: 4px; color:#bd3030">
-                  <i class="fa-solid fa-exclamation"></i>
-                  <!-- <i class="fa-solid fa-circle-exclamation"></i> -->
-                </span>
-              </el-tooltip>
+                  placement="right" effect="dark" :show-after="0" trigger="hover" :hide-after="0">
+                  <span style="cursor: pointer; margin-left: 4px; color:#bd3030">
+                    <i class="fa-solid fa-exclamation"></i>
+                    <!-- <i class="fa-solid fa-circle-exclamation"></i> -->
+                  </span>
+                </el-tooltip>
                 </span>
               </div>
             </td>
@@ -1094,11 +1094,11 @@
                 </span>
               </el-tooltip>
               <el-tooltip content="Warning: the Decision Tool may be wrong, so consider this value carefully."
-              placement="top" effect="dark" :show-after="0" trigger="hover" :hide-after="0">
-              <span style="cursor: pointer; margin-left: 6px; font-size:12px;  color:#bd3030">
-                <i class="fa-solid fa-exclamation"></i>
-                <!-- <i class="fa-solid fa-circle-exclamation"></i> -->
-              </span>
+                placement="top" effect="dark" :show-after="0" trigger="hover" :hide-after="0">
+                <span style="cursor: pointer; margin-left: 6px; font-size:12px;  color:#bd3030">
+                  <i class="fa-solid fa-exclamation"></i>
+                  <!-- <i class="fa-solid fa-circle-exclamation"></i> -->
+                </span>
               </el-tooltip>
               <br />
               <span class="pred-description" @mouseenter="highlightAllPredAndActual()"
@@ -1179,13 +1179,11 @@
                 </span>
               </el-tooltip>
             </td>
-            <td class="right-align money highlight-green">TBD
-              <el-tooltip content="To Be Determined" placement="right" effect="dark" :show-after="0" trigger="hover"
-                :hide-after="0">
-                <span class="tooltip-icon">
-                  <i class="fa-regular fa-circle-question"></i>
-                </span>
-              </el-tooltip>
+            <el-tooltip content="To Be Determined" placement="right" effect="dark" :show-after="0" trigger="hover"
+              :hide-after="0">
+              <td class="right-align money highlight-green">TBD
+
+            </el-tooltip>
             </td>
             <template v-for="(row, idx) in Comparables[domainIdx][currentTargetIndex]" :key="row.id">
               <td class="right-align money highlight-green">{{row.actual}}{{unit_list[domainIdx]}}</td>
@@ -1239,6 +1237,13 @@
                 trigger="hover" :hide-after="0">
                 <span class="tooltip-icon">
                   <i class="fa-regular fa-circle-question"></i>
+                </span>
+              </el-tooltip>
+              <el-tooltip content="Warning: the Decision Tool may be wrong, so consider this value carefully."
+                placement="top" effect="dark" :show-after="0" trigger="hover" :hide-after="0">
+                <span style="cursor: pointer; margin-left: 6px; font-size:12px;  color:#bd3030">
+                  <i class="fa-solid fa-exclamation"></i>
+                  <!-- <i class="fa-solid fa-circle-exclamation"></i> -->
                 </span>
               </el-tooltip>
               <br />
