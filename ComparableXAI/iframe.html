@@ -1179,11 +1179,12 @@
                 </span>
               </el-tooltip>
             </td>
-            <el-tooltip content="To Be Determined" placement="right" effect="dark" :show-after="0" trigger="hover"
-              :hide-after="0">
-              <td class="right-align money highlight-green">TBD
 
-            </el-tooltip>
+            <td class="right-align money highlight-green" style="cursor: pointer;">
+              <el-tooltip content="To Be Determined" placement="right" effect="dark" :show-after="0" trigger="hover"
+                :hide-after="0"> TBD
+
+              </el-tooltip>
             </td>
             <template v-for="(row, idx) in Comparables[domainIdx][currentTargetIndex]" :key="row.id">
               <td class="right-align money highlight-green">{{row.actual}}{{unit_list[domainIdx]}}</td>
