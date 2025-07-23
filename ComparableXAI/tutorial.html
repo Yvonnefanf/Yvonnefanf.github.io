@@ -1434,7 +1434,8 @@
               </el-tooltip>
             </td>
             <td class="right-align subject money highlight-green" @mouseenter="highlightAllAdjustedPrices()"
-              @mouseleave="unhighlightAllAdjustedPrices()">
+              @mouseleave="unhighlightAllAdjustedPrices()" style="position: relative; overflow:visible;">
+              <div class="annotated" style="position: absolute; top:0; left:-30px;">3a</div>
               <div style="cursor: pointer;">
 
                 <el-tooltip :content="weightedAverageTooltipContent" placement="right" effect="dark" :show-after="0"
