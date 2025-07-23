@@ -519,22 +519,22 @@
             <th></th>
             <th class="subject right-align" style="width: 62px;">
               <div style="margin: 0 auto;" class="annotation">2</div>
-            </th> 
+            </th>
           </tr>
           <tr>
             <th>
               <div style="margin: 0 auto;" class="annotation">1</div>
             </th>
-            <th class="subject right-align border-btm annotation-border-top annotation-border-left annotation-border-right" style="width: 62px;">Subject</th>
-           </tr>
+            <th
+              class="subject right-align border-btm annotation-border-top annotation-border-left annotation-border-right"
+              style="width: 62px;">Subject</th>
+          </tr>
         </thead>
         <tbody>
           <template v-for="(feature, index) in Features[domainIdx]">
             <tr>
-              <td 
-              class="feature-name annotation-border-left annotation-border-right"
-              :class="{'annotation-border-top':index==0, 'annotation-border-btm':index==Features[domainIdx].length-1}"
-              >
+              <td class="feature-name annotation-border-left annotation-border-right"
+                :class="{'annotation-border-top':index==0, 'annotation-border-btm':index==Features[domainIdx].length-1}">
                 {{feature}}
                 <el-tooltip :content="FeatureDescriptions[domainIdx][index]" placement="right" effect="dark"
                   :show-after="0">
@@ -544,41 +544,30 @@
                 </el-tooltip>
               </td>
               <td class="right-align annotation-border-left annotation-border-right"
-              :class="{'annotation-border-btm':index==Features[domainIdx].length-1}"
-              >{{Targets[domainIdx][currentTargetIndex].feature_val[index]}}</td>
+                :class="{'annotation-border-btm':index==Features[domainIdx].length-1}">
+                {{Targets[domainIdx][currentTargetIndex].feature_val[index]}}</td>
             </tr>
           </template>
           <tr>
             <td colspan="2" style="padding: 0; overflow: visible;">
-              <!-- sub tabel -- >
-              <table style="overflow: visible; width: 100%; border-collapse: collapse; background-color: #c2f0c2;">
+              <!-- sub tabel -->
+              <table class="highlight-green" style="overflow: visible; width: 100%; border-collapse: collapse; margin:0;">
                 <tr style="overflow: visible;">
-               
-                  <td style="width: 140px; position: relative; overflow: visible;" class="feature-name money highlight-green">
+
+                  <td style="width: 140px; position: relative; overflow: visible;"
+                    class="feature-name money highlight-green">
                     <div style="margin: 0 auto; position: absolute; top: 0; left: -30px;" class="annotation">3</div>
                     {{ Labels[domainIdx][0] }}
-                    <el-tooltip
-                      :content="Labels_Descriptions[domainIdx][0]"
-                      placement="right"
-                      effect="dark"
-                      :show-after="0"
-                      trigger="hover"
-                      :hide-after="0"
-                    >
+                    <el-tooltip :content="Labels_Descriptions[domainIdx][0]" placement="right" effect="dark"
+                      :show-after="0" trigger="hover" :hide-after="0">
                       <span class="tooltip-icon">
                         <i class="fa-regular fa-circle-question"></i>
                       </span>
                     </el-tooltip>
                   </td>
                   <td class="right-align money highlight-green" style="cursor: pointer;">
-                    <el-tooltip
-                      content="To Be Determined"
-                      placement="right"
-                      effect="dark"
-                      :show-after="0"
-                      trigger="hover"
-                      :hide-after="0"
-                    >
+                    <el-tooltip content="To Be Determined" placement="right" effect="dark" :show-after="0"
+                      trigger="hover" :hide-after="0">
                       TBD
                     </el-tooltip>
                   </td>
@@ -586,7 +575,7 @@
               </table>
             </td>
           </tr>
-         
+
           <tr>
             <td style="height:4px;" class="feature-name money">
             </td>
@@ -603,8 +592,7 @@
           <tr>
             <td style="width: 140px; position:relative; overflow:visible;" class="feature-name money">
               <div style="margin: 0 auto; 
-              position:absolute; top:0; left:-30px;" 
-              class="annotation">4</div>
+              position:absolute; top:0; left:-30px;" class="annotation">4</div>
               {{Labels[domainIdx][1]}}
               <el-tooltip :content="Labels_Descriptions[domainIdx][1]" placement="right" effect="dark" :show-after="0"
                 trigger="hover" :hide-after="0">
@@ -625,7 +613,201 @@
         </tbody>
       </table>
     </div>
+    <!-- STAET COMPAEABLE TUT-->
+    <div class="tab-content" v-if="currentTutStep==1">
+      <table class="plain-xai-table" style="border-collapse: separate; border-spacing: 4px 0;">
+        <thead>
+          <tr>
+            <th></th>
+            <th class="subject right-align" style="width: 62px;">
+              <div style="margin: 0 auto;" class="annotation">2</div>
+            </th>
+            <template v-for="(row, idx) in Comparables[currentTargetIndex]" :key="row.id">
+              <th style="width: 62px;" class="right-align"><div style="margin: 0 auto;" class="annotation">5</div></th>
+            </template>
 
+          </tr>
+
+          <tr>
+            <th> <div style="margin: 0 auto;" class="annotation">1</div> </th>
+            <th class="subject right-align border-btm" style="width: 62px;">Subject</th>
+            <template v-for="(row, idx) in Comparables[currentTargetIndex]" :key="row.id">
+              <th style="width: 62px;" class="right-align border-btm annotation-border-top annotation-border-left annotation-border-right">Comparable {{idx+1}}</th>
+            </template>
+
+          </tr>
+
+        </thead>
+        <tbody>
+          <template v-for="(feature, index) in Features[domainIdx]">
+            <tr>
+              <td class="feature-name">
+                {{feature}}
+                <el-tooltip :content="FeatureDescriptions[domainIdx][index]" placement="right" effect="dark"
+                  :show-after="0">
+                  <span class="tooltip-icon" style="cursor: pointer; margin-left: 4px;">
+                    <i class="fa-regular fa-circle-question"></i>
+                  </span>
+                </el-tooltip>
+              </td>
+              <td class="right-align">{{Targets[domainIdx][currentTargetIndex].feature_val[index]}}</td>
+              <template v-for="(row, idx) in Comparables[domainIdx][currentTargetIndex]" :key="row.id">
+                <td class="right-align annotation-border-left annotation-border-right" 
+                :class="{'annotation-border-btm': index == Features[domainIdx].length -1 }"
+                >{{row.feature_val[index]}}</td>
+              </template>
+            </tr>
+
+          </template>
+          <!-- <tr>
+            <td style="width: 140px;" class="feature-name money highlight-green">{{Labels[domainIdx][0]}}
+              <el-tooltip :content="Labels_Descriptions[domainIdx][0]" placement="right" effect="dark" :show-after="0"
+                trigger="hover" :hide-after="0">
+                <span class="tooltip-icon">
+                  <i class="fa-regular fa-circle-question"></i>
+                </span>
+              </el-tooltip>
+            </td>
+
+            <td class="right-align money highlight-green" style="cursor: pointer;">
+              <el-tooltip content="To Be Determined" placement="right" effect="dark" :show-after="0" trigger="hover"
+                :hide-after="0"> TBD
+
+              </el-tooltip>
+            </td>
+            <template v-for="(row, idx) in Comparables[domainIdx][currentTargetIndex]" :key="row.id">
+              <td class="right-align money highlight-green">{{row.actual}}{{unit_list[domainIdx]}}</td>
+            </template>
+          </tr> -->
+          <tr>
+            <td :colspan="2 + Comparables[domainIdx][currentTargetIndex].length" style="padding: 0; overflow:visible;">
+              <table class="highlight-green" style="width: 100%; border-collapse: collapse; margin:0; overflow:visible;">
+                <tr style="overflow:visible;">
+                  <!-- 左侧标签 -->
+                  <td style="width: 140px; position:relative; overflow:visible;" class="feature-name money highlight-green">
+                    <div style="margin: 0 auto; 
+              position:absolute; top:0; left:-30px;" class="annotation">3</div>
+                    {{Labels[domainIdx][0]}}
+                    <el-tooltip :content="Labels_Descriptions[domainIdx][0]" placement="right" effect="dark" :show-after="0"
+                      trigger="hover" :hide-after="0">
+                      <span class="tooltip-icon">
+                        <i class="fa-regular fa-circle-question"></i>
+                      </span>
+                    </el-tooltip>
+                  </td>
+          
+                  <!-- Subject 值 -->
+                  <td class="right-align money highlight-green" style="cursor: pointer;">
+                    <el-tooltip content="To Be Determined" placement="right" effect="dark" :show-after="0" trigger="hover"
+                      :hide-after="0"> TBD
+                    </el-tooltip>
+                  </td>
+          
+                  <!-- Comparable 值 -->
+                  <template v-for="(row, idx) in Comparables[domainIdx][currentTargetIndex]" :key="row.id">
+                    <td class="right-align money highlight-green">
+                      {{row.actual}}{{unit_list[domainIdx]}}
+                    </td>
+                  </template>
+                </tr>
+              </table>
+            </td>
+          </tr>
+
+          <tr>
+            <td class="feature-name" style="position: relative; overflow:visible;">
+              <div style="margin: 0 auto; 
+              position:absolute; top:0; left:-30px;" class="annotation">6</div>
+              Similarity Score
+              <el-tooltip content="The similarity score between the comparable and the subject." placement="right"
+                effect="dark" :show-after="0" trigger="hover" :hide-after="0">
+                <span class="tooltip-icon">
+                  <i class="fa-regular fa-circle-question"></i>
+                </span>
+              </el-tooltip>
+            </td>
+            <td class="right-align subject">—</td>
+            <template v-for="(row, idx) in Comparables[domainIdx][currentTargetIndex]" :key="row.id">
+              <td class="comp1-header right-align" :class="{ 'adjusted-price-highlight': allAdjustedPricesHighlighted}"
+                style="position:relative;">
+                <span>{{ similarityScores[idx] }}%
+              </td>
+              
+            </template>
+          </tr>
+
+          <tr>
+            <td style="height:2px;" class="feature-name money">
+            </td>
+            <td class="right-align money subject">
+            </td>
+            <template v-for="(row, idx) in Comparables[domainIdx][currentTargetIndex]" :key="row.id">
+              <td colspan="2" class="comp1-header right-align money"><span>
+
+              </td>
+              <td :colspan="row.adjusted_step_number*2" class="right-align" :class="{hidden: currentOpenComp!==idx}">
+
+              </td>
+            </template>
+          </tr>
+
+          <tr>
+            <td style="width: 140px; position:relative; overflow:visible;" class="feature-name money">
+              <div style="margin: 0 auto; 
+              position:absolute; top:0; left:-30px;" class="annotation">4</div>
+
+              <div style="margin: 0 auto; 
+              position:absolute; bottom:0; left:-30px;" class="annotation">4a</div>
+
+              {{Labels[domainIdx][1]}}
+              <el-tooltip :content="Labels_Descriptions[domainIdx][1]" placement="right" effect="dark" :show-after="0"
+                trigger="hover" :hide-after="0">
+                <span class="tooltip-icon">
+                  <i class="fa-regular fa-circle-question"></i>
+                </span>
+              </el-tooltip>
+              <el-tooltip content="Warning: the Decision Tool may be wrong, so consider this value carefully."
+                placement="top" effect="dark" :show-after="0" trigger="hover" :hide-after="0">
+                <span style="cursor: pointer; margin-left: 6px; font-size:10px;  color:#bd3030">
+                  <!-- <i class="fa-solid fa-exclamation"></i> -->
+                  <!-- <i class="far fa-exclamation-circle"></i> -->
+                  <i class="bi bi-exclamation-circle"></i>
+                  <!-- <i class="fa-solid fa-circle-exclamation"></i> -->
+                </span>
+              </el-tooltip>
+              <br />
+              <span class="pred-description" @mouseenter="highlightAllPredAndActual()"
+                @mouseleave="unhighlightAllPredAndActual()">Prediction Error
+                <el-tooltip content="The difference between the actual value and the predicted value." placement="right"
+                  effect="dark" :show-after="0" trigger="hover" :hide-after="0">
+                  <span class="tooltip-icon">
+                    <!-- <i class="fa-regular fa-circle-question"></i> -->
+                    <i class="fa-regular fa-circle-question"></i>
+                  </span>
+                </el-tooltip>
+              </span>
+            </td>
+
+            <td class="right-align money">{{Targets[domainIdx][currentTargetIndex].pred}}{{unit_list[domainIdx]}}
+              <br> <span>—</span>
+            </td>
+            <template v-for="(row, idx) in Comparables[domainIdx][currentTargetIndex]" :key="row.id">
+              <td class="right-align money">{{row.pred}}{{unit_list[domainIdx]}}
+                <br />
+                <el-tooltip
+                  :content="row.pred + unit_list[domainIdx] + ' is ' + getPredictionDifference(row) + ' than the actual value of ' + row.actual + unit_list[domainIdx]"
+                  placement="bottom" effect="dark" :show-after="0" trigger="hover" :hide-after="0">
+                  <span class="pred-description highlight-green" @mouseenter="highlightActualPrice(idx)"
+                    @mouseleave="unhighlightActualPrice(idx)">{{ getPredictionDifference(row) }}</span>
+                </el-tooltip>
+              </td>
+            </template>
+
+          </tr>
+
+        </tbody>
+      </table>
+    </div>
 
 
     <div class="tab-content" v-if="currentTab === 0">
