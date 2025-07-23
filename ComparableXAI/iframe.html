@@ -5,6 +5,8 @@
   <meta charset="UTF-8">
   <title>Comparable XAI</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
+
   <link href="https://fonts.googleapis.com/css2?family=Space+Mono&display=swap" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono&display=swap" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css2?family=Roboto+Condensed&display=swap" rel="stylesheet">
@@ -852,8 +854,9 @@
               </el-tooltip>
               <el-tooltip content="Warning: the Decision Tool may be wrong, so consider this value carefully."
                 placement="top" effect="dark" :show-after="0" trigger="hover" :hide-after="0">
-                <span style="cursor: pointer; margin-left: 6px; font-size:12px;  color:#bd3030">
-                  <i class="fa-solid fa-exclamation"></i>
+                <span style="cursor: pointer; margin-left: 6px; font-size:10px;  color:#bd3030">
+                  <!-- <i class="fa-solid fa-exclamation"></i> -->
+                  <i class="bi bi-exclamation-circle"></i>
                   <!-- <i class="fa-solid fa-circle-exclamation"></i> -->
                 </span>
               </el-tooltip>
@@ -1158,7 +1161,7 @@
                 {{feature}}
                 <el-tooltip :content="FeatureDescriptions[domainIdx][index]" placement="right" effect="dark"
                   :show-after="0">
-                  <span style="cursor: pointer; margin-left: 4px;">
+                  <span class="tooltip-icon"style="cursor: pointer; margin-left: 4px;">
                     <i class="fa-regular fa-circle-question"></i>
                   </span>
                 </el-tooltip>
@@ -1242,8 +1245,10 @@
               </el-tooltip>
               <el-tooltip content="Warning: the Decision Tool may be wrong, so consider this value carefully."
                 placement="top" effect="dark" :show-after="0" trigger="hover" :hide-after="0">
-                <span style="cursor: pointer; margin-left: 6px; font-size:12px;  color:#bd3030">
-                  <i class="fa-solid fa-exclamation"></i>
+                <span style="cursor: pointer; margin-left: 6px; font-size:10px;  color:#bd3030">
+                  <!-- <i class="fa-solid fa-exclamation"></i> -->
+                  <!-- <i class="far fa-exclamation-circle"></i> -->
+                  <i class="bi bi-exclamation-circle"></i>
                   <!-- <i class="fa-solid fa-circle-exclamation"></i> -->
                 </span>
               </el-tooltip>
@@ -1253,13 +1258,16 @@
                 <el-tooltip content="The difference between the actual value and the predicted value." placement="right"
                   effect="dark" :show-after="0" trigger="hover" :hide-after="0">
                   <span class="tooltip-icon">
+                    <!-- <i class="fa-regular fa-circle-question"></i> -->
                     <i class="fa-regular fa-circle-question"></i>
                   </span>
                 </el-tooltip>
               </span>
             </td>
 
-            <td class="right-align money">{{Targets[domainIdx][currentTargetIndex].pred}}{{unit_list[domainIdx]}}</td>
+            <td class="right-align money">{{Targets[domainIdx][currentTargetIndex].pred}}{{unit_list[domainIdx]}}
+              <br> <span>—</span>
+            </td>
             <template v-for="(row, idx) in Comparables[domainIdx][currentTargetIndex]" :key="row.id">
               <td class="right-align money">{{row.pred}}{{unit_list[domainIdx]}}
                 <br />
