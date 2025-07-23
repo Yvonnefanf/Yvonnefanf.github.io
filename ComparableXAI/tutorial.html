@@ -550,8 +550,13 @@
                 </el-tooltip>
               </td>
               <td class="right-align annotation-border-left annotation-border-right"
+              style="cursor:pointer"
                 :class="{'annotation-border-btm':index==Features[domainIdx].length-1}">
-                {{Targets[domainIdx][currentTargetIndex].feature_val[index]}}</td>
+                <el-tooltip :content="Targets[domainIdx][currentTargetIndex].feature_val[index]" placement="right" effect="dark"
+                  :show-after="0">
+                  {{Targets[domainIdx][currentTargetIndex].feature_val[index]}}</td>
+                </el-tooltip>
+                
             </tr>
           </template>
           <tr>
@@ -1031,7 +1036,8 @@
               </el-tooltip>
             </td>
             <td class="right-align subject money highlight-green" @mouseenter="highlightAllAdjustedPrices()"
-              @mouseleave="unhighlightAllAdjustedPrices()">
+              @mouseleave="unhighlightAllAdjustedPrices()" style="border:2px solid #2874c1; overflow:visible; position:relative;">
+              <div class="annotation" style="position: absolute; top: 0; left: -30px;">3a</div>
               <div style="cursor: pointer;">
 
                 <el-tooltip :content="weightedAverageTooltipContent" placement="right" effect="dark" :show-after="0"
