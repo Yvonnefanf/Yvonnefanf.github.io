@@ -692,7 +692,7 @@
                     {{weightedAverageValue}}{{unit_list[domainIdx]}} ?
                   </span>
                 </el-tooltip>
-                <el-tooltip content="Warning: the Decision Tool may be wrong, so consider this value carefully."
+                <el-tooltip :content="warningContent"
                   placement="right" effect="dark" :show-after="0" trigger="hover" :hide-after="0">
                   <span style="cursor: pointer; margin-left: 4px; color:#bd3030">
                     <i class="fa-solid fa-exclamation"></i>
@@ -857,6 +857,7 @@
                 <span style="cursor: pointer; margin-left: 6px; font-size:10px;  color:#bd3030">
                   <!-- <i class="fa-solid fa-exclamation"></i> -->
                   <i class="bi bi-exclamation-circle"></i>
+                  
                   <!-- <i class="fa-solid fa-circle-exclamation"></i> -->
                 </span>
               </el-tooltip>
@@ -1372,6 +1373,11 @@
             'Comparable XAI (No Trace)',
             'Plain Example-based XAI'
           ],
+          warning: [
+          "Warning: this is an estimate, not the Actual Price, so it may be inaccurate.",
+          "Warning: this is an estimate, not the Actual Salary, so it may be inaccurate.",
+          "Warning: this is an estimate, not the Actual Energy Usage, so it may be inaccurate."
+          ],
           Labels: [
             //domain 1
             ['Actual Price ($)', 'AI Prediction ($)', 'Adjusted Price ($)'],
@@ -1380,6 +1386,8 @@
             //domain 3
             ['Actual Energy Usage (kWh)', 'AI Prediction (kWh)', 'Adjusted Usage (kWh)']
           ],
+
+
           Labels_Descriptions: [
             //domain 1
             ['The actual sale price of the comparable house.',
@@ -1714,6 +1722,10 @@
       computed: {
         domainIdx() {
           return domainKeyToIndex[this.domain];
+        },
+        warningContent() {
+          const msg = this.warning[this.domainIdx];
+          return msg || 'Warning: estimate may be inaccurate.';
         },
         weightedAverageTooltipContent() {
           const comparables = this.Comparables[this.domainIdx][this.currentTargetIndex];

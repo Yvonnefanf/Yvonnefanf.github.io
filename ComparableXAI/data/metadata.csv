@@ -3,7 +3,7 @@ domainId,featureIndex,featureName,is_numerical,Description
 0,1,# Bathroom,1,The number of bathrooms in the house.
 0,2,Living Area (ksqft),1,Indoor living space in thousands of square feet.
 0,3,Grade,1,A rating of the overall quality and design of the house, based on King County's grading system.
-0,4,Age (years),1,The year the house was originally built.
+0,4,Age (years),1,Number of years since the house was originally built.
 0,5,Condition,1,A rating of the overall condition of the house (e.g., from 1 to 5, with 5 being the best).
 1,0,Age (years),1,The age of the employee in years.
 1,1,Gender,0,The gender of the employee.
