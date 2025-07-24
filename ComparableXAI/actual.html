@@ -483,15 +483,10 @@
       
       <table class="plain-xai-table" style="border-collapse: separate; border-spacing: 4px 0;">
         <thead>
-          <tr>
-            <th></th>
-            <th class="subject right-align" style="width: 62px;">
-              <div style="margin: 0 auto;" class="annotation">2</div>
-            </th>
-          </tr>
+        
           <tr>
             <th>
-              <div style="margin: 0 auto;" class="annotation">1</div>
+              
             </th>
             <th
               class="subject right-align border-btm annotation-border-top annotation-border-left annotation-border-right"
@@ -530,7 +525,7 @@
 
                   <td style="width: 140px; position: relative; overflow: visible;"
                     class="feature-name money highlight-green">
-                    <div style="margin: 0 auto; position: absolute; top: 0; left: -30px;" class="annotation">3</div>
+                   
                     {{ Labels[domainIdx][0] }}
                     <el-tooltip :content="Labels_Descriptions[domainIdx][0]" placement="right" effect="dark"
                       :show-after="0" trigger="hover" :hide-after="0">
@@ -540,9 +535,9 @@
                     </el-tooltip>
                   </td>
                   <td class="right-align money highlight-green" style="cursor: pointer;">
-                    <el-tooltip content="To Be Determined" placement="right" effect="dark" :show-after="0"
+                    <el-tooltip :content="'Answer: ' + Targets[domainIdx][currentTargetIndex].actual + unit_list[domainIdx]" placement="right" effect="dark" :show-after="0"
                       trigger="hover" :hide-after="0">
-                      TBD
+                      {{Targets[domainIdx][currentTargetIndex].actual}}{{unit_list[domainIdx]}}
                     </el-tooltip>
                   </td>
                 </tr>
@@ -551,7 +546,7 @@
           </tr>
 
           <tr>
-            <td style="height:4px;" class="feature-name money">
+            <td style="height:0px;" class="feature-name money">
             </td>
             <td class="right-align money subject">
             </td>
@@ -565,8 +560,7 @@
 
           <tr>
             <td style="width: 140px; position:relative; overflow:visible;" class="feature-name money">
-              <div style="margin: 0 auto; 
-              position:absolute; top:0; left:-30px;" class="annotation">4</div>
+              
               {{Labels[domainIdx][1]}}
               <el-tooltip :content="Labels_Descriptions[domainIdx][1]" placement="right" effect="dark" :show-after="0"
                 trigger="hover" :hide-after="0">
