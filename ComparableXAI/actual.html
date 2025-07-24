@@ -479,7 +479,116 @@
 <body>
 
   <div id="app">
-    <div class="tab-content" v-if="currentTab < 2">
+    <div class="tab-content" v-if="xaiType=='noXAI'">
+      
+      <table class="plain-xai-table" style="border-collapse: separate; border-spacing: 4px 0;">
+        <thead>
+          <tr>
+            <th></th>
+            <th class="subject right-align" style="width: 62px;">
+              <div style="margin: 0 auto;" class="annotation">2</div>
+            </th>
+          </tr>
+          <tr>
+            <th>
+              <div style="margin: 0 auto;" class="annotation">1</div>
+            </th>
+            <th
+              class="subject right-align border-btm annotation-border-top annotation-border-left annotation-border-right"
+              style="width: 62px;">Subject</th>
+          </tr>
+        </thead>
+        <tbody>
+          <template v-for="(feature, index) in Features[domainIdx]">
+            <tr>
+              <td class="feature-name annotation-border-left annotation-border-right"
+                :class="{'annotation-border-top':index==0, 'annotation-border-btm':index==Features[domainIdx].length-1}">
+                {{feature}}
+                <el-tooltip :content="FeatureDescriptions[domainIdx][index]" placement="right" effect="dark"
+                  :show-after="0">
+                  <span class="tooltip-icon" style="cursor: pointer; margin-left: 4px;">
+                    <i class="fa-regular fa-circle-question"></i>
+                  </span>
+                </el-tooltip>
+              </td>
+              <td class="right-align annotation-border-left annotation-border-right" style="cursor:pointer"
+                :class="{'annotation-border-btm':index==Features[domainIdx].length-1}">
+                <el-tooltip :content="Targets[domainIdx][currentTargetIndex].feature_val[index]" placement="right"
+                  effect="dark" :show-after="0">
+                  {{Targets[domainIdx][currentTargetIndex].feature_val[index]}}
+              </td>
+              </el-tooltip>
+
+            </tr>
+          </template>
+          <tr>
+            <td colspan="2" style="padding: 0; overflow: visible;">
+              <!-- sub tabel -->
+              <table class="highlight-green"
+                style="overflow: visible; width: 100%; border-collapse: collapse; margin:0;">
+                <tr style="overflow: visible;">
+
+                  <td style="width: 140px; position: relative; overflow: visible;"
+                    class="feature-name money highlight-green">
+                    <div style="margin: 0 auto; position: absolute; top: 0; left: -30px;" class="annotation">3</div>
+                    {{ Labels[domainIdx][0] }}
+                    <el-tooltip :content="Labels_Descriptions[domainIdx][0]" placement="right" effect="dark"
+                      :show-after="0" trigger="hover" :hide-after="0">
+                      <span class="tooltip-icon">
+                        <i class="fa-regular fa-circle-question"></i>
+                      </span>
+                    </el-tooltip>
+                  </td>
+                  <td class="right-align money highlight-green" style="cursor: pointer;">
+                    <el-tooltip content="To Be Determined" placement="right" effect="dark" :show-after="0"
+                      trigger="hover" :hide-after="0">
+                      TBD
+                    </el-tooltip>
+                  </td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+
+          <tr>
+            <td style="height:4px;" class="feature-name money">
+            </td>
+            <td class="right-align money subject">
+            </td>
+            <template v-for="(row, idx) in Comparables[domainIdx][currentTargetIndex]" :key="row.id">
+              <td colspan="2" class="comp1-header right-align money"><span>
+              </td>
+              <td :colspan="row.adjusted_step_number*2" class="right-align" :class="{hidden: currentOpenComp!==idx}">
+              </td>
+            </template>
+          </tr>
+
+          <tr>
+            <td style="width: 140px; position:relative; overflow:visible;" class="feature-name money">
+              <div style="margin: 0 auto; 
+              position:absolute; top:0; left:-30px;" class="annotation">4</div>
+              {{Labels[domainIdx][1]}}
+              <el-tooltip :content="Labels_Descriptions[domainIdx][1]" placement="right" effect="dark" :show-after="0"
+                trigger="hover" :hide-after="0">
+                <span class="tooltip-icon">
+                  <i class="fa-regular fa-circle-question"></i>
+                </span>
+              </el-tooltip>
+              <el-tooltip content="Warning: the Decision Tool may be wrong, so consider this value carefully."
+                placement="top" effect="dark" :show-after="0" trigger="hover" :hide-after="0">
+                <span style="cursor: pointer; margin-left: 6px; font-size:12px;  color:#bd3030">
+                  <!-- <i class="bi bi-exclamation-circle"></i> -->
+                  <i class="fa-solid fa-exclamation"></i>
+                </span>
+              </el-tooltip>
+            </td>
+            <td class="right-align money">{{Targets[domainIdx][currentTargetIndex].pred}}{{unit_list[domainIdx]}}
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="tab-content" v-if="xaiType=='comparableXAI' || xaiType=='trace'">
       <table>
         <thead>
           <!-- <tr>
@@ -512,7 +621,7 @@
                 <!-- <div style="font-size: 12px; display:flex;align-items:center;justify-content:center;color:#800080">
                   AI Prediction ($): {{row.pred}}K
                 </div> -->
-                <el-tooltip v-if="currentTab==0" :content="currentOpenComp==idx ? 'Hide Trace' : 'Show Trace'"
+                <el-tooltip v-if="xaiType=='trace'" :content="currentOpenComp==idx ? 'Hide Trace' : 'Show Trace'"
                   placement="top" effect="dark" :show-after="0" trigger="hover" :hide-after="0">
                   <button class="toggle-button" @click="toggleCols(`comp${idx+1}`,idx)">
 
@@ -904,7 +1013,7 @@
     </div>
 
 
-    <div class="tab-content" v-if="currentTab==2" class="tab-content">
+    <div class="tab-content" v-if="xaiType=='comparable'" class="tab-content">
       <table class="plain-xai-table">
         <thead>
           <tr>
@@ -1086,6 +1195,7 @@
     const initDomain = getParam('domain', 'house');
     const initTab = Number(getParam('tab', 0));
     const initInstance = Number(getParam('instance', 0));
+    const initXAItype = getParam('xaiType', 'noXAI');
 
 
     const { createApp } = Vue;
@@ -1103,6 +1213,7 @@
           domain_list: ['House Price', 'Salary', 'Energy'],
           unit_list: ['K', 'K', 'kWh'],
           unit_list_header: ['$', '$', ''],
+          xaiType: initXAItype,
 
 
           currentOpenComp: null,
