@@ -476,7 +476,8 @@
       border-left: 4px solid #2874c1;
     }
 
-    .annotation,.annotated {
+    .annotation,
+    .annotated {
       width: 26px;
       height: 26px;
       border-radius: 26px;
@@ -487,10 +488,12 @@
       font-weight: 600;
       font-family: sans-serif;
     }
-    .annotation{
+
+    .annotation {
       background-color: #2874c1;
     }
-    .annotated{
+
+    .annotated {
       background-color: #2874c1;
       opacity: 0.3;
     }
@@ -549,20 +552,21 @@
                   </span>
                 </el-tooltip>
               </td>
-              <td class="right-align annotation-border-left annotation-border-right"
-              style="cursor:pointer"
+              <td class="right-align annotation-border-left annotation-border-right" style="cursor:pointer"
                 :class="{'annotation-border-btm':index==Features[domainIdx].length-1}">
-                <el-tooltip :content="Targets[domainIdx][currentTargetIndex].feature_val[index]" placement="right" effect="dark"
-                  :show-after="0">
-                  {{Targets[domainIdx][currentTargetIndex].feature_val[index]}}</td>
-                </el-tooltip>
-                
+                <el-tooltip :content="Targets[domainIdx][currentTargetIndex].feature_val[index]" placement="right"
+                  effect="dark" :show-after="0">
+                  {{Targets[domainIdx][currentTargetIndex].feature_val[index]}}
+              </td>
+              </el-tooltip>
+
             </tr>
           </template>
           <tr>
             <td colspan="2" style="padding: 0; overflow: visible;">
               <!-- sub tabel -->
-              <table class="highlight-green" style="overflow: visible; width: 100%; border-collapse: collapse; margin:0;">
+              <table class="highlight-green"
+                style="overflow: visible; width: 100%; border-collapse: collapse; margin:0;">
                 <tr style="overflow: visible;">
 
                   <td style="width: 140px; position: relative; overflow: visible;"
@@ -634,17 +638,23 @@
             <th class="subject right-align" style="width: 62px;">
               <div style="margin: 0 auto;" class="annotation">2</div>
             </th>
-            <template v-for="(row, idx) in Comparables[currentTargetIndex]" :key="row.id">
-              <th style="width: 62px;" class="right-align"><div style="margin: 0 auto;" class="annotation">5</div></th>
+            <template v-for="(row, idx) in Comparables[domainIdx][currentTargetIndex]" :key="row.id">
+              <th style="width: 62px;" class="right-align">
+                <div style="margin: 0 auto;" class="annotation">5</div>
+              </th>
             </template>
 
           </tr>
 
           <tr>
-            <th> <div style="margin: 0 auto;" class="annotation">1</div> </th>
+            <th>
+              <div style="margin: 0 auto;" class="annotation">1</div>
+            </th>
             <th class="subject right-align border-btm" style="width: 62px;">Subject</th>
-            <template v-for="(row, idx) in Comparables[currentTargetIndex]" :key="row.id">
-              <th style="width: 62px;" class="right-align border-btm annotation-border-top annotation-border-left annotation-border-right">Comparable {{idx+1}}</th>
+            <template v-for="(row, idx) in Comparables[domainIdx][currentTargetIndex]" :key="row.id">
+              <th style="width: 62px;"
+                class="right-align border-btm annotation-border-top annotation-border-left annotation-border-right">
+                Comparable {{idx+1}}</th>
             </template>
 
           </tr>
@@ -664,38 +674,40 @@
               </td>
               <td class="right-align">{{Targets[domainIdx][currentTargetIndex].feature_val[index]}}</td>
               <template v-for="(row, idx) in Comparables[domainIdx][currentTargetIndex]" :key="row.id">
-                <td class="right-align annotation-border-left annotation-border-right" 
-                :class="{'annotation-border-btm': index == Features[domainIdx].length -1 }"
-                >{{row.feature_val[index]}}</td>
+                <td class="right-align annotation-border-left annotation-border-right"
+                  :class="{'annotation-border-btm': index == Features[domainIdx].length -1 }">{{row.feature_val[index]}}
+                </td>
               </template>
             </tr>
 
           </template>
-         
+
           <tr>
             <td :colspan="2 + Comparables[domainIdx][currentTargetIndex].length" style="padding: 0; overflow:visible;">
-              <table class="highlight-green" style="width: 100%; border-collapse: collapse; margin:0; overflow:visible;">
+              <table class="highlight-green"
+                style="width: 100%; border-collapse: collapse; margin:0; overflow:visible;">
                 <tr style="overflow:visible;">
                   <!-- 左侧标签 -->
-                  <td style="width: 140px; position:relative; overflow:visible;" class="feature-name money highlight-green">
+                  <td style="width: 140px; position:relative; overflow:visible;"
+                    class="feature-name money highlight-green">
                     <div style="margin: 0 auto; 
               position:absolute; top:0; left:-30px;" class="annotation">3</div>
                     {{Labels[domainIdx][0]}}
-                    <el-tooltip :content="Labels_Descriptions[domainIdx][0]" placement="right" effect="dark" :show-after="0"
-                      trigger="hover" :hide-after="0">
+                    <el-tooltip :content="Labels_Descriptions[domainIdx][0]" placement="right" effect="dark"
+                      :show-after="0" trigger="hover" :hide-after="0">
                       <span class="tooltip-icon">
                         <i class="fa-regular fa-circle-question"></i>
                       </span>
                     </el-tooltip>
                   </td>
-          
+
                   <!-- Subject 值 -->
                   <td class="right-align money highlight-green" style="cursor: pointer;">
-                    <el-tooltip content="To Be Determined" placement="right" effect="dark" :show-after="0" trigger="hover"
-                      :hide-after="0"> TBD
+                    <el-tooltip content="To Be Determined" placement="right" effect="dark" :show-after="0"
+                      trigger="hover" :hide-after="0"> TBD
                     </el-tooltip>
                   </td>
-          
+
                   <!-- Comparable 值 -->
                   <template v-for="(row, idx) in Comparables[domainIdx][currentTargetIndex]" :key="row.id">
                     <td class="right-align money highlight-green">
@@ -725,7 +737,7 @@
                 style="position:relative;">
                 <span>{{ similarityScores[idx] }}%
               </td>
-              
+
             </template>
           </tr>
 
@@ -861,8 +873,8 @@
                 <!-- <div style="font-size: 12px; display:flex;align-items:center;justify-content:center;color:#800080">
                   AI Prediction ($): {{row.pred}}K
                 </div> -->
-                <el-tooltip v-if="currentTutStep==3" :content="currentOpenComp==idx ? 'Hide Trace' : 'Show Trace'" placement="top" effect="dark"
-                  :show-after="0" trigger="hover" :hide-after="0">
+                <el-tooltip v-if="currentTutStep==3" :content="currentOpenComp==idx ? 'Hide Trace' : 'Show Trace'"
+                  placement="top" effect="dark" :show-after="0" trigger="hover" :hide-after="0">
                   <button class="toggle-button" @click="toggleCols(`comp${idx+1}`,idx)">
 
                     <span v-if="currentOpenComp!=idx" class="toggle-text">{{ currentOpenComp ==idx ? ' ' : '...'
@@ -911,11 +923,14 @@
             </td>
             <td class="subject"></td>
             <template v-for="(row, idx) in Comparables[domainIdx][currentTargetIndex]" :key="row.id">
-              <th style="width: 64px; position:relative; overflow:visible;" class="comp-header right-align border-btm annotation-border-left annotation-border-right annotation-border-top"
+              <th style="width: 64px; position:relative; overflow:visible;"
+                class="comp-header right-align border-btm annotation-border-left annotation-border-right annotation-border-top"
                 :class="{'trace-border-left': currentOpenComp===idx}">
-                <div class="annotation" style="position: absolute; top:4px; left:-2px;">5a</div> Values</th>
+                <div class="annotation" style="position: absolute; top:4px; left:-2px;">5a</div> Values
+              </th>
               <th :class="{'adj-price' : currentOpenComp===idx }"
-                class="comp1-header right-align border-btm money highlight-green2 annotation-border-left annotation-border-right annotation-border-top" style="width: 62px;position:relative;">
+                class="comp1-header right-align border-btm money highlight-green2 annotation-border-left annotation-border-right annotation-border-top"
+                style="width: 62px;position:relative;">
                 <div class="annotation" style="position: absolute; top:4px;">5b</div>
                 <span> {{unit_list_header[domainIdx]}} Δ </span>
                 <!-- <button class="toggle-button" @click="toggleCols(`comp${idx+1}`,idx)">
@@ -1026,7 +1041,7 @@
           </tr>
 
           <tr class="">
-           
+
             <td class="feature-name money highlight-green" style="position: relative; overflow:visible;">
               <div style="position: absolute; top:0; left:-30px;" class="annotated">3</div>
               {{Labels[domainIdx][0]}}
@@ -1037,7 +1052,8 @@
               </el-tooltip>
             </td>
             <td class="right-align subject money highlight-green" @mouseenter="highlightAllAdjustedPrices()"
-              @mouseleave="unhighlightAllAdjustedPrices()" style="border:2px solid #2874c1; overflow:visible; position:relative;">
+              @mouseleave="unhighlightAllAdjustedPrices()"
+              style="border:2px solid #2874c1; overflow:visible; position:relative;">
               <div class="annotation" style="position: absolute; top: 0; left: -30px;">3a</div>
               <div style="cursor: pointer;">
 
@@ -1059,7 +1075,7 @@
             </td>
             <template v-for="(row, idx) in Comparables[domainIdx][currentTargetIndex]" :key="row.id">
               <td colspan="2" class="comp1-header right-align money highlight-green"
-              style="border-left:2px solid #bbf2a7; border-right:2px solid #bbf2a7;"
+                style="border-left:2px solid #bbf2a7; border-right:2px solid #bbf2a7;"
                 :class="{ 'actual-price-highlight': highlightedActualPrice === idx, 'all-pred-actual-highlight': allPredAndActualHighlighted, 'trace-border-left': currentOpenComp===idx }">
                 <span>
                   {{row.actual}}{{unit_list[domainIdx]}}
@@ -1069,7 +1085,7 @@
                 :class="{hidden: currentOpenComp!==idx}" style="position:relative;">
                 <!-- {{row.actual}}{{unit_list[domainIdx]}} -->
               </td>
-             
+
             </template>
           </tr>
           <tr>
@@ -1199,7 +1215,7 @@
           </tr>
         </tbody>
       </table>
-  
+
     </div>
     <div class="tab-content" v-if="currentTutStep ==3 ">
       <table>
@@ -1259,8 +1275,8 @@
                 <!-- <div style="font-size: 12px; display:flex;align-items:center;justify-content:center;color:#800080">
                   AI Prediction ($): {{row.pred}}K
                 </div> -->
-                <el-tooltip v-if="currentTutStep==3" :content="currentOpenComp==idx ? 'Hide Trace' : 'Show Trace'" placement="top" effect="dark"
-                  :show-after="0" trigger="hover" :hide-after="0">
+                <el-tooltip v-if="currentTutStep==3" :content="currentOpenComp==idx ? 'Hide Trace' : 'Show Trace'"
+                  placement="top" effect="dark" :show-after="0" trigger="hover" :hide-after="0">
                   <button class="toggle-button" @click="toggleCols(`comp${idx+1}`,idx)">
 
                     <span v-if="currentOpenComp!=idx" class="toggle-text">{{ currentOpenComp ==idx ? ' ' : '...'
@@ -1311,9 +1327,11 @@
             <template v-for="(row, idx) in Comparables[domainIdx][currentTargetIndex]" :key="row.id">
               <th style="width: 64px; position:relative; overflow:visible;" class="comp-header right-align border-btm"
                 :class="{'trace-border-left': currentOpenComp===idx}">
-                <div class="annotated" style="position: absolute; top:4px; left:-2px;">5a</div> Values</th>
+                <div class="annotated" style="position: absolute; top:4px; left:-2px;">5a</div> Values
+              </th>
               <th :class="{'adj-price' : currentOpenComp===idx }"
-                class="comp1-header right-align border-btm money highlight-green2" style="width: 62px;position:relative;">
+                class="comp1-header right-align border-btm money highlight-green2"
+                style="width: 62px;position:relative;">
                 <div class="annotated" style="position: absolute; top:4px;">5b</div>
                 <span> {{unit_list_header[domainIdx]}} Δ </span>
                 <!-- <button class="toggle-button" @click="toggleCols(`comp${idx+1}`,idx)">
@@ -1424,7 +1442,7 @@
           </tr>
 
           <tr class="">
-           
+
             <td class="feature-name money highlight-green" style="position: relative; overflow:visible;">
               <div style="position: absolute; top:0; left:-30px;" class="annotated">3</div>
               {{Labels[domainIdx][0]}}
@@ -1466,7 +1484,7 @@
                 :class="{hidden: currentOpenComp!==idx}" style="position:relative;">
                 <!-- {{row.actual}}{{unit_list[domainIdx]}} -->
               </td>
-             
+
             </template>
           </tr>
           <tr>
@@ -1597,10 +1615,10 @@
           </tr>
         </tbody>
       </table>
-  
+
     </div>
-  
-    
+
+
   </div>
 
   <script>
@@ -1825,7 +1843,8 @@
                 'adjusted_price': [582.9, 612.5, +694.5, 676],
                 'final_adjusted_price': 639.2,
               }
-            ]],
+            ]
+            ],
             [
               //domain 2 instance 1
               [
@@ -2006,7 +2025,7 @@
         domainIdx() {
           return domainKeyToIndex[this.domain];
         },
-       
+
         warningContent() {
           const msg = this.warning[this.domainIdx];
           return msg || 'Warning: estimate may be inaccurate.';
@@ -2117,7 +2136,7 @@
       mounted() {
         this.updateSliderFromComparables();
       },
-      created(){
+      created() {
         if (this.currentTutStep === 3) {
           this.currentOpenComp = 0;
         }
