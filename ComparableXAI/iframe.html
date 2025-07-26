@@ -19,9 +19,9 @@
   <link rel="stylesheet" href="https://unpkg.com/element-plus/dist/index.css">
   <script src="https://unpkg.com/element-plus/dist/index.full.js"></script>
 
-  <!-- No internet open 👇-->
-  <!-- <link rel="stylesheet" href="./min.css">
-  <script src="./min.js"></script> -->
+
+  <link rel="stylesheet" href="./index.css">
+  <!-- <script src="./min.js"></script> --> -->
 
   <style>
     body {
@@ -689,15 +689,18 @@
                 <el-tooltip :content="weightedAverageTooltipContent" placement="right" effect="dark" :show-after="0"
                   trigger="hover" :hide-after="0">
                   <span style="cursor: pointer;">
-                    {{weightedAverageValue}}{{unit_list[domainIdx]}} ?
+                    {{weightedAverageValue}}{{unit_list[domainIdx]}}
                   </span>
                 </el-tooltip>
                 <el-tooltip :content="warningContent"
-                  placement="right" effect="dark" :show-after="0" trigger="hover" :hide-after="0">
-                  <span style="cursor: pointer; margin-left: 4px; color:#bd3030">
-                    <i class="fa-solid fa-exclamation"></i>
+                  placement="top" effect="dark" :show-after="0" trigger="hover" :hide-after="0">
+                  
+                  <div class="approx-warning">
+                    <!-- <i class="fa-solid fa-exclamation"></i> -->
+                    ≈
                     <!-- <i class="fa-solid fa-circle-exclamation"></i> -->
-                  </span>
+                  </div>
+                
                 </el-tooltip>
                 </span>
               </div>
@@ -853,12 +856,9 @@
                 </span>
               </el-tooltip>
               <el-tooltip content="Warning: the Decision Tool may be wrong, so consider this value carefully."
-                placement="top" effect="dark" :show-after="0" trigger="hover" :hide-after="0">
-                <span style="cursor: pointer; margin-left: 6px; font-size:10px;  color:#bd3030">
-                  <!-- <i class="fa-solid fa-exclamation"></i> -->
-                  <i class="bi bi-exclamation-circle"></i>
-                  
-                  <!-- <i class="fa-solid fa-circle-exclamation"></i> -->
+                placement="bottom" effect="dark" :show-after="0" trigger="hover" :hide-after="0">
+                <span class="pred-warning">
+                  <i class="bi bi-exclamation-triangle"></i>
                 </span>
               </el-tooltip>
               <br />
@@ -1032,15 +1032,16 @@
                 <el-tooltip :content="weightedAverageTooltipContent" placement="right" effect="dark" :show-after="0"
                   trigger="hover" :hide-after="0">
                   <span style="cursor: pointer; margin-left: 2px; font-size: 12px;">
-                    {{weightedAverageValue}}{{unit_list[domainIdx]}} ?
+                    {{weightedAverageValue}}{{unit_list[domainIdx]}}
                   </span>
                 </el-tooltip>
-                <el-tooltip content="Warning: the Decision Tool may be wrong, so consider this value carefully."
-                  placement="right" effect="dark" :show-after="0" trigger="hover" :hide-after="0">
-                  <span style="cursor: pointer; margin-left: 4px; color:#bd3030">
-                    <i class="fa-solid fa-exclamation"></i>
+                <el-tooltip :content="warningContent"
+                  placement="top" effect="dark" :show-after="0" trigger="hover" :hide-after="0">
+                  <div class="approx-warning">
+                    <!-- <i class="fa-solid fa-exclamation"></i> -->
+                    ≈
                     <!-- <i class="fa-solid fa-circle-exclamation"></i> -->
-                  </span>
+                  </div>
                 </el-tooltip>
                 </span>
               </div>
@@ -1098,10 +1099,9 @@
                 </span>
               </el-tooltip>
               <el-tooltip content="Warning: the Decision Tool may be wrong, so consider this value carefully."
-                placement="top" effect="dark" :show-after="0" trigger="hover" :hide-after="0">
-                <span style="cursor: pointer; margin-left: 6px; font-size:12px;  color:#bd3030">
-                  <i class="fa-solid fa-exclamation"></i>
-                  <!-- <i class="fa-solid fa-circle-exclamation"></i> -->
+                placement="bottom" effect="dark" :show-after="0" trigger="hover" :hide-after="0">
+                <span class="pred-warning">
+                  <i class="bi bi-exclamation-triangle"></i>
                 </span>
               </el-tooltip>
               <br />
@@ -1245,12 +1245,9 @@
                 </span>
               </el-tooltip>
               <el-tooltip content="Warning: the Decision Tool may be wrong, so consider this value carefully."
-                placement="top" effect="dark" :show-after="0" trigger="hover" :hide-after="0">
-                <span style="cursor: pointer; margin-left: 6px; font-size:10px;  color:#bd3030">
-                  <!-- <i class="fa-solid fa-exclamation"></i> -->
-                  <!-- <i class="far fa-exclamation-circle"></i> -->
-                  <i class="bi bi-exclamation-circle"></i>
-                  <!-- <i class="fa-solid fa-circle-exclamation"></i> -->
+                placement="bottom" effect="dark" :show-after="0" trigger="hover" :hide-after="0">
+                <span class="pred-warning">
+                  <i class="bi bi-exclamation-triangle"></i>
                 </span>
               </el-tooltip>
               <br />

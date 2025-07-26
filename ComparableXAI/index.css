@@ -1,0 +1,19 @@
+.pred-warning {
+    cursor: pointer;
+    margin-left: 4px;
+    font-size: 10px;
+    color: #bd3030
+  }
+
+  .approx-warning {
+    width: 10px;
+    height: 10px;
+    color: #bd3030;
+    border-radius: 10px;
+    border: 1px solid #bd3030;
+    display: inline-block;
+    text-align: center;
+    line-height: 10px;
+    margin-left: 4px;
+    font-size: 12px;
+  }
