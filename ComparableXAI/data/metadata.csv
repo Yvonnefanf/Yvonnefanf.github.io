@@ -1,10 +1,10 @@
 domainId,domainName,featureId,featureName,featureDescription,isNumerical
-0,House Price,0,Distance to Downtown (miles),Distance from the property to the city center in miles.,1
-0,House Price,1,# Bathroom,The number of bathrooms in the house.,1
-0,House Price,2,Living Area (ksqft),Indoor living space in thousands of square feet.,1
+0,House Price,0,# Bathroom,The number of bathrooms in the house.,1
+0,House Price,1,Living Area (ksqft),Indoor living space in thousands of square feet.,1
+0,House Price,2,Condition,"A rating of the overall condition of the house (e.g., from 1 to 5, with 5 being the best).",1
 0,House Price,3,Grade,A rating of the overall quality and design of the house based on King County's grading system.,1
-0,House Price,4,Age (years),The year the house was originally built.,1
-0,House Price,5,Condition,"A rating of the overall condition of the house (e.g., from 1 to 5, with 5 being the best).",1
+0,House Price,4,Distance to Downtown (miles),Distance from the property to the city center in miles.,1
+0,House Price,5,Age (years),The year the house was originally built.,1
 1,Salary,0,Age (years),The age of the employee in years.,1
 1,Salary,1,Gender,The gender of the employee.,0
 1,Salary,2,Education Level,The education level of the employee.,1
