@@ -484,7 +484,110 @@
 <body>
 
   <div id="app">
-    <div class="tab-content" v-if="currentTab === 0">
+    <div class="tab-content" v-if="xaiType=='noXAI'">
+      
+      <table class="plain-xai-table" style="border-collapse: separate; border-spacing: 4px 0;">
+        <thead>
+        
+          <tr>
+            <th>
+              
+            </th>
+            <th
+              class="subject right-align border-btm annotation-border-top annotation-border-left annotation-border-right"
+              style="width: 62px;">Subject</th>
+          </tr>
+        </thead>
+        <tbody>
+          <template v-for="(feature, index) in Features[domainIdx]">
+            <tr>
+              <td class="feature-name annotation-border-left annotation-border-right"
+                :class="{'annotation-border-top':index==0, 'annotation-border-btm':index==Features[domainIdx].length-1}">
+                {{feature}}
+                <el-tooltip :content="FeatureDescriptions[domainIdx][index]" placement="right" effect="dark"
+                  :show-after="0">
+                  <span class="tooltip-icon" style="cursor: pointer; margin-left: 4px;">
+                    <i class="fa-regular fa-circle-question"></i>
+                  </span>
+                </el-tooltip>
+              </td>
+              <td class="right-align annotation-border-left annotation-border-right" style="cursor:pointer"
+                :class="{'annotation-border-btm':index==Features[domainIdx].length-1}">
+                <el-tooltip :content="Targets[domainIdx][currentTargetIndex].feature_val[index]" placement="right"
+                  effect="dark" :show-after="0">
+                  {{Targets[domainIdx][currentTargetIndex].feature_val[index]}}
+              </td>
+              </el-tooltip>
+
+            </tr>
+          </template>
+          <tr>
+            <td colspan="2" style="padding: 0; overflow: visible;">
+              <!-- sub tabel -->
+              <table class="highlight-green"
+                style="overflow: visible; width: 100%; border-collapse: collapse; margin:0;">
+                <tr style="overflow: visible;">
+
+                  <td style="width: 140px; position: relative; overflow: visible;"
+                    class="feature-name money highlight-green">
+                   
+                    {{ Labels[domainIdx][0] }}
+                    <el-tooltip :content="Labels_Descriptions[domainIdx][0]" placement="right" effect="dark"
+                      :show-after="0" trigger="hover" :hide-after="0">
+                      <span class="tooltip-icon">
+                        <i class="fa-regular fa-circle-question"></i>
+                      </span>
+                    </el-tooltip>
+                  </td>
+                  <td class="right-align money highlight-green" style="cursor: pointer;">
+                    <el-tooltip content="To Be Determined" placement="right" effect="dark" :show-after="0"
+                      trigger="hover" :hide-after="0">
+                      TBD
+                    </el-tooltip>
+                  </td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+
+          <tr>
+            <td style="height:0px;" class="feature-name money">
+            </td>
+            <td class="right-align money subject">
+            </td>
+            <template v-for="(row, idx) in Comparables[domainIdx][currentTargetIndex]" :key="row.id">
+              <td colspan="2" class="comp1-header right-align money"><span>
+              </td>
+              <td :colspan="row.adjusted_step_number*2" class="right-align" :class="{hidden: currentOpenComp!==idx}">
+              </td>
+            </template>
+          </tr>
+
+          <tr>
+            <td style="width: 140px; position:relative; overflow:visible;" class="feature-name money">
+              
+              {{Labels[domainIdx][1]}}
+              <el-tooltip :content="Labels_Descriptions[domainIdx][1]" placement="right" effect="dark" :show-after="0"
+                trigger="hover" :hide-after="0">
+                <span class="tooltip-icon">
+                  <i class="fa-regular fa-circle-question"></i>
+                </span>
+              </el-tooltip>
+              <el-tooltip content="Warning: the Decision Tool may be wrong, so consider this value carefully."
+                placement="top" effect="dark" :show-after="0" trigger="hover" :hide-after="0">
+                <span style="cursor: pointer; margin-left: 6px; font-size:12px;  color:#bd3030">
+                  <!-- <i class="bi bi-exclamation-circle"></i> -->
+                  <i class="fa-solid fa-exclamation"></i>
+                </span>
+              </el-tooltip>
+            </td>
+            <td class="right-align money">{{Targets[domainIdx][currentTargetIndex].pred}}{{unit_list[domainIdx]}}
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="tab-content" v-if="xaiType === 'trace'">
       <table>
         <thead>
           <!-- Header row -->
@@ -800,7 +903,7 @@
     </div>
 
     <!-- NO Trace Version -->
-    <div class="tab-content" v-else-if="currentTab === 1">
+    <div class="tab-content" v-if="xaiType == 'comparableXAI'">
 
       <table>
         <thead>
@@ -1017,13 +1120,13 @@
 
 
     </div>
-    <div class="tab-content" v-else class="tab-content">
+    <div class="tab-content" v-if="xaiType == 'comparable'" class="tab-content">
       <table class="plain-xai-table">
         <thead>
           <tr>
             <th></th>
             <th class="subject right-align border-btm" style="width: 62px;">Subject</th>
-            <template v-for="(row, idx) in Comparables[currentTargetIndex]" :key="row.id">
+            <template v-for="(row, idx) in Comparables[domainIdx][currentTargetIndex]" :key="row.id">
               <th style="width: 62px;" class="right-align border-btm">Comparable {{idx+1}}</th>
             </template>
 
@@ -1186,6 +1289,7 @@
     const initDomain = getParam('domain', 'house');
     const initTab = Number(getParam('tab', 0));
     const initInstance = Number(getParam('instance', 0));
+    const initXAItype = getParam('xaiType', 'noXAI');
 
 
     const { createApp } = Vue;
@@ -1200,6 +1304,7 @@
           domain: initDomain,
           currentTab: initTab,
           currentTargetIndex: initInstance,
+          xaiType: initXAItype,
           //about domain
           domain_list: [],
           unit_list: [],
