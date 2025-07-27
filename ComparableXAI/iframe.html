@@ -1482,6 +1482,7 @@
             this.Features[domainIdx] = features.map(f => f.featureName);
             this.FeatureDescriptions[domainIdx] = features.map(f => f.featureDescription);
             this.numberical_feature[domainIdx] = features.map(f => f.isNumerical);
+         
           });
           console.log("finished process feature metadata")
         },
@@ -1492,12 +1493,25 @@
             if (!grouped[row.domainId]) {
               grouped[row.domainId] = {};
             }
-            
+            const domainId = row.domainId;
+            const numFlags = this.numberical_feature?.[domainId] || [];  // e.g. [true, false, ...]
+        
             // Extract feature values
             const featureVals = [];
             for (let i = 0; i < 6; i++) {
               const val = row[`feature${i}`];
-              featureVals.push(val !== null && val !== undefined ? String(val) : '');
+              if (val !== null && val !== undefined) {
+                if (numFlags[i]) {
+                  // 数值型特征：保留一位小数
+                  const numVal = Number(val);
+                  featureVals.push(!isNaN(numVal) ? numVal.toFixed(1) : '');
+                } else {
+                  // 类别型特征：转为字符串
+                  featureVals.push(String(val));
+                }
+              } else {
+                featureVals.push('');
+              }
             }
 
             grouped[row.domainId][row.instanceId] = {
@@ -1532,6 +1546,9 @@
             if (!grouped[row.domainId][row.instanceId]) {
               grouped[row.domainId][row.instanceId] = {};
             }
+            const domainId = row.domainId;
+            const numFlags = this.numberical_feature?.[domainId] || [];  // e.g. [true, false, ...]
+        
 
             // Extract feature values and deltas
             const featureVals = [];
@@ -1540,12 +1557,25 @@
             
             for (let i = 0; i < 6; i++) {
               const val = row[`feature${i}`];
-              featureVals.push(val !== null && val !== undefined ? String(val) : '');
-              
+              if (val !== null && val !== undefined) {
+                if (numFlags[i]) {
+                  // 数值型特征：保留一位小数
+                  const numVal = Number(val);
+                  featureVals.push(!isNaN(numVal) ? numVal.toFixed(1) : '');
+                } else {
+                  // 类别型特征：转为字符串
+                  featureVals.push(String(val));
+                }
+              } else {
+                featureVals.push('');
+              }
               const dx = row[`delta_x${i}`];
               const dy = row[`delta_y${i}`];
-              deltaX.push(dx !== null ? dx : 0);
-              deltaY.push(dy !== null ? dy : 0);
+              
+              const dxVal = Number(dx);
+              const dyVal = Number(dy);
+              deltaX.push(!isNaN(dxVal) ? dxVal.toFixed(1) : '0.0');
+              deltaY.push(!isNaN(dyVal) ? dyVal.toFixed(1) : '0.0');
             }
 
             // Parse adjusted_order and adjusted_price arrays
