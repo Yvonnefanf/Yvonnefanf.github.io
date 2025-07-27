@@ -1185,7 +1185,7 @@
       const params = new URLSearchParams(window.location.search);
       return params.has(key) ? params.get(key) : defaultValue;
     }
-    const domainKeyToIndex = { house: 0, salary: 1, energy: 2 };
+    const domainKeyToIndex = { house: 0, energy: 1, salary: 2 };
     const initDomain = getParam('domain', 'house');
     const initTab = Number(getParam('tab', 0));
     const initInstance = Number(getParam('instance', 0));

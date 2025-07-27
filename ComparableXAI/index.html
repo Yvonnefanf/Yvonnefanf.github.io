@@ -20,14 +20,15 @@
     <label for="domain">Domain:</label>
     <select id="domain">
       <option value="house">House Price</option>
-      <option value="salary">Salary</option>
       <option value="energy">Energy</option>
+      <option value="salary">Salary</option>
     </select>
-    <label for="tab">XAI Type:</label>
-    <select id="tab">
-      <option value="0">Comparable XAI</option>
-      <option value="1">Comparable XAI (No Trace)</option>
-      <option value="2">Plain Example-based XAI</option>
+    <label for="xaiType">XAI Type:</label>
+    <select id="xaiType">
+      <option value="noXAI">No XAI</option>
+      <option value="comparable">Example based XAI</option>
+      <option value="comparableXAI">Comparable XAI</option>
+      <option value="trace">Trace</option>
     </select>
     <label for="instance">Instance:</label>
     <input id="instance" type="number" value="0" min="0" />
@@ -48,9 +49,9 @@
 
     function updateFrame() {
       const d = document.getElementById('domain').value; // now a string
-      const t = document.getElementById('tab').value;
+      const x = document.getElementById('xaiType').value;
       const i = document.getElementById('instance').value;
-      const url = `https://yvonnefanf.github.io/ComparableXAI/iframe.html?domain=${d}&tab=${t}&instance=${i}`;
+      const url = `https://yvonnefanf.github.io/ComparableXAI/iframe.html?domain=${d}&xaiType=${x}&instance=${i}`;
       const frame = document.getElementById('xaiFrame');
       frame.src = url;
       const link = document.getElementById('frameUrlLink');
@@ -63,7 +64,7 @@
 
     // Update on button click and when controls change
     document.getElementById('loadBtn').addEventListener('click', updateFrame);
-    ['domain', 'tab', 'instance'].forEach(id => {
+    ['domain', 'xaiType', 'instance'].forEach(id => {
       document.getElementById(id).addEventListener('change', updateFrame);
     });
   </script>

@@ -1285,7 +1285,7 @@
       const params = new URLSearchParams(window.location.search);
       return params.has(key) ? params.get(key) : defaultValue;
     }
-    const domainKeyToIndex = { house: 0, salary: 1, energy: 2 };
+    const domainKeyToIndex = { house: 0, energy: 1, salary: 2 };
     const initDomain = getParam('domain', 'house');
     const initTab = Number(getParam('tab', 0));
     const initInstance = Number(getParam('instance', 0));
@@ -1381,7 +1381,8 @@
             const price = comparables[idx].adjusted_price && comparables[idx].adjusted_price.length > 0
               ? comparables[idx].adjusted_price[comparables[idx].adjusted_step_number - 1]
               : 0;
-            formula += `${weight}% × ${price}${this.unit_list[this.domain]}`;
+            formula += `${weight}% × ${price}${this.unit_list[this.domainIdx]}`;
+           
             if (idx < comparables.length - 1) formula += ' + ';
             sum += weight * price;
             totalWeight += weight;
@@ -1556,6 +1557,7 @@
             const idx = row.domainId;
             this.domain_list[idx] = row.domainName;
             this.unit_list[idx] = row.unit;
+            console.log("unit",row)
             this.unit_list_header[idx] = row.unitHeader;
             this.warning[idx] = row.warning;
             this.Labels[idx] = [row.labelActual, row.labelPrediction, row.labelAdjusted];
