@@ -485,13 +485,13 @@
 
   <div id="app">
     <div class="tab-content" v-if="xaiType=='noXAI'">
-      
+
       <table class="plain-xai-table" style="border-collapse: separate; border-spacing: 4px 0;">
         <thead>
-        
+
           <tr>
             <th>
-              
+
             </th>
             <th
               class="subject right-align border-btm annotation-border-top annotation-border-left annotation-border-right"
@@ -530,7 +530,7 @@
 
                   <td style="width: 140px; position: relative; overflow: visible;"
                     class="feature-name money highlight-green">
-                   
+
                     {{ Labels[domainIdx][0] }}
                     <el-tooltip :content="Labels_Descriptions[domainIdx][0]" placement="right" effect="dark"
                       :show-after="0" trigger="hover" :hide-after="0">
@@ -565,7 +565,7 @@
 
           <tr>
             <td style="width: 140px; position:relative; overflow:visible;" class="feature-name money">
-              
+
               {{Labels[domainIdx][1]}}
               <el-tooltip :content="Labels_Descriptions[domainIdx][1]" placement="right" effect="dark" :show-after="0"
                 trigger="hover" :hide-after="0">
@@ -577,7 +577,7 @@
                 placement="top" effect="dark" :show-after="0" trigger="hover" :hide-after="0">
                 <span style="cursor: pointer; margin-left: 6px; font-size:12px;  color:#bd3030">
                   <!-- <i class="bi bi-exclamation-circle"></i> -->
-                  <i class="fa-solid fa-exclamation"></i>
+                  <i class="bi bi-exclamation-triangle"></i>
                 </span>
               </el-tooltip>
             </td>
@@ -660,8 +660,8 @@
               </el-tooltip>
             </td>
             <td class="right-align subject">
-              <el-tooltip :content="Targets[domainIdx]?.[currentTargetIndex].feature_val[index] || '' " placement="right"
-                effect="dark" :show-after="0" trigger="hover" :hide-after="0">
+              <el-tooltip :content="Targets[domainIdx]?.[currentTargetIndex].feature_val[index] || '' "
+                placement="right" effect="dark" :show-after="0" trigger="hover" :hide-after="0">
                 <div style=" display: inline-block;
                 max-width: 62px;
                 width: 62px;
@@ -1325,7 +1325,7 @@
             [],
             //domain 3
             []],
-            numberical_feature: [
+          numberical_feature: [
             //domain 1
             [],
             //domain 2
@@ -1335,9 +1335,10 @@
           ],
           Features: [],
           FeatureDescriptions: [],
-          Targets:[],
-          Comparables:[],
-          
+          Targets: [],
+          Comparables: [],
+          categoryMappings: {},
+
 
 
           currentOpenComp: null,
@@ -1356,9 +1357,9 @@
             { min: 200, max: 500 }, // domain 0
             { min: 30, max: 200 }   // domain 1
           ],
-          
-       
-          
+
+
+
         }
       },
       computed: {
@@ -1371,7 +1372,7 @@
         },
         weightedAverageTooltipContent() {
           const comparables = this.Comparables[this.domainIdx]?.[this.currentTargetIndex];
-          if (!Array.isArray(this.Comparables[this.domainIdx])  || comparables.length === 0) return '';
+          if (!Array.isArray(this.Comparables[this.domainIdx]) || comparables.length === 0) return '';
 
           let formula = '';
           let sum = 0;
@@ -1382,7 +1383,7 @@
               ? comparables[idx].adjusted_price[comparables[idx].adjusted_step_number - 1]
               : 0;
             formula += `${weight}% × ${price}${this.unit_list[this.domainIdx]}`;
-           
+
             if (idx < comparables.length - 1) formula += ' + ';
             sum += weight * price;
             totalWeight += weight;
@@ -1409,10 +1410,10 @@
         },
         similarityScores() {
           const targets = this.Targets[this.domainIdx];
-          
-          
+
+
           const comparables = this.Comparables[this.domainIdx][this.currentTargetIndex];
-          
+
           if (!Array.isArray(targets) || !targets[this.currentTargetIndex] || !Array.isArray(comparables)) {
             return [];
           }
@@ -1455,7 +1456,7 @@
           return ((this.maxSliderValue - range.min) / (range.max - range.min)) * 100;
         },
         currentComparableFinalPrices() {
-          
+
           if (!Array.isArray(!this.Comparables[this.domainIdx]) || comparables.length === 0) return [];
           const comparables = this.Comparables[this.domainIdx][this.currentTargetIndex];
 
@@ -1481,19 +1482,28 @@
           return target && target.actual ? target.actual : '-';
         }
       },
-      mounted() {
+      async mounted() {
+        const [map1, map2] = await Promise.all([
+          fetch('./data/domain1.json').then(r => r.json()),
+          fetch('./data/domain2.json').then(r => r.json())
+        ]);
+        this.categoryMappings = {
+          "1": map1,
+          "2": map2
+        }
         this.loadCSVData()
-        this.updateSliderFromComparables();
+   
+
 
       },
       watch: {
         domain() {
           this.currentTargetIndex = 0;
-          this.updateSliderFromComparables();
+      
           this.showAnswer = false;
         },
         currentTargetIndex() {
-          this.updateSliderFromComparables();
+
           this.showAnswer = false;
         }
       },
@@ -1557,7 +1567,7 @@
             const idx = row.domainId;
             this.domain_list[idx] = row.domainName;
             this.unit_list[idx] = row.unit;
-            console.log("unit",row)
+            console.log("unit", row)
             this.unit_list_header[idx] = row.unitHeader;
             this.warning[idx] = row.warning;
             this.Labels[idx] = [row.labelActual, row.labelPrediction, row.labelAdjusted];
@@ -1589,7 +1599,7 @@
             this.Features[domainIdx] = features.map(f => f.featureName);
             this.FeatureDescriptions[domainIdx] = features.map(f => f.featureDescription);
             this.numberical_feature[domainIdx] = features.map(f => f.isNumerical);
-         
+
           });
           console.log("finished process feature metadata")
         },
@@ -1602,7 +1612,8 @@
             }
             const domainId = row.domainId;
             const numFlags = this.numberical_feature?.[domainId] || [];  // e.g. [true, false, ...]
-        
+            console.log("numFlags", numFlags)
+
             // Extract feature values
             const featureVals = [];
             for (let i = 0; i < 6; i++) {
@@ -1613,8 +1624,16 @@
                   const numVal = Number(val);
                   featureVals.push(!isNaN(numVal) ? numVal.toFixed(1) : '');
                 } else {
+                  
                   // 类别型特征：转为字符串
-                  featureVals.push(String(val));
+                  const raw = String(val);
+                  const featName = this.Features[domainId][i];
+  
+                  const mapForDomain = this.categoryMappings[String(domainId)] || {};
+                  const labelMap = mapForDomain[featName] || {};
+                  
+                  featureVals.push(labelMap[raw] ?? raw);
+
                 }
               } else {
                 featureVals.push('');
@@ -1636,7 +1655,7 @@
             const domainIdx = Number(domainId);
             const instances = grouped[domainId];
             const maxInstance = Math.max(...Object.keys(instances).map(Number));
-            
+
             for (let i = 0; i <= maxInstance; i++) {
               this.Targets[domainIdx][i] = instances[i] || null;
             }
@@ -1645,7 +1664,7 @@
         processComparables(data) {
           // Group by domainId, instanceId, and comparableId
           const grouped = {};
-          
+
           data.forEach(row => {
             if (!grouped[row.domainId]) {
               grouped[row.domainId] = {};
@@ -1655,13 +1674,13 @@
             }
             const domainId = row.domainId;
             const numFlags = this.numberical_feature?.[domainId] || [];  // e.g. [true, false, ...]
-        
+
 
             // Extract feature values and deltas
             const featureVals = [];
             const deltaX = [];
             const deltaY = [];
-            
+
             for (let i = 0; i < 6; i++) {
               const val = row[`feature${i}`];
               if (val !== null && val !== undefined) {
@@ -1671,14 +1690,21 @@
                   featureVals.push(!isNaN(numVal) ? numVal.toFixed(1) : '');
                 } else {
                   // 类别型特征：转为字符串
-                  featureVals.push(String(val));
+                  const raw = String(val);
+                  const featName = this.Features[domainId][i];
+  
+                  const mapForDomain = this.categoryMappings[String(domainId)] || {};
+                  const labelMap = mapForDomain[featName] || {};
+                  
+                  featureVals.push(labelMap[raw] ?? raw);
+
                 }
               } else {
                 featureVals.push('');
               }
               const dx = row[`delta_x${i}`];
               const dy = row[`delta_y${i}`];
-              
+
               const dxVal = Number(dx);
               const dyVal = Number(dy);
               deltaX.push(!isNaN(dxVal) ? dxVal.toFixed(1) : '0.0');
@@ -1688,7 +1714,7 @@
             // Parse adjusted_order and adjusted_price arrays
             let adjustedOrder = [];
             let adjustedPrice = [];
-            
+
             // Handle adjusted_order - could be string, array, or null
             if (row.adjusted_order) {
               if (typeof row.adjusted_order === 'string') {
@@ -1699,7 +1725,7 @@
                 adjustedOrder = [row.adjusted_order].map(Number);
               }
             }
-            
+
             // Handle adjusted_price - could be string, array, or null
             if (row.adjusted_price) {
               if (typeof row.adjusted_price === 'string') {
@@ -1732,40 +1758,19 @@
           Object.keys(grouped).forEach(domainId => {
             const domainIdx = Number(domainId);
             const instances = grouped[domainId];
-            
+
             Object.keys(instances).forEach(instanceId => {
               const instanceIdx = Number(instanceId);
               if (!this.Comparables[domainIdx][instanceIdx]) {
                 this.Comparables[domainIdx][instanceIdx] = [];
               }
-              
+
               const comparables = instances[instanceId];
               Object.keys(comparables).sort((a, b) => Number(a) - Number(b)).forEach(comparableId => {
                 this.Comparables[domainIdx][instanceIdx].push(comparables[comparableId]);
               });
             });
           });
-        },
-
-        updateSliderFromComparables() {
-          const range = this.comparablePriceRange;
-          const sliderRange = this.currentSliderRange;
-          // Map the comparable price range to current slider range
-          const comparableMin = range.min;
-          const comparableMax = range.max;
-
-          // If comparable prices are all 0, use default range within current slider range
-          if (comparableMin === 0 && comparableMax === 0) {
-            const defaultRange = sliderRange.max - sliderRange.min;
-            this.minSliderValue = Math.round(sliderRange.min + defaultRange * 0.3);
-            this.maxSliderValue = Math.round(sliderRange.min + defaultRange * 0.7);
-          } else {
-            // Map comparable prices to current slider range
-            // Scale the comparable range to fit within current slider range
-            const scale = Math.min(sliderRange.max / comparableMax, 1); // Ensure we don't exceed slider max
-            this.minSliderValue = Math.round(comparableMin * scale);
-            this.maxSliderValue = Math.round(comparableMax * scale);
-          }
         },
         highlightActualPrice(idx) {
           this.highlightedActualPrice = idx;
