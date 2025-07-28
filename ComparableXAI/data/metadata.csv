@@ -6,12 +6,13 @@ domainId,domainName,featureId,featureName,featureDescription,isNumerical
 0,House Price,4,Distance to Downtown (miles),Distance from the property to the city center in miles.,1
 0,House Price,5,Age (years),The year the house was originally built.,1
 1,Energy,0,Building Size (sqft),The total interior floor space of the building, measured in thousands of square feet.,1
-1,Energy,1,Primary Use,The functional category of the building (e.g., education, office, residential).,0
+1,Energy,1,Primary Use,"The functional category of the building (e.g., education, office, residential).",0
 1,Energy,2,Temperature (°F),Outdoor air temperature at the time of measurement, in degrees Fahrenheit.,1
 1,Energy,3,Hour of the Day,The hour of the day when the energy usage was recorded (0 = midnight, 23 = 11 PM).,1
 1,Energy,4,Day of the Week,The day of the week when the energy usage was recorded.,1
-2,Salary,0,Age (years),The age of the employee in years.,1
-2,Salary,1,Gender,The gender of the employee.,0
-2,Salary,2,Education Level,The education level of the employee.,1
-2,Salary,3,Job Title,Job title of the employee.,0
-2,Salary,4,Work Experience (years),The number of years of work experience of the employee.,1
+2,Salary,0,Work Mode,"The employee's work arrangement, such as Hybrid (some remote, some in-person), Remote, or In-person.",0
+2,Salary,1,Education Level,"The employee's education level, such as Primary School, Bachelor’s Degree (B.A., B.S., B.Eng., etc.).",0
+2,Salary,2,Work Experience (years),"The number of years of work experience in the industry.",1
+2,Salary,3,Job Title,"The employee's job title, such as Developer, Product Manager, or Designer.",0
+2,Salary,4,Orgnization Size,"The size of the organization, such as 2–9 employees, or 10,000+ employees.",0
+2,Salary,5,Country,"The employee's work country, for example: United States of America, Singapore, or France.",0

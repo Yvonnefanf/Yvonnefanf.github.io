@@ -1,0 +1,21 @@
+{
+  "Primary Use":
+  {
+    "0": "Education",
+    "1": "Entertainment/public assembly",
+    "2": "Food sales and service",
+    "3": "Healthcare",
+    "4": "Lodging/residential",
+    "5": "Manufacturing/industrial",
+    "6": "Office",
+    "7": "Other",
+    "8": "Parking",
+    "9": "Public services",
+    "10": "Religious worship",
+    "11": "Retail",
+    "12": "Services",
+    "13": "Technology/science",
+    "14": "Utility",
+    "15": "Warehouse/storage"
+  }
+}
