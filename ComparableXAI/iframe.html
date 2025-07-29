@@ -515,10 +515,9 @@
                 :class="{'annotation-border-btm':index==Features[domainIdx].length-1}">
                 <el-tooltip :content="Targets[domainIdx][currentTargetIndex].feature_val[index]" placement="right"
                   effect="dark" :show-after="0">
-                  {{Targets[domainIdx][currentTargetIndex].feature_val[index]}}
+                  <span class="adj-value-span" style="width: 100px;">{{Targets[domainIdx][currentTargetIndex].feature_val[index]}}</span>
               </td>
               </el-tooltip>
-
             </tr>
           </template>
           <tr>
