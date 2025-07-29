@@ -926,10 +926,7 @@
                 style="width: 62px;position:relative;">
                 <div class="annotation" style="position: absolute; top:4px;">5b</div>
                 <span> {{unit_list_header[domainIdx]}} Δ </span>
-                <!-- <button class="toggle-button" @click="toggleCols(`comp${idx+1}`,idx)">
-                  <span v-if="currentOpenComp!=idx" class="toggle-text">{{ currentOpenComp ==idx ? ' ' : '...' }}</span>
-                  <i class="toggle-text fa-solid fa-angle-left" v-if="currentOpenComp==idx"></i>
-                </button> -->
+            
               </th>
               <template v-for="i in row.adjusted_step_number">
                 <th class="adj-value border-btm right-align" style="font-weight: bold;"
@@ -1326,10 +1323,7 @@
                 style="width: 62px;position:relative;">
                 <div class="annotated" style="position: absolute; top:4px;">5b</div>
                 <span> {{unit_list_header[domainIdx]}} Δ </span>
-                <!-- <button class="toggle-button" @click="toggleCols(`comp${idx+1}`,idx)">
-                  <span v-if="currentOpenComp!=idx" class="toggle-text">{{ currentOpenComp ==idx ? ' ' : '...' }}</span>
-                  <i class="toggle-text fa-solid fa-angle-left" v-if="currentOpenComp==idx"></i>
-                </button> -->
+             
               </th>
               <template v-for="i in row.adjusted_step_number">
                 <th class="adj-value border-btm right-align" style="font-weight: bold;"
@@ -1638,31 +1632,15 @@
           currentTab: initTab,
           currentTargetIndex: initInstance,
           currentTutStep: initStep,
-          domain_list: ['House Price', 'Energy', 'Salary'],
-          unit_list: ['K', 'kWh', 'K'],
-          unit_list_header: ['$', '', '$'],
+          domain_list: [],
+          unit_list: [],
+          unit_list_header: [],
           categoryMappings: {},
-
-
           currentOpenComp: null,
-          // Slider data
-          slider_min: 200,
-          slider_max: 500,
-          minSliderValue: 350,
-          maxSliderValue: 450,
-          draggingHandle: null,
-          isDragging: false,
           highlightedActualPrice: null,
           allAdjustedPricesHighlighted: false,
           allPredAndActualHighlighted: false,
-          showAnswer: false,
-          slider_ranges: [
-            { min: 200, max: 500 }, // domain 0
-            { min: 30, max: 200 }   // domain 1
-          ],
-
           warning: [
-
           ],
           Labels: [
             //domain 1
@@ -1709,253 +1687,8 @@
 
             ]
           ],
-          Targets: [
-            // domain 1
-            [
-            ],
-            //domain 2
-            [
-            ],
-            //domain 3
-            [
-              
-            ]
-          ],
-          Comparables: [
-            // domain 1
-            [[
-              {
-                'id': 0,
-                'feature_val': [12.1, 2, 1.1, 7, 68, 5],
-                'delta_x': [+0.3, -1, +0.3, 0, 0, -1],
-                'delta_y': [-3, -6, +30, 0, 0, -3],
-                'pred': 373,
-                'actual': 390,
-                'adjusted_step_number': 4,
-                'adjusted_order': [1, 2, 0, 5],
-                'adjusted_price': [384, 414, 411, 408],
-                'final_adjusted_price': 408,
-                'net_adjustments': [-6, 24, 21, 18],
-                'net_adjustment': 18
-              },
-              {
-                'id': 1,
-                'feature_val': [10.5, 1, 0.7, 6, 73, 3],
-                'delta_x': [+1.8, 0, +0.7, +1, -7, +1],
-                'delta_y': [-113, 0, +135, +97, +7, +22],
-                'pred': 232,
-                'actual': 245,
-                'adjusted_step_number': 5,
-                'adjusted_order': [0, 2, 3, 4, 5],
-                'adjusted_price': [132, 267, 364, 371, 393],
-                'final_adjusted_price': 393,
-                'net_adjustments': [-113, 22, 119, 126, 148],
-                'net_adjustment': 148
-              }
-            ],
-
-            [
-              //'feature_val': [3.2, '1¾', 1.7, 8, 112, 3],
-              {
-                'id': 0,
-                'feature_val': [3, 2, 1.8, 8, 90, 3],
-                'delta_x': [-0.1, '¼', -0.1, 0, +22, 0],
-                'delta_y': [-41.4, 0, 0, 0, +105.6, 0],
-                'pred': 641.6,
-                'actual': 575,
-                'adjusted_step_number': 4,
-                'adjusted_order': [2, 4, 1, 0],
-                'adjusted_price': [575, 680.6, 680.6, 639.2],
-                'final_adjusted_price': 639.2,
-              },
-              {
-                'id': 1,
-                'feature_val': [7, 2.5, 1.6, 8, 7, 3],
-                'delta_x': [-3.8, -0.5, +0.1, 0, +83, 0],
-                'delta_y': [+29.6, -18.5, +57.9, 0, +82, 0],
-                'pred': 517.6,
-                'actual': 525,
-                'adjusted_step_number': 4,
-                'adjusted_order': [2, 0, 4, 1],
-                'adjusted_price': [582.9, 612.5, +694.5, 676],
-                'final_adjusted_price': 639.2,
-              }
-            ]
-            ],
-            [
-              //domain 2 instance 1
-              [
-                //domain 2 instance 1 comp 1
-                {
-                  'id': 0,
-                  'feature_val': [31.0, 'Male', "Bachelor's", 'Junior Project Manager', 3.0],
-
-                  'delta_x': [0, 0, 0, 1, 0],
-                  'delta_y': [0, 0, 0, -4.2, 0],
-                  'pred': 52.5,
-                  'actual': 55,
-                  'adjusted_step_number': 1,
-                  'adjusted_order': [3],
-                  'adjusted_price': [50.8],
-                  'final_adjusted_price': 50.8,
-                  //'net_adjustments': [-6, 24, 21, 18],
-                  //'net_adjustment': 18
-                },
-                //domain 2 instance 1 comp 2
-                {
-                  'id': 0,
-                  'feature_val': [30, 'Female', "Bachelor's", 'Digital Content Producer', 3],
-                  'delta_x': [1, 1, 0, 1, 0],
-                  'delta_y': [+2.6, +0.4, 0, -2.9, 0],
-                  'pred': 48.5,
-                  'actual': 50,
-                  'adjusted_step_number': 3,
-                  'adjusted_order': [1, 0, 3],
-                  'adjusted_price': [50.4, 53, 50.1],
-                  'final_adjusted_price': 50.1,
-
-                  'net_adjustments': [-6, 24, 21, 18],
-                  'net_adjustment': 18
-                },
-              ],
-              //domain 2 instance 2
-              [
-                //domain 2 instance 2 comp 1
-                {
-                  'id': 0,
-
-                  'feature_val': [36.0, 'Male', "Master's", 'Senior Business Development Manager', 11],
-                  'delta_x': [1, 0, 0, 1, 1],
-                  'delta_y': [-7.7, 0, 0, +0.6, -2.8],
-                  'pred': 119.6,
-                  'actual': 120,
-                  'adjusted_step_number': 3,
-                  'adjusted_order': [0, 3, 4],
-                  'adjusted_price': [112.3, 112.9, 110.1],
-                  'final_adjusted_price': 110.1,
-
-                },
-                /*{
-                  'id': 1,
-                  'feature_val': [35.0, 'Male', "Master's", 'Business Development Manager', 8.0],
-                  'delta_x': [0, 0, 0, 1, 2],
-                  'delta_y': [0, 0, 0, +12.5, +9.6],
-                  'pred': 91.5,
-                  'actual': 90,
-                  'adjusted_step_number': 2,
-                  'adjusted_order': [3, 4],
-                  'adjusted_price': [102.5, 112.1],
-                  'final_adjusted_price': 112.1,
-                },*/
-                //domain 2 instance 2 comp 2
-                {
-                  'id': 1,
-                  'feature_val': [35, 'Male', "Master's", 'Product Manager', 7.0],
-                  'delta_x': [0, 0, 0, 1, 3],
-                  'delta_y': [0, 0, 0, -0.1, +8.7],
-                  'pred': 103.7,
-                  'actual': 105,
-                  'adjusted_step_number': 2,
-                  'adjusted_order': [3, 4],
-                  'adjusted_price': [103.6, 112.3],
-                  'final_adjusted_price': 112.3,
-                }
-              ],
-              //domain 2 instance 3
-              [
-                //domain 2 instance 3 comp 1
-                //'feature_val': [46, 'Male', "phD", 'Senior Data Scientist', 18],
-                {
-                  'id': 0,
-                  'feature_val': [46, 'Male', 'PhD', 'Senior Manager', 20],
-                  'delta_x': [0, 0, 0, 1, -2],
-                  'delta_y': [0, 0, 0, -7.6, -2.2],
-                  'pred': 168.5,
-                  'actual': 170,
-                  'adjusted_step_number': 2,
-                  'adjusted_order': [4, 3],
-                  'adjusted_price': [167.8, 160.2],
-                  'final_adjusted_price': 160.2,
-                },
-
-                {
-                  'id': 1,
-                  'feature_val': [47, 'Male', 'PhD', 'Director of Engineering', 20],
-                  'delta_x': [-1, 0, 0, 1, -2],
-                  'delta_y': [-15.6, 0, 0, -4.4, -2.4],
-                  'pred': 178.4,
-                  'actual': 180,
-                  'adjusted_step_number': 3,
-                  'adjusted_order': [4, 0, 3],
-                  'adjusted_price': [177.6, 162, 157.6],
-                  'final_adjusted_price': 157.6,
-                },
-
-              ]
-            ],
-            [[{
-
-              'id': 0,
-              'feature_val': ['Residential', 7063, 70, 10, 29.8, 'Weekday'],
-              'delta_x': [0, 0, +6, 0, 0, 0],
-              'delta_y': [0, 0, 2, 0, 0, 0],
-              'pred': 2700,
-              'actual': 2710,
-              'adjusted_step_number': 1,
-              'adjusted_order': [2],
-              'adjusted_price': [2716],
-              'final_adjusted_price': 2716,
-
-            }]]
-
-
-          ],
-          Comparables_no_trace: [
-            [
-              {
-                'id': 0,
-                'feature_val': [12.1, 2, 1.1, 7, 68, 5],
-                'delta_x': [+0.3, -1, +0.3, 0, 0, -1],
-                'delta_y': [+11, -6, -10, 0, 0, +1.5],
-                'pred': 373,
-                'actual': 390,
-                'adjusted_step_number': 4,
-                'adjusted_price': 386
-              },
-              {
-                'id': 1,
-                'feature_val': [10.5, 1, 0.7, 6, 73, 3],
-                'delta_x': [+1.8, 0, +0.7, +1, -7, +1],
-                'delta_y': [-67, 0, +154, +150, +6, +35],
-                'pred': 232,
-                'actual': 245,
-                'adjusted_step_number': 5,
-                'adjusted_price': 524
-              }
-            ],
-            [
-              {
-                'id': 0,
-                'feature_val': [0, 0, 0, 0, 0, 0],
-                'delta_x': [0, 0, 0, 0, 0, 0],
-                'delta_y': [0, 0, 0, 0, 0, 0],
-                'pred': 0,
-                'actual': 0,
-                'adjusted_step_number': 3,
-                'adjusted_price': 0
-              },
-              {
-                'id': 1,
-                'feature_val': [0, 0, 0, 0, 0, 0],
-                'delta_x': [0, 0, 0, 0, 0, 0],
-                'delta_y': [0, 0, 0, 0, 0, 0],
-                'pred': 0,
-                'actual': 0,
-                'adjusted_step_number': 4,
-                'adjusted_price': 0
-              }
-            ]
-          ]
+          Targets: [],
+          Comparables: [],
         }
       },
       computed: {
@@ -2033,17 +1766,7 @@
           const total = scores.reduce((a, b) => a + b, 0);
           return scores.map(s => total ? Math.round((s / total) * 100) : 0);
         },
-        currentSliderRange() {
-          return this.slider_ranges[this.domainIdx];
-        },
-        minSliderPercent() {
-          const range = this.currentSliderRange;
-          return ((this.minSliderValue - range.min) / (range.max - range.min)) * 100;
-        },
-        maxSliderPercent() {
-          const range = this.currentSliderRange;
-          return ((this.maxSliderValue - range.min) / (range.max - range.min)) * 100;
-        },
+        
         currentComparableFinalPrices() {
           const comparables = this.Comparables[this.domainIdx][this.currentTargetIndex];
           if (!comparables || comparables.length === 0) return [];
@@ -2351,9 +2074,7 @@
         unhighlightAllPredAndActual() {
           this.allPredAndActualHighlighted = false;
         },
-        toggleAnswer() {
-          this.showAnswer = !this.showAnswer;
-        },
+        
         toggleCols(group, idx) {
           if (this.currentOpenComp == idx) {
             this.currentOpenComp = null
@@ -2391,43 +2112,7 @@
             return "0% (Same)";
           }
         },
-        startHandleDrag(handle, event) {
-          event.preventDefault();
-          this.draggingHandle = handle;
-          this.isDragging = true;
-        },
-        startSliderDrag(event) {
-          if (!this.isDragging) {
-            this.updateSliderValue(event);
-          }
-        },
-        onSliderDrag(event) {
-          if (this.isDragging) {
-            this.updateSliderValue(event);
-          }
-        },
-        stopSliderDrag() {
-          this.isDragging = false;
-          this.draggingHandle = null;
-        },
-        updateSliderValue(event) {
-          const rect = event.currentTarget.getBoundingClientRect();
-          const x = event.clientX - rect.left;
-          const percent = Math.max(0, Math.min(100, (x / rect.width) * 100));
-          const range = this.currentSliderRange;
-          const value = Math.round(range.min + (percent / 100) * (range.max - range.min));
-
-          if (this.draggingHandle === 'min') {
-            this.minSliderValue = Math.min(value, this.maxSliderValue - 10);
-          } else if (this.draggingHandle === 'max') {
-            this.maxSliderValue = Math.max(value, this.minSliderValue + 10);
-          } else {
-            // Click on track - move both handles
-            const currentRange = this.maxSliderValue - this.minSliderValue;
-            this.minSliderValue = Math.max(range.min, value - currentRange / 2);
-            this.maxSliderValue = Math.min(range.max, this.minSliderValue + currentRange);
-          }
-        }
+        
       }
     }).mount('#app');
   </script>
