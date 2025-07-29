@@ -1044,7 +1044,7 @@
             <td class="right-align subject money highlight-green" @mouseenter="highlightAllAdjustedPrices()"
               @mouseleave="unhighlightAllAdjustedPrices()"
               style="border:2px solid #2874c1; overflow:visible; position:relative;">
-              <div class="annotation" style="position: absolute; top: 0; left: -30px;">3a</div>
+              <div class="annotation" style="position: absolute; top: 0; left: -20px;">3a</div>
               <div style="cursor: pointer;">
 
                 <el-tooltip :content="weightedAverageTooltipContent" placement="top" effect="dark" :show-after="0"
@@ -1440,7 +1440,7 @@
             </td>
             <td class="right-align subject money highlight-green" @mouseenter="highlightAllAdjustedPrices()"
               @mouseleave="unhighlightAllAdjustedPrices()" style="position: relative; overflow:visible;">
-              <div class="annotated" style="position: absolute; top:0; left:-30px;">3a</div>
+              <div class="annotated" style="position: absolute; top:0; left:-20px;">3a</div>
               <div style="cursor: pointer;">
 
 
@@ -1842,8 +1842,8 @@
             const [domainMetadata, metadata, subjects, comparables] = await Promise.all([
               this.loadCSV('./data/domain_metadata.csv'),
               this.loadCSV('./data/metadata.csv'),
-              this.loadCSV('./data/subject.csv'),
-              this.loadCSV('./data/comparables.csv')
+              this.loadCSV('./data/tutorial/subject.csv'),
+              this.loadCSV('./data/tutorial/comparables.csv')
             ]);
             console.log('loaded');
 
