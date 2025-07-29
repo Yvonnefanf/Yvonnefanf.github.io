@@ -17,5 +17,15 @@
     "13": "Technology/science",
     "14": "Utility",
     "15": "Warehouse/storage"
+  },
+  "Day of the Week":
+  {
+    "0": "Monday",
+    "1": "Tuesday",
+    "2": "Wednesday",
+    "3": "Thursday",
+    "4": "Friday",
+    "5": "Saturday",
+    "6": "Sunday"
   }
 }
