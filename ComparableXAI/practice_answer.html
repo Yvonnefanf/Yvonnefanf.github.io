@@ -1303,8 +1303,8 @@
             const [domainMetadata, metadata, subjects, comparables] = await Promise.all([
               this.loadCSV('./data/domain_metadata.csv'),
               this.loadCSV('./data/metadata.csv'),
-              this.loadCSV('./data/subject.csv'),
-              this.loadCSV('./data/comparables.csv')
+              this.loadCSV('./data/practice/subject.csv'),
+              this.loadCSV('./data/practice/comparables.csv')
             ]);
             console.log('loaded');
 
