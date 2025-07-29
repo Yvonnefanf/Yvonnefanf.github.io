@@ -509,7 +509,8 @@
                 :class="{'annotation-border-btm':index==Features[domainIdx].length-1}">
                 <el-tooltip :content="Targets[domainIdx][currentTargetIndex].feature_val[index]" placement="right"
                   effect="dark" :show-after="0">
-                  <span class="adj-value-span" style="width: 100px;">{{Targets[domainIdx][currentTargetIndex].feature_val[index]}}</span>
+                  <span class="adj-value-span"
+                    style="width: 100px;">{{Targets[domainIdx][currentTargetIndex].feature_val[index]}}</span>
               </td>
               </el-tooltip>
             </tr>
@@ -593,8 +594,8 @@
                 :class="{'trace-border-left': currentOpenComp===idx, 'trace-border-top': currentOpenComp===idx, 'green-right-border': currentOpenComp===idx}"
                 style="position:relative;">
                 Comparable {{idx + 1}}
-                <el-tooltip v-if="xaiType=='trace'" :content="currentOpenComp==idx ? 'Hide Trace' : 'Show Trace'" placement="top" effect="dark"
-                  :show-after="0" trigger="hover" :hide-after="0">
+                <el-tooltip v-if="xaiType=='trace'" :content="currentOpenComp==idx ? 'Hide Trace' : 'Show Trace'"
+                  placement="top" effect="dark" :show-after="0" trigger="hover" :hide-after="0">
                   <button class="toggle-button" @click="toggleCols(`comp${idx+1}`,idx)">
 
                     <span v-if="currentOpenComp!=idx" class="toggle-text">{{ currentOpenComp ==idx ? ' ' : '...'
@@ -1064,7 +1065,7 @@
     const initTab = Number(getParam('tab', 0));
     const initInstance = Number(getParam('instance', 0));
     const initXAItype = getParam('xaiType', 'noXAI');
-    const initTesing = getParam('testing',false)
+    const initTesing = getParam('testing', false)
 
 
     const { createApp } = Vue;
@@ -1079,7 +1080,7 @@
           domain: initDomain,
           currentTab: initTab,
           currentTargetIndex: initInstance,
-          internalTesting:initTesing,
+          internalTesting: initTesing,
           xaiType: initXAItype,
           //about domain
           domain_list: [],
@@ -1166,7 +1167,7 @@
           }
           if (totalWeight === 0) return formula;
           const avg = (sum / totalWeight).toFixed(1);
-          return `${formula} = ${avg}${this.unit_list[this.domain]}`;
+          return `${formula} = ${avg}${this.unit_list[this.domainIdx]}`;
         },
         weightedAverageValue() {
           const comparables = this.Comparables[this.domainIdx]?.[this.currentTargetIndex];
@@ -1268,14 +1269,14 @@
           "2": map2
         }
         this.loadCSVData()
-   
+
 
 
       },
       watch: {
         domain() {
           this.currentTargetIndex = 0;
-      
+
           this.showAnswer = false;
         },
         currentTargetIndex() {
@@ -1343,7 +1344,7 @@
             const idx = row.domainId;
             this.domain_list[idx] = row.domainName;
             this.unit_list[idx] = row.unit;
-            console.log("unit", row)
+
             this.unit_list_header[idx] = row.unitHeader;
             this.warning[idx] = row.warning;
             this.Labels[idx] = [row.labelActual, row.labelPrediction, row.labelAdjusted];
@@ -1388,7 +1389,7 @@
             }
             const domainId = row.domainId;
             const numFlags = this.numberical_feature?.[domainId] || [];  // e.g. [true, false, ...]
-            console.log("numFlags", numFlags)
+
 
             // Extract feature values
             const featureVals = [];
@@ -1398,14 +1399,14 @@
                 const featName = this.Features[domainId][i];
                 if (numFlags[i]) {
                   if (featName === '# Bathroom') {
-                    const raw   = Number(val);
+                    const raw = Number(val);
                     const whole = Math.floor(raw);
-                    const frac  = raw - whole;
+                    const frac = raw - whole;
                     let char = '';
                     if (Math.abs(frac - 0.25) < 1e-6) char = '\u00BC'; // ¼
-                    else if (Math.abs(frac - 0.5 ) < 1e-6) char = '\u00BD'; // ½
+                    else if (Math.abs(frac - 0.5) < 1e-6) char = '\u00BD'; // ½
                     else if (Math.abs(frac - 0.75) < 1e-6) char = '\u00BE'; // ¾
-              
+
                     // “2¼” or “2” if no fraction
                     featureVals.push(char ? `${whole}${char}` : `${whole}`);
                   } else {
@@ -1414,14 +1415,14 @@
                     featureVals.push(!isNaN(numVal) ? numVal : '');
                   }
                 } else {
-                  
+
                   // 类别型特征：转为字符串
                   const raw = String(val);
                   const featName = this.Features[domainId][i];
-  
+
                   const mapForDomain = this.categoryMappings[String(domainId)] || {};
                   const labelMap = mapForDomain[featName] || {};
-                  
+
                   featureVals.push(labelMap[raw] ?? raw);
 
                 }
@@ -1450,8 +1451,10 @@
               this.Targets[domainIdx][i] = instances[i] || null;
             }
           });
+          console.log("finished process subject")
         },
         processComparables(data) {
+
           // Group by domainId, instanceId, and comparableId
           const grouped = {};
 
@@ -1475,21 +1478,34 @@
               const val = row[`feature${i}`];
               if (val !== null && val !== undefined) {
                 const featName = this.Features[domainId][i];
-                if (featName === '# Bathroom') {
-                  const raw   = Number(val);
-                  const whole = Math.floor(raw);
-                  const frac  = raw - whole;
-                  let char = '';
-                  if (Math.abs(frac - 0.25) < 1e-6) char = '\u00BC'; // ¼
-                  else if (Math.abs(frac - 0.5 ) < 1e-6) char = '\u00BD'; // ½
-                  else if (Math.abs(frac - 0.75) < 1e-6) char = '\u00BE'; // ¾
-            
-                  // “2¼” or “2” if no fraction
-                  featureVals.push(char ? `${whole}${char}` : `${whole}`);
+                if (numFlags[i]) {
+                  if (featName === '# Bathroom') {
+                    const raw = Number(val);
+                    const whole = Math.floor(raw);
+                    const frac = raw - whole;
+                    let char = '';
+                    if (Math.abs(frac - 0.25) < 1e-6) char = '\u00BC'; // ¼
+                    else if (Math.abs(frac - 0.5) < 1e-6) char = '\u00BD'; // ½
+                    else if (Math.abs(frac - 0.75) < 1e-6) char = '\u00BE'; // ¾
+
+                    // “2¼” or “2” if no fraction
+                    featureVals.push(char ? `${whole}${char}` : `${whole}`);
+                  } else {
+                    // 其他数值一位小数
+                    const numVal = Number(val).toFixed(1);
+                    featureVals.push(!isNaN(numVal) ? numVal : '');
+                  }
                 } else {
-                  // 其他数值一位小数
-                  const numVal = Number(val).toFixed(1);
-                  featureVals.push(!isNaN(numVal) ? numVal : '');
+
+                  // 类别型特征：转为字符串
+                  const raw = String(val);
+                  const featName = this.Features[domainId][i];
+
+                  const mapForDomain = this.categoryMappings[String(domainId)] || {};
+                  const labelMap = mapForDomain[featName] || {};
+
+                  featureVals.push(labelMap[raw] ?? raw);
+
                 }
               } else {
                 featureVals.push('');
@@ -1563,6 +1579,20 @@
               });
             });
           });
+
+          // Ensure all instances have a Comparables array, even if empty
+          for (let domainIdx = 0; domainIdx < this.Targets.length; domainIdx++) {
+            const instances = this.Targets[domainIdx] || [];
+            for (let instanceIdx = 0; instanceIdx < instances.length; instanceIdx++) {
+              if (!this.Comparables[domainIdx]) {
+                this.Comparables[domainIdx] = [];
+              }
+              if (!this.Comparables[domainIdx][instanceIdx]) {
+                console.log("domainIdx",domainIdx,instanceIdx)
+                this.Comparables[domainIdx][instanceIdx] = [];
+              }
+            }
+          }
         },
         highlightActualPrice(idx) {
           this.highlightedActualPrice = idx;
@@ -1591,7 +1621,7 @@
           } else {
             this.currentOpenComp = idx
           }
-          console.log("group", group)
+
         },
         nextTarget() {
           if (this.currentTargetIndex < this.Targets[this.domainIdx].length - 1) {
