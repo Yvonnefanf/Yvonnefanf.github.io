@@ -5,7 +5,7 @@ domainId,domainName,featureId,featureName,featureDescription,isNumerical
 0,House Price,3,Grade,"Building and construction quality rating (4 is lowest, 13 is highest).",1
 0,House Price,4,Distance to Downtown (miles),"Distance from the house to the city center in miles.",1
 0,House Price,5,Age (years),"Number of years since the house was built.",1
-1,Energy,0,Building Size (sqft),The total interior floor space of the building, measured in thousands of square feet.,1
+1,Energy,0,Building Size (ksqft),The total interior floor space of the building, measured in thousands of square feet.,1
 1,Energy,1,Primary Use,"The functional category of the building (e.g., education, office, residential).",0
 1,Energy,2,Temperature (°F),Outdoor air temperature at the time of measurement, in degrees Fahrenheit.,1
 1,Energy,3,Hour of the Day,The hour of the day when the energy usage was recorded (0 = midnight, 23 = 11 PM).,1
