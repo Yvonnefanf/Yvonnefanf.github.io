@@ -9,7 +9,7 @@ domainId,domainName,featureId,featureName,featureDescription,isNumerical
 1,Energy,1,Primary Use,"The functional category of the building (e.g., education, office, residential).",0
 1,Energy,2,Temperature (°F),Outdoor air temperature at the time of measurement, in degrees Fahrenheit.,1
 1,Energy,3,Hour of the Day,The hour of the day when the energy usage was recorded (0 = midnight, 23 = 11 PM).,1
-1,Energy,4,Day of the Week,The day of the week when the energy usage was recorded.,0
+1,Energy,4,Day of the Week,"Indicates whether the energy usage was recorded on a weekday or weekend.",0
 2,Salary,0,Work Mode,"The employee's work arrangement, such as Hybrid (some remote, some in-person), Remote, or In-person.",0
 2,Salary,1,Education Level,"The employee's education level, such as Primary School, Bachelor’s Degree (B.A., B.S., B.Eng., etc.).",0
 2,Salary,2,Work Experience (years),"The number of years of work experience in the industry.",1
