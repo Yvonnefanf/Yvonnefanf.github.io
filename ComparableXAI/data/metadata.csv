@@ -1,10 +1,10 @@
 domainId,domainName,featureId,featureName,featureDescription,isNumerical
-0,House Price,0,# Bathroom,The number of bathrooms in the house.,1
-0,House Price,1,Living Area (ksqft),Indoor living space in thousands of square feet.,1
-0,House Price,2,Condition,"A rating of the overall condition of the house (e.g., from 1 to 5, with 5 being the best).",1
-0,House Price,3,Grade,A rating of the overall quality and design of the house based on King County's grading system.,1
-0,House Price,4,Distance to Downtown (miles),Distance from the property to the city center in miles.,1
-0,House Price,5,Age (years),The year the house was originally built.,1
+0,House Price,0,# Bathroom,"Number of bathrooms in the house (½ and ¾ baths are partial bathrooms).",1
+0,House Price,1,Living Area (ksqft),Area of the interior space in units of thousands of square feet.,1
+0,House Price,2,Condition,"Overall rating of the house's physical condition, on a scale from 1 (poor) to 5 (excellent).",1
+0,House Price,3,Grade,"Building and construction quality rating (4 is lowest, 13 is highest).",1
+0,House Price,4,Distance to Downtown (miles),"Distance from the house to the city center in miles.",1
+0,House Price,5,"Number of years since the house was built.",1
 1,Energy,0,Building Size (sqft),The total interior floor space of the building, measured in thousands of square feet.,1
 1,Energy,1,Primary Use,"The functional category of the building (e.g., education, office, residential).",0
 1,Energy,2,Temperature (°F),Outdoor air temperature at the time of measurement, in degrees Fahrenheit.,1
