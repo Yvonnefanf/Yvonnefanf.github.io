@@ -883,6 +883,7 @@
                     <span class="pred-description highlight-green" @mouseenter="highlightActualPrice(idx)"
                       @mouseleave="unhighlightActualPrice(idx)">{{ getPredictionDifference(row) }}</span>
                   </el-tooltip>
+                  
               </td>
               <td :colspan="row.adjusted_step_number*2" class="right-align ai-pred-bg"
                 :class="{hidden: currentOpenComp!==idx}">
@@ -945,6 +946,220 @@
             </td>
             <template v-for="(row, idx) in Comparables[domainIdx]?.[currentTargetIndex]" :key="row.id">
               <td class="right-align money highlight-green">{{row.actual}}{{unit_list[domainIdx]}}</td>
+            </template>
+          </tr>
+
+          <tr>
+            <td class="feature-name">Similarity Score
+              <el-tooltip content="The similarity score between the comparable and the subject." placement="right"
+                effect="dark" :show-after="0" trigger="hover" :hide-after="0">
+                <span class="tooltip-icon">
+                  <i class="fa-regular fa-circle-question"></i>
+                </span>
+              </el-tooltip>
+            </td>
+            <td class="right-align subject">—</td>
+            <template v-for="(row, idx) in Comparables[domainIdx]?.[currentTargetIndex]" :key="row.id">
+              <td class="comp1-header right-align" :class="{ 'adjusted-price-highlight': allAdjustedPricesHighlighted}"
+                style="position:relative;">
+                <span>{{ similarityScores[idx] }}%
+              </td>
+              <!-- <template v-for="(ele, i) in row.adjusted_price">
+                <td :colspan="2" class="right-align comp-details" :class="{hidden: currentOpenComp!==idx}"
+                  style="position:relative;">
+                  <span></span>
+                </td>
+              </template> -->
+            </template>
+          </tr>
+
+          <tr>
+            <td style="height:8px;" class="feature-name money">
+            </td>
+            <td class="right-align money subject">
+            </td>
+            <template v-for="(row, idx) in Comparables[domainIdx]?.[currentTargetIndex]" :key="row.id">
+              <td colspan="2" class="comp1-header right-align money"><span>
+
+              </td>
+              <td :colspan="row.adjusted_step_number*2" class="right-align" :class="{hidden: currentOpenComp!==idx}">
+
+              </td>
+            </template>
+          </tr>
+
+
+
+          <tr>
+            <td style="width: 140px;" class="feature-name money">{{Labels[domainIdx]?.[1] || ''}}
+              <el-tooltip :content="Labels_Descriptions[domainIdx][1]" placement="right" effect="dark" :show-after="0"
+                trigger="hover" :hide-after="0">
+                <span class="tooltip-icon">
+                  <i class="fa-regular fa-circle-question"></i>
+                </span>
+              </el-tooltip>
+              <el-tooltip content="Warning: the Decision Tool may be wrong, so consider this value carefully."
+                placement="bottom" effect="dark" :show-after="0" trigger="hover" :hide-after="0">
+                <span class="pred-warning">
+                  <i class="bi bi-exclamation-triangle"></i>
+                </span>
+              </el-tooltip>
+              <br />
+              <span class="pred-description" @mouseenter="highlightAllPredAndActual()"
+                @mouseleave="unhighlightAllPredAndActual()">Prediction Error
+                <el-tooltip content="The difference between the actual value and the predicted value." placement="right"
+                  effect="dark" :show-after="0" trigger="hover" :hide-after="0">
+                  <span class="tooltip-icon">
+                    <!-- <i class="fa-regular fa-circle-question"></i> -->
+                    <i class="fa-regular fa-circle-question"></i>
+                  </span>
+                </el-tooltip>
+              </span>
+            </td>
+
+            <td class="right-align money">{{Targets[domainIdx]?.[currentTargetIndex].pred}}{{unit_list[domainIdx]}}
+              <br> <span>—</span>
+            </td>
+            <template v-for="(row, idx) in Comparables[domainIdx]?.[currentTargetIndex]" :key="row.id">
+              <td class="right-align money">{{row.pred}}{{unit_list[domainIdx]}}
+                <br />
+                <el-tooltip
+                  :content="row.pred + unit_list[domainIdx] + ' is ' + getPredictionDifference(row) + ' than the actual value of ' + row.actual + unit_list[domainIdx]"
+                  placement="bottom" effect="dark" :show-after="0" trigger="hover" :hide-after="0">
+                  <span class="pred-description highlight-green" @mouseenter="highlightActualPrice(idx)"
+                    @mouseleave="unhighlightActualPrice(idx)">{{ getPredictionDifference(row) }}</span>
+                </el-tooltip>
+              </td>
+            </template>
+
+          </tr>
+
+        </tbody>
+      </table>
+    </div>
+    <div class="tab-content" v-if="xaiType == 'linear_reg'" class="tab-content">
+      <table class="plain-xai-table">
+        <thead>
+          <tr>
+            <th></th>
+            <th class="subject right-align border-btm" style="width: 62px;">Subject</th>
+            <template v-for="(row, idx) in Comparables[domainIdx][currentTargetIndex]" :key="row.id">
+              <th style="width: 62px;" class="right-align border-btm">Comparable {{idx+1}}</th>
+            </template>
+
+          </tr>
+
+        </thead>
+        <tbody>
+          <template v-for="(feature, index) in Features[domainIdx]">
+            <tr>
+              <td class="feature-name">
+                {{feature}}
+                <el-tooltip :content="FeatureDescriptions[domainIdx]?.[index] || ''" placement="right" effect="dark"
+                  :show-after="0">
+                  <span class="tooltip-icon" style="cursor: pointer; margin-left: 4px;">
+                    <i class="fa-regular fa-circle-question"></i>
+                  </span>
+                </el-tooltip>
+              </td>
+              <td class="right-align">{{Targets[domainIdx]?.[currentTargetIndex].feature_val[index]}}</td>
+              <template v-for="(row, idx) in Comparables[domainIdx]?.[currentTargetIndex]" :key="row.id">
+                <td class="right-align">{{row.feature_val[index]}}</td>
+              </template>
+            </tr>
+
+          </template>
+          <tr>
+            <td style="width: 140px;" class="feature-name money highlight-green">{{Labels[domainIdx]?.[0] || ''}}
+              <el-tooltip :content="Labels_Descriptions[domainIdx][0]" placement="right" effect="dark" :show-after="0"
+                trigger="hover" :hide-after="0">
+                <span class="tooltip-icon">
+                  <i class="fa-regular fa-circle-question"></i>
+                </span>
+              </el-tooltip>
+            </td>
+
+            <td class="right-align money highlight-green" style="cursor: pointer;">
+              <el-tooltip placement="right" effect="light" :show-after="0">
+                <template #content>
+                  <!-- 1. 描述文字 -->
+                  <div style="font-size:12px; font-weight:500; margin:10px 0;">
+                    
+                    Based on Comparables, the adjustment factors for each attribute are:
+                    <br/>
+                    <span style="width:60px;color:#bd3030; font-size:12px; font-weight:400; line-height:12px;">
+                      <!-- {{warningContent}} -->
+                      <span style="font-weight: 800;">Warning: </span> this is an estimate so it may be inaccurate.
+                    </span> 
+                  </div>
+                  <div style="display: flex;">
+                    <!-- 2. 系数表格 -->
+                    <table style="border-collapse: collapse; font-size: 12px; width:100%; margin-left:30px;">
+                      <thead>
+                        <tr>
+                          <th style="padding:2px 0px; font-size: 12px; text-align:left;">Attribute</th>
+                          <th style="padding:2px 0px; font-size: 12px; text-align:right;">Value</th>
+                          <th style="padding:2px 0px; font-size: 12px; text-align:right;">Factors</th>
+                          <th style="padding:2px 0px; font-size: 12px; text-align:right;">Partial</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr v-for="(row,i) in getLinearTooltipRows(domainIdx, currentTargetIndex)" :key="i"  :style="{ color: row.factor ==
+                        0 ? '#ddd' : '#222' }">
+                          <td style="padding:0; height:16px;"><span style="overflow: hidden; display:inline-block;width:100px; text-overflow:ellipsis;">{{ row.name }}</span></td>
+                          <td style="padding:0; text-align:right;">{{ row.value }}</td>
+                          <td style="padding:0 4px;text-align:right;">× <span
+                              style="display:inline-block; width: 40px;">{{ row.factor ==0? '': row.factor }} </span></td>
+                          <td style="padding:0 4px;text-align:right;">= <span
+                            style="display:inline-block; width: 40px;">{{ row.partial }}</span></td>
+                        </tr>
+
+                        <tr style="font-weight:bold; color:#ddd;">
+                          <td colspan="2" style="padding:0px;">Basement</td>
+                          <td style="padding:0px 4px; text-align:right;">+ 
+                            <span style="display:inline-block; width: 40px;">{{
+                            Linear_reg[domainIdx][currentTargetIndex].linear_pred.toFixed(1) }}</span></td>
+                          <td style="padding:0px 4px; text-align:right;">= <span style="display:inline-block; width: 40px;">
+                            {{
+                              Linear_reg[domainIdx][currentTargetIndex].linear_pred.toFixed(1) }}
+                          </span></td>
+                        </tr>
+                        <!-- <tr style="border-top:2px solid #666; font-weight:bold;">
+                          <td colspan="2" style="padding:4px;">Sum</td>
+                          <td style="padding:4px; text-align:right;">=</td>
+                          <td style="padding:4px; text-align:right;">{{
+                            Linear_reg[domainIdx][currentTargetIndex].linear_pred.toFixed(2) }}</td>
+                        </tr> -->
+                      </tbody>
+                    </table>
+                    <!-- 3. 加号与箭头指向 AI Explainer -->
+                    <div style="display:flex; align-items:center;">
+                      <div style=" font-size:20px; margin-top:-4px; margin-left:10px;"> } </div>
+                      <div style="font-size:20px; margin-left:8px;">+</div>
+                      <div style="margin:0 8px; margin-top:-2px;font-size:14px;">→</div>
+                      <div
+                        style="width:60px; font-size:14px; color:#2e8113;">
+                        {{ Linear_reg[domainIdx][currentTargetIndex].linear_pred.toFixed(1) }}{{ unit_list[domainIdx] }} 
+                        <br/> 
+                      </div>
+                     
+                    </div>
+                  </div>
+                 
+                </template>
+                <span class="right-align money highlight-green" style="cursor: pointer; font-weight:500;">
+                  {{ Linear_reg[domainIdx]?.[currentTargetIndex]?.linear_pred.toFixed(1) }}{{ unit_list[domainIdx] }}
+                  <div class="approx-warning">
+                    <!-- <i class="fa-solid fa-exclamation"></i> -->
+                    ≈
+                    <!-- <i class="fa-solid fa-circle-exclamation"></i> -->
+                  </div>
+                </span>
+              </el-tooltip>
+            </td>
+            <template v-for="(row, idx) in Comparables[domainIdx]?.[currentTargetIndex]" :key="row.id">
+              <td class="right-align money highlight-green">{{row.actual}}{{unit_list[domainIdx]}}</td>
+              
             </template>
           </tr>
 
@@ -1108,6 +1323,7 @@
             //domain 3
             []
           ],
+          Linear_reg: [],
           Features: [],
           FeatureDescriptions: [],
           Targets: [],
@@ -1145,6 +1361,7 @@
           const msg = this.warning[this.domainIdx];
           return msg || 'Warning: estimate may be inaccurate.';
         },
+
         weightedAverageTooltipContent() {
           const comparables = this.Comparables[this.domainIdx]?.[this.currentTargetIndex];
           if (!Array.isArray(this.Comparables[this.domainIdx]) || comparables.length === 0) return '';
@@ -1303,11 +1520,12 @@
         async loadCSVData() {
           try {
             // load all CSV files
-            const [domainMetadata, metadata, subjects, comparables] = await Promise.all([
+            const [domainMetadata, metadata, subjects, comparables, linear_reg] = await Promise.all([
               this.loadCSV('./data/domain_metadata.csv'),
               this.loadCSV('./data/metadata.csv'),
               this.loadCSV('./data/subject.csv'),
-              this.loadCSV('./data/comparables.csv')
+              this.loadCSV('./data/comparables.csv'),
+              this.loadCSV('./data/linear_reg.csv')
             ]);
             console.log('loaded');
 
@@ -1320,6 +1538,7 @@
             this.processSubjects(subjects);
             // Process comparables
             this.processComparables(comparables);
+            this.processLinearReg(linear_reg)
 
 
           } catch (error) {
@@ -1429,13 +1648,13 @@
 
 
             // Extract feature values and deltas
-            
+
             const deltaX = [];
             const deltaY = [];
-            const featureVals = extract_features(row,domainId,numFlags, this)
+            const featureVals = extract_features(row, domainId, numFlags, this)
             for (let i = 0; i < 6; i++) {
               const val = row[`feature${i}`];
-              
+
               const dx = row[`delta_x${i}`];
               const dy = row[`delta_y${i}`];
 
@@ -1514,11 +1733,86 @@
                 this.Comparables[domainIdx] = [];
               }
               if (!this.Comparables[domainIdx][instanceIdx]) {
-                console.log("domainIdx", domainIdx, instanceIdx)
+
                 this.Comparables[domainIdx][instanceIdx] = [];
               }
             }
           }
+        },
+        processLinearReg(data) {
+          const grouped = {};
+          data.forEach(row => {
+            const d = Number(row.domainId);
+            const i = Number(row.instanceId);
+            if (!grouped[d]) grouped[d] = {};
+            // Collect intercept and coefficients
+            const coefs = [
+              Number(row.coef_0), Number(row.coef_1), Number(row.coef_2),
+              Number(row.coef_3), Number(row.coef_4), Number(row.coef_5)
+            ];
+            const features_val = Array.from({ length: 6 }, (_, k) =>
+             Number(row[`feature${k}`])
+            );
+            grouped[d][i] = {
+              intercept: Number(row.intercept.toFixed(1)),
+              coefs,
+              features_val,
+              linear_pred: Number(row.linear_pred.toFixed(1))
+            };
+          });
+
+          // Prepare the Linear_reg array with correct dimensions
+          const maxDomain = Math.max(...data.map(r => Number(r.domainId)));
+          this.Linear_reg = Array.from({ length: maxDomain + 1 }, () => []);
+
+          // Fill in the regression info, leaving gaps as null
+          Object.entries(grouped).forEach(([domainKey, insts]) => {
+            const d = Number(domainKey);
+            const maxInst = Math.max(...Object.keys(insts).map(n => Number(n)));
+            for (let idx = 0; idx <= maxInst; idx++) {
+              this.Linear_reg[d][idx] = insts[idx] || null;
+            }
+          });
+        },
+        // New helper: build rows for tooltip table
+        getLinearTooltipRows(domainIdx, instanceIdx) {
+          const lr = this.Linear_reg[domainIdx]?.[instanceIdx];
+          const target = this.Targets[domainIdx]?.[instanceIdx];
+          
+          if (!lr || !target) return [];
+          const names = this.Features[domainIdx] || [];
+          const values = target.feature_val || [];
+          const cal_values = lr.features_val || [];
+  
+          // Build each row: name, value, factor text, partial = coef * value
+          return lr.coefs.map((coef, j) => {
+            
+            const name = names[j] || `x${j}`;
+            const val = values[j];
+            const factor = `${coef.toFixed(1)}`;
+            const partial = (coef * Number(cal_values[j])).toFixed(1);
+            return { name, value: val, factor, partial };
+          });
+        },
+        computeLinearTooltip(domainIdx, instanceIdx) {
+          const lr = this.Linear_reg[domainIdx]?.[instanceIdx];
+          const target = this.Targets[domainIdx]?.[instanceIdx];
+          if (!lr || !target) return '';
+          const featureNames = this.Features[domainIdx] || [];
+          const featureVals = target.feature_val || [];
+          const terms = [String(lr.intercept.toFixed(1))];
+          lr.coefs.forEach((coef, j) => {
+            const fname = featureNames[j] ?? `x${j}`;
+            const fval = featureVals[j] ?? '';
+            if (coef != 0) {
+              coef = coef.toFixed(1)
+              terms.push(`${String(coef)}×${fname}(${String(fval)})`);
+            }
+
+          });
+          const formula = terms.join(' + ');
+
+          return `${formula} = ${String(lr.linear_pred.toFixed(1))}`;
         },
         highlightActualPrice(idx) {
           this.highlightedActualPrice = idx;
