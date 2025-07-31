@@ -699,8 +699,24 @@
 
                   <!-- Subject 值 -->
                   <td class="right-align money highlight-green" style="cursor: pointer;">
-                    <el-tooltip content="To Be Determined" placement="right" effect="dark" :show-after="0"
-                      trigger="hover" :hide-after="0"> TBD
+                    <el-tooltip placement="top" effect="light" :show-after="0" trigger="hover" :hide-after="0">
+                      <template #content>
+                        Estimated value based on comparables and similarity scores:<br />
+                        {{weightedAverageTooltipContentForComparable}}
+                        <br />
+                        <span style="width:60px;color:#bd3030; font-size:12px; font-weight:400; line-height:12px;">
+                          <!-- {{warningContent}} -->
+                          <span style="font-weight: 800;">Warning: </span> this is an estimate so it may be inaccurate.
+                        </span>
+      
+                      </template>
+                      <div>
+                        {{weightedAverageValueForComparable}}
+                        <div class="approx-warning">
+                          ≈
+                        </div>
+                      </div>
+      
                     </el-tooltip>
                   </td>
 
