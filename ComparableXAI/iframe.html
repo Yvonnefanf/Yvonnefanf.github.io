@@ -736,16 +736,15 @@
               @mouseleave="unhighlightAllAdjustedPrices()">
               <div style="cursor: pointer;">
 
-                <el-tooltip placement="top" effect="light" :show-after="0"
-                  trigger="hover" :hide-after="0">
+                <el-tooltip placement="top" effect="light" :show-after="0" trigger="hover" :hide-after="0">
                   <template #content>
-                    <span>Reconciled price (from adjusted Comparables):</span><br/>
-                  <span style="color: #bd3030;">{{warningContent}}</span>
-                  <br/>
-                  {{weightedAverageTooltipContent}}
+                    <span>Reconciled price (from adjusted Comparables):</span><br />
+                    <span style="color: #bd3030;">{{warningContent}}</span>
+                    <br />
+                    {{weightedAverageTooltipContent}}
                   </template>
                   <span style="cursor: pointer;">
-                    {{weightedAverageValue}}{{unit_list[domainIdx]}} 
+                    {{weightedAverageValue}}{{unit_list[domainIdx]}}
                     <div class="approx-warning">
                       <!-- <i class="fa-solid fa-exclamation"></i> -->
                       ≈
@@ -753,7 +752,7 @@
                     </div>
                   </span>
                 </el-tooltip>
-          
+
                 </span>
               </div>
             </td>
@@ -885,7 +884,7 @@
                     <span class="pred-description highlight-green" @mouseenter="highlightActualPrice(idx)"
                       @mouseleave="unhighlightActualPrice(idx)">{{ getPredictionDifference(row) }}</span>
                   </el-tooltip>
-                  
+
               </td>
               <td :colspan="row.adjusted_step_number*2" class="right-align ai-pred-bg"
                 :class="{hidden: currentOpenComp!==idx}">
@@ -941,25 +940,24 @@
             </td>
 
             <td class="right-align money highlight-green" style="cursor: pointer;">
-              <el-tooltip placement="top" effect="light" :show-after="0" trigger="hover"
-                :hide-after="0"> 
+              <el-tooltip placement="top" effect="light" :show-after="0" trigger="hover" :hide-after="0">
                 <template #content>
-                  Estimated value based on comparables and similarity scores:<br/>
+                  Estimated value based on comparables and similarity scores:<br />
                   {{weightedAverageTooltipContentForComparable}}
-                  <br/>
+                  <br />
                   <span style="width:60px;color:#bd3030; font-size:12px; font-weight:400; line-height:12px;">
                     <!-- {{warningContent}} -->
                     <span style="font-weight: 800;">Warning: </span> this is an estimate so it may be inaccurate.
-                  </span> 
-                  
+                  </span>
+
                 </template>
                 <div>
-                  {{weightedAverageValueForComparable}} 
+                  {{weightedAverageValueForComparable}}
                   <div class="approx-warning">
                     ≈
                   </div>
                 </div>
-               
+
               </el-tooltip>
             </td>
             <template v-for="(row, idx) in Comparables[domainIdx]?.[currentTargetIndex]" :key="row.id">
@@ -1081,16 +1079,14 @@
                 </el-tooltip>
               </th>
 
-            
+
 
             </template>
           </tr>
-
-
           <tr>
             <td class="comp1-header"></td>
             <td class="subject"></td>
-            <template v-for="(row, idx) in Comparables[domainIdx]?.[currentTargetIndex]" :key="row.id">
+            <template v-for="(row, idx) in LinearAdjustments[domainIdx]?.[currentTargetIndex]" :key="row.id">
               <th style="width: 62px;" class="comp-header right-align border-btm"
                 :class="{'trace-border-left': currentOpenComp===idx}">Values</th>
               <th :class="{'adj-price' : currentOpenComp===idx }"
@@ -1101,7 +1097,7 @@
                   <i class="toggle-text fa-solid fa-angle-left" v-if="currentOpenComp==idx"></i>
                 </button> -->
               </th>
-         
+
             </template>
           </tr>
         </thead>
@@ -1132,7 +1128,7 @@
               </el-tooltip>
 
             </td>
-            <template v-for="(row, idx) in Comparables[domainIdx]?.[currentTargetIndex]" :key="row.id">
+            <template v-for="(row, idx) in LinearAdjustments[domainIdx]?.[currentTargetIndex]" :key="row.id">
               <td class="comp1-header right-align"
                 :class="{'gray-font': row.delta_x[index]==0, 'trace-border-left': currentOpenComp===idx}">
                 <el-tooltip :content="row.feature_val[index]" placement="right" effect="dark" :show-after="0"
@@ -1154,7 +1150,7 @@
                 :class="{'gray-font': row.delta_x[index]==0, 'adj-price' : currentOpenComp==idx }">
                 {{row.delta_y[index]!==0? row.delta_y[index]+unit_list[domainIdx]:'0' }}
               </td>
-             
+
             </template>
           </tr>
 
@@ -1170,40 +1166,39 @@
               @mouseleave="unhighlightAllAdjustedPrices()">
               <div style="cursor: pointer;">
 
-                <el-tooltip placement="top" effect="light" :show-after="0"
-                  trigger="hover" :hide-after="0">
+                <el-tooltip placement="top" effect="light" :show-after="0" trigger="hover" :hide-after="0">
                   <template #content>
-                    <span>Reconciled price (from adjusted comparables):</span><br/>
-                  <span style="color: #bd3030;">{{warningContent}}</span>
-                  <br/>
-                  {{weightedAverageTooltipContent}}
+                    <span>Reconciled price (from adjusted comparables):</span><br />
+                    <span style="color: #bd3030;">{{warningContent}}</span>
+                    <br />
+                    {{weightedAverageTooltipContentLinearAdjustments}}
                   </template>
                   <span style="cursor: pointer;">
-                    
-                      
-                      {{weightedAverageValue}}{{unit_list[domainIdx]}} 
-                      <div class="approx-warning">
-                        <!-- <i class="fa-solid fa-exclamation"></i> -->
-                        ≈
-                        <!-- <i class="fa-solid fa-circle-exclamation"></i> -->
-                      </div>
-                    
-                  
+
+
+                    {{weightedAverageValueLinearAdjustments}}{{unit_list[domainIdx]}}
+                    <div class="approx-warning">
+                      <!-- <i class="fa-solid fa-exclamation"></i> -->
+                      ≈
+                      <!-- <i class="fa-solid fa-circle-exclamation"></i> -->
+                    </div>
+
+
                   </span>
                 </el-tooltip>
-            
+
                 </span>
               </div>
             </td>
-            <template v-for="(row, idx) in Comparables[domainIdx]?.[currentTargetIndex]" :key="row.id">
+            <template v-for="(row, idx) in LinearAdjustments[domainIdx]?.[currentTargetIndex]" :key="row.id">
               <td colspan="2" class="comp1-header right-align money highlight-green"
                 :class="{ 'actual-price-highlight': highlightedActualPrice === idx, 'all-pred-actual-highlight': allPredAndActualHighlighted, 'trace-border-left': currentOpenComp===idx }">
                 <span>
                   {{row.actual}}{{unit_list[domainIdx]}}
               </td>
-                <!-- {{row.actual}}{{unit_list[domainIdx]}} -->
+              <!-- {{row.actual}}{{unit_list[domainIdx]}} -->
               </td>
-        
+
             </template>
           </tr>
           <tr>
@@ -1216,13 +1211,13 @@
               </el-tooltip>
             </td>
             <td class="right-align money subject highlight-green2 border-top">—</td>
-            <template v-for="(row, idx) in Comparables[domainIdx]?.[currentTargetIndex]" :key="row.id">
+            <template v-for="(row, idx) in LinearAdjustments[domainIdx]?.[currentTargetIndex]" :key="row.id">
               <td colspan="2" class="comp1-header right-align money border-top highlight-green2"
                 :class="{ 'adjusted-price-highlight': allAdjustedPricesHighlighted, 'trace-border-bottom': currentOpenComp===idx, 'trace-border-left': currentOpenComp===idx}"
                 style="position:relative;">
-                <span>{{row.adjusted_price[row.adjusted_step_number - 1]}}{{unit_list[domainIdx]}}
+                <span>{{row.adjusted_price}}{{unit_list[domainIdx]}}
               </td>
-            
+
             </template>
           </tr>
           <!--  Reconsolidation -->
@@ -1237,12 +1232,12 @@
               </el-tooltip>
             </td>
             <td class="right-align subject">—</td>
-            <template v-for="(row, idx) in Comparables[domainIdx]?.[currentTargetIndex]" :key="row.id">
+            <template v-for="(row, idx) in LinearAdjustments[domainIdx]?.[currentTargetIndex]" :key="row.id">
               <td colspan="2" class="comp1-header right-align"
                 :class="{ 'adjusted-price-highlight': allAdjustedPricesHighlighted}" style="position:relative;">
                 <span>{{ similarityScores[idx] }}%
               </td>
-          
+
             </template>
           </tr>
           <tr>
@@ -1254,7 +1249,7 @@
               <td colspan="2" class="comp1-header right-align money"><span>
 
               </td>
-              
+
             </template>
           </tr>
 
@@ -1289,7 +1284,7 @@
               <span class="pred-description"> — </span>
             </td>
 
-            <template v-for="(row, idx) in Comparables[domainIdx]?.[currentTargetIndex]" :key="row.id">
+            <template v-for="(row, idx) in LinearAdjustments[domainIdx]?.[currentTargetIndex]" :key="row.id">
               <td colspan="2" class="comp1-header right-align money ai-pred-bg"
                 :class="{ 'pred-highlight': highlightedActualPrice === idx, 'all-pred-actual-highlight': allPredAndActualHighlighted }">
                 <span>
@@ -1301,9 +1296,9 @@
                     <span class="pred-description highlight-green" @mouseenter="highlightActualPrice(idx)"
                       @mouseleave="unhighlightActualPrice(idx)">{{ getPredictionDifference(row) }}</span>
                   </el-tooltip>
-                  
+
               </td>
-             
+
               </td>
             </template>
           </tr>
@@ -1357,13 +1352,13 @@
                 <template #content>
                   <!-- 1. 描述文字 -->
                   <div style="font-size:12px; font-weight:500; margin:10px 0;">
-                    
+
                     Based on Comparables, the adjustment factors for each attribute are:
-                    <br/>
+                    <br />
                     <span style="width:60px;color:#bd3030; font-size:12px; font-weight:400; line-height:12px;">
                       <!-- {{warningContent}} -->
                       <span style="font-weight: 800;">Warning: </span> this is an estimate so it may be inaccurate.
-                    </span> 
+                    </span>
                   </div>
                   <div style="display: flex;">
                     <!-- 2. 系数表格 -->
@@ -1377,25 +1372,30 @@
                         </tr>
                       </thead>
                       <tbody>
-                        <tr v-for="(row,i) in getLinearTooltipRows(domainIdx, currentTargetIndex)" :key="i"  :style="{ color: row.factor ==
+                        <tr v-for="(row,i) in getLinearTooltipRows(domainIdx, currentTargetIndex)" :key="i" :style="{ color: row.factor ==
                         0 ? '#ddd' : '#222' }">
-                          <td style="padding:0; height:16px;"><span style="overflow: hidden; display:inline-block;width:100px; text-overflow:ellipsis;">{{ row.name }}</span></td>
+                          <td style="padding:0; height:16px;"><span
+                              style="overflow: hidden; display:inline-block;width:100px; text-overflow:ellipsis;">{{
+                              row.name }}</span></td>
                           <td style="padding:0; text-align:right;">{{ row.value }}</td>
                           <td style="padding:0 4px;text-align:right;">× <span
-                              style="display:inline-block; width: 40px;">{{ row.factor ==0? '': row.factor }} </span></td>
+                              style="display:inline-block; width: 40px;">{{ row.factor ==0? '': row.factor }} </span>
+                          </td>
                           <td style="padding:0 4px;text-align:right;">= <span
-                            style="display:inline-block; width: 40px;">{{ row.partial }}</span></td>
+                              style="display:inline-block; width: 40px;">{{ row.partial }}</span></td>
                         </tr>
 
                         <tr style="font-weight:bold; color:#ddd;">
                           <td colspan="2" style="padding:0px;">Basement</td>
-                          <td style="padding:0px 4px; text-align:right;">+ 
+                          <td style="padding:0px 4px; text-align:right;">+
                             <span style="display:inline-block; width: 40px;">{{
-                            Linear_reg[domainIdx][currentTargetIndex].intercept.toFixed(1) }}</span></td>
-                          <td style="padding:0px 4px; text-align:right;">= <span style="display:inline-block; width: 40px;">
-                            {{
+                              Linear_reg[domainIdx][currentTargetIndex].intercept.toFixed(1) }}</span>
+                          </td>
+                          <td style="padding:0px 4px; text-align:right;">= <span
+                              style="display:inline-block; width: 40px;">
+                              {{
                               Linear_reg[domainIdx][currentTargetIndex].intercept.toFixed(1) }}
-                          </span></td>
+                            </span></td>
                         </tr>
                         <!-- <tr style="border-top:2px solid #666; font-weight:bold;">
                           <td colspan="2" style="padding:4px;">Sum</td>
@@ -1410,15 +1410,14 @@
                       <div style=" font-size:20px; margin-top:-4px; margin-left:10px;"> } </div>
                       <div style="font-size:20px; margin-left:8px;">+</div>
                       <div style="margin:0 8px; margin-top:-2px;font-size:14px;">→</div>
-                      <div
-                        style="width:60px; font-size:14px; color:#2e8113;">
-                        {{ Linear_reg[domainIdx][currentTargetIndex].linear_pred.toFixed(1) }}{{ unit_list[domainIdx] }} 
-                        <br/> 
+                      <div style="width:60px; font-size:14px; color:#2e8113;">
+                        {{ Linear_reg[domainIdx][currentTargetIndex].linear_pred.toFixed(1) }}{{ unit_list[domainIdx] }}
+                        <br />
                       </div>
-                     
+
                     </div>
                   </div>
-                 
+
                 </template>
                 <span class="right-align money highlight-green" style="cursor: pointer; font-weight:500;">
                   {{ Linear_reg[domainIdx]?.[currentTargetIndex]?.linear_pred.toFixed(1) }}{{ unit_list[domainIdx] }}
@@ -1432,7 +1431,7 @@
             </td>
             <template v-for="(row, idx) in Comparables[domainIdx]?.[currentTargetIndex]" :key="row.id">
               <td class="right-align money highlight-green">{{row.actual}}{{unit_list[domainIdx]}}</td>
-              
+
             </template>
           </tr>
 
@@ -1601,6 +1600,7 @@
           FeatureDescriptions: [],
           Targets: [],
           Comparables: [],
+          LinearAdjustments: [],
           categoryMappings: {},
 
 
@@ -1673,8 +1673,43 @@
           if (totalWeight === 0) return '-';
           return (sum / totalWeight).toFixed(1);
         },
+        weightedAverageTooltipContentLinearAdjustments() {
+          const comparables = this.LinearAdjustments[this.domainIdx]?.[this.currentTargetIndex];
+          if (!Array.isArray(this.LinearAdjustments[this.domainIdx]) || comparables.length === 0) return '';
+
+          let formula = '';
+          let sum = 0;
+          let totalWeight = 0;
+          for (let idx = 0; idx < comparables.length; idx++) {
+            const weight = this.similarityScores[idx] || 0;
+            const price = comparables[idx].adjusted_price
+            formula += `${weight}% × ${price}${this.unit_list[this.domainIdx]}`;
+
+            if (idx < comparables.length - 1) formula += ' + ';
+            sum += weight * price;
+            totalWeight += weight;
+          }
+          if (totalWeight === 0) return formula;
+          const avg = (sum / totalWeight).toFixed(1);
+          return `${avg}${this.unit_list[this.domainIdx]} = ${formula}`;
+        },
+        weightedAverageValueLinearAdjustments() {
+          const comparables = this.LinearAdjustments[this.domainIdx]?.[this.currentTargetIndex];
+          if (!Array.isArray(this.LinearAdjustments[this.domainIdx]) || comparables.length === 0) return '-';
+          let sum = 0;
+          let totalWeight = 0;
+          for (let idx = 0; idx < comparables.length; idx++) {
+            const weight = this.similarityScores[idx] || 0;
+            const price = comparables[idx].adjusted_price
+            console.log("comparables[idx].adjusted_price")
+            sum += weight * price;
+            totalWeight += weight;
+          }
+          if (totalWeight === 0) return '-';
+          return (sum / totalWeight).toFixed(1);
+        },
         // for plain example based
-        weightedAverageTooltipContentForComparable(){
+        weightedAverageTooltipContentForComparable() {
           const comparables = this.Comparables[this.domainIdx]?.[this.currentTargetIndex];
           if (!Array.isArray(this.Comparables[this.domainIdx]) || comparables.length === 0) return '';
 
@@ -1701,7 +1736,7 @@
           let totalWeight = 0;
           for (let idx = 0; idx < comparables.length; idx++) {
             const weight = this.similarityScores[idx] || 0;
-            const price = comparables[idx].actual 
+            const price = comparables[idx].actual
             sum += weight * price;
             totalWeight += weight;
           }
@@ -1826,12 +1861,13 @@
         async loadCSVData() {
           try {
             // load all CSV files
-            const [domainMetadata, metadata, subjects, comparables, linear_reg] = await Promise.all([
+            const [domainMetadata, metadata, subjects, comparables, linear_reg, linear_adjustments] = await Promise.all([
               this.loadCSV('./data/domain_metadata.csv'),
               this.loadCSV('./data/metadata.csv'),
               this.loadCSV('./data/subject.csv'),
               this.loadCSV('./data/comparables.csv'),
-              this.loadCSV('./data/linear_reg.csv')
+              this.loadCSV('./data/linear_reg.csv'),
+              this.loadCSV('./data/linear_adjustments.csv')
             ]);
             console.log('loaded');
 
@@ -1844,7 +1880,8 @@
             this.processSubjects(subjects);
             // Process comparables
             this.processComparables(comparables);
-            this.processLinearReg(linear_reg)
+            this.processLinearReg(linear_reg);
+            this.processLinearAdjustments(linear_adjustments);
 
 
           } catch (error) {
@@ -2057,7 +2094,7 @@
               Number(row.coef_3), Number(row.coef_4), Number(row.coef_5)
             ];
             const features_val = Array.from({ length: 6 }, (_, k) =>
-             Number(row[`feature${k}`])
+              Number(row[`feature${k}`])
             );
             grouped[d][i] = {
               intercept: Number(row.intercept.toFixed(1)),
@@ -2080,19 +2117,94 @@
             }
           });
         },
+        processLinearAdjustments(data) {
+          // Group by domainId, instanceId, and comparableId
+          const grouped = {};
+
+          data.forEach(row => {
+            if (!grouped[row.domainId]) {
+              grouped[row.domainId] = {};
+            }
+            if (!grouped[row.domainId][row.instanceId]) {
+              grouped[row.domainId][row.instanceId] = {};
+            }
+            const domainId = row.domainId;
+            const numFlags = this.numberical_feature?.[domainId] || [];  // e.g. [true, false, ...]
+            // Extract feature values and deltas
+            const deltaX = [];
+            const deltaY = [];
+            const featureVals = extract_features(row, domainId, numFlags, this)
+            for (let i = 0; i < 6; i++) {
+              const val = row[`feature${i}`];
+
+              const dx = row[`delta_x${i}`];
+              const dy = row[`delta_y${i}`];
+
+              const dxVal = Number(dx);
+              const dyVal = Number(dy);
+              deltaX.push(!isNaN(dxVal) ? dxVal.toFixed(1) : '0.0');
+              deltaY.push(!isNaN(dyVal) ? dyVal.toFixed(1) : '0.0');
+            }
+            grouped[row.domainId][row.instanceId][row.comparableId] = {
+              id: row.comparableId,
+              feature_val: featureVals,
+              delta_x: deltaX,
+              delta_y: deltaY,
+              pred: Number(row.pred).toFixed(1),
+              actual: Number(row.actual).toFixed(1),
+              adjusted_price: Number(row.adjusted_price).toFixed(1)
+            };
+          });
+
+          // Convert to array format
+          const domainCount = Math.max(...Object.keys(grouped).map(Number)) + 1;
+          this.LinearAdjustments = new Array(domainCount).fill(null).map(() => []);
+
+          Object.keys(grouped).forEach(domainId => {
+            const domainIdx = Number(domainId);
+            const instances = grouped[domainId];
+
+            Object.keys(instances).forEach(instanceId => {
+              const instanceIdx = Number(instanceId);
+              if (!this.LinearAdjustments[domainIdx][instanceIdx]) {
+                this.LinearAdjustments[domainIdx][instanceIdx] = [];
+              }
+
+              const comparables = instances[instanceId];
+              Object.keys(comparables).sort((a, b) => Number(a) - Number(b)).forEach(comparableId => {
+                this.LinearAdjustments[domainIdx][instanceIdx].push(comparables[comparableId]);
+              });
+            });
+          });
+
+          // Ensure all instances have a linear_adjustments array, even if empty
+          for (let domainIdx = 0; domainIdx < this.Targets.length; domainIdx++) {
+            const instances = this.Targets[domainIdx] || [];
+            for (let instanceIdx = 0; instanceIdx < instances.length; instanceIdx++) {
+              if (!this.LinearAdjustments[domainIdx]) {
+                this.LinearAdjustments[domainIdx] = [];
+              }
+              if (!this.LinearAdjustments[domainIdx][instanceIdx]) {
+
+                this.LinearAdjustments[domainIdx][instanceIdx] = [];
+              }
+            }
+          }
+         
+        },
         // New helper: build rows for tooltip table
         getLinearTooltipRows(domainIdx, instanceIdx) {
           const lr = this.Linear_reg[domainIdx]?.[instanceIdx];
           const target = this.Targets[domainIdx]?.[instanceIdx];
-          
+
           if (!lr || !target) return [];
           const names = this.Features[domainIdx] || [];
           const values = target.feature_val || [];
           const cal_values = lr.features_val || [];
-  
+
           // Build each row: name, value, factor text, partial = coef * value
           return lr.coefs.map((coef, j) => {
-            
+
             const name = names[j] || `x${j}`;
             const val = values[j];
             const factor = `${coef.toFixed(1)}`;
