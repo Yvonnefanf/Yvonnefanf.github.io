@@ -739,7 +739,8 @@
                 <el-tooltip :content="weightedAverageTooltipContent" placement="right" effect="dark" :show-after="0"
                   trigger="hover" :hide-after="0">
                   <span style="cursor: pointer;">
-                    {{weightedAverageValue}}{{unit_list[domainIdx]}}
+                    {{weightedAverageValue}}{{unit_list[domainIdx]}} 
+                    
                   </span>
                 </el-tooltip>
                 <el-tooltip :content="warningContent" placement="top" effect="dark" :show-after="0" trigger="hover"
@@ -939,9 +940,25 @@
             </td>
 
             <td class="right-align money highlight-green" style="cursor: pointer;">
-              <el-tooltip content="To Be Determined" placement="right" effect="dark" :show-after="0" trigger="hover"
-                :hide-after="0"> TBD
-
+              <el-tooltip placement="top" effect="light" :show-after="0" trigger="hover"
+                :hide-after="0"> 
+                <template #content>
+                  Estimated value based on comparables and similarity scores:<br/>
+                  {{weightedAverageTooltipContentForComparable}}
+                  <br/>
+                  <span style="width:60px;color:#bd3030; font-size:12px; font-weight:400; line-height:12px;">
+                    <!-- {{warningContent}} -->
+                    <span style="font-weight: 800;">Warning: </span> this is an estimate so it may be inaccurate.
+                  </span> 
+                  
+                </template>
+                <div>
+                  {{weightedAverageValueForComparable}} 
+                  <div class="approx-warning">
+                    ≈
+                  </div>
+                </div>
+               
               </el-tooltip>
             </td>
             <template v-for="(row, idx) in Comparables[domainIdx]?.[currentTargetIndex]" :key="row.id">
@@ -1400,10 +1417,43 @@
           if (totalWeight === 0) return '-';
           return (sum / totalWeight).toFixed(1);
         },
+        // for plain example based
+        weightedAverageTooltipContentForComparable(){
+          const comparables = this.Comparables[this.domainIdx]?.[this.currentTargetIndex];
+          if (!Array.isArray(this.Comparables[this.domainIdx]) || comparables.length === 0) return '';
+
+          let formula = '';
+          let sum = 0;
+          let totalWeight = 0;
+          for (let idx = 0; idx < comparables.length; idx++) {
+            const weight = this.similarityScores[idx] || 0;
+            const price = comparables[idx].actual
+            formula += `${weight}% × ${price}${this.unit_list[this.domainIdx]}`;
+
+            if (idx < comparables.length - 1) formula += ' + ';
+            sum += weight * price;
+            totalWeight += weight;
+          }
+          if (totalWeight === 0) return formula;
+          const avg = (sum / totalWeight).toFixed(1);
+          return `${avg}${this.unit_list[this.domainIdx]} = ${formula}`;
+        },
+        weightedAverageValueForComparable() {
+          const comparables = this.Comparables[this.domainIdx]?.[this.currentTargetIndex];
+          if (!Array.isArray(this.Comparables[this.domainIdx]) || comparables.length === 0) return '-';
+          let sum = 0;
+          let totalWeight = 0;
+          for (let idx = 0; idx < comparables.length; idx++) {
+            const weight = this.similarityScores[idx] || 0;
+            const price = comparables[idx].actual 
+            sum += weight * price;
+            totalWeight += weight;
+          }
+          if (totalWeight === 0) return '-';
+          return (sum / totalWeight).toFixed(1);
+        },
         similarityScores() {
           const targets = this.Targets[this.domainIdx];
-
-
           const comparables = this.Comparables[this.domainIdx][this.currentTargetIndex];
 
           if (!Array.isArray(targets) || !targets[this.currentTargetIndex] || !Array.isArray(comparables)) {
