@@ -2144,6 +2144,9 @@
           const featureVal = row.feature_val[index];
           const targetVal = this.Targets[this.domainIdx]?.[this.currentTargetIndex].feature_val[index];
           const deltaY = row.delta_y[index];
+          if(deltaY ==0){
+            return 'This attribute is same as the Subject, no adjustment needed'
+          }
           const val = Number(deltaY)>0? '+'+ deltaY :deltaY 
           return `Change ${featureName} from ${featureVal} to ${targetVal} will adjust ${val}${this.unit_list[this.domainIdx]}`;
         },

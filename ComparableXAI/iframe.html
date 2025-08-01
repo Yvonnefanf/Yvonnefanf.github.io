@@ -687,10 +687,14 @@
                 </el-tooltip>
 
               </td>
-              <td class="comp1-header right-align money highlight-green2"
+              <td style="cursor: pointer;" class="comp1-header right-align money highlight-green2"
                 :class="{'gray-font': row.delta_x[index]==0, 'adj-price' : currentOpenComp==idx }">
-                {{row.delta_y[index]!==0? row.delta_y[index]+unit_list[domainIdx]:'0' }}
+                <el-tooltip :content="getDeltayTooltip(row,index)" placement="top" effect="dark" :show-after="0" trigger="hover" :hide-after="0">
+                  {{row.delta_y[index]!==0? row.delta_y[index]+unit_list[domainIdx]:'0' }}
+                </el-tooltip>
+                
               </td>
+              
               <template v-for="i in row.adjusted_step_number">
                 <td class="right-align adj-value" :class="{hidden: currentOpenComp!==idx }"
                   :style="{ color: index == row.adjusted_order[i-1] ? '#222' : '#bcbcbc', cursor: index == row.adjusted_order[i-1] ? 'pointer' : 'default' }">
@@ -1148,7 +1152,9 @@
               </td>
               <td class="comp1-header right-align money highlight-green2"
                 :class="{'gray-font': row.delta_x[index]==0, 'adj-price' : currentOpenComp==idx }">
-                {{row.delta_y[index]!==0? row.delta_y[index]+unit_list[domainIdx]:'0' }}
+                <el-tooltip :content="getDeltayTooltip(row,index)" placement="top" effect="dark" :show-after="0" trigger="hover" :hide-after="0">
+                  {{row.delta_y[index]!==0? row.delta_y[index]+unit_list[domainIdx]:'0' }}
+                </el-tooltip>
               </td>
 
             </template>
@@ -1841,6 +1847,17 @@
         }
       },
       methods: {
+        getDeltayTooltip(row,index){
+          const featureName = this.Features[this.domainIdx][index];
+          const featureVal = row.feature_val[index];
+          const targetVal = this.Targets[this.domainIdx]?.[this.currentTargetIndex].feature_val[index];
+          const deltaY = row.delta_y[index];
+          if(deltaY ==0){
+            return 'This attribute is same as the Subject, no adjustment needed'
+          }
+          const val = Number(deltaY)>0? '+'+ deltaY :deltaY 
+          return `Change ${featureName} from ${featureVal} to ${targetVal} will adjust ${val}${this.unit_list[this.domainIdx]}`;
+        },
         async loadCSV(filename) {
           return new Promise((resolve, reject) => {
             Papa.parse(filename, {
