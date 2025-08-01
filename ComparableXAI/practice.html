@@ -805,7 +805,7 @@
           </tr>
           <!--  Reconsolidation -->
 
-          <tr>
+          <tr v-if="Comparables[domainIdx]?.[currentTargetIndex]?.length>1">
             <td class="feature-name">Similarity Score
               <el-tooltip content="The similarity score between the comparable and the subject." placement="right"
                 effect="dark" :show-after="0" trigger="hover" :hide-after="0">
@@ -967,7 +967,7 @@
             </template>
           </tr>
 
-          <tr>
+          <tr v-if="Comparables[domainIdx]?.[currentTargetIndex]?.length>1">
             <td class="feature-name">Similarity Score
               <el-tooltip content="The similarity score between the comparable and the subject." placement="right"
                 effect="dark" :show-after="0" trigger="hover" :hide-after="0">
@@ -1227,7 +1227,7 @@
           </tr>
           <!--  Reconsolidation -->
 
-          <tr>
+          <tr v-if="Comparables[domainIdx]?.[currentTargetIndex]?.length>1">
             <td class="feature-name">Similarity Score
               <el-tooltip content="The similarity score between the comparable and the subject." placement="right"
                 effect="dark" :show-after="0" trigger="hover" :hide-after="0">
@@ -1440,7 +1440,7 @@
             </template>
           </tr>
 
-          <tr>
+          <tr v-if="Comparables[domainIdx]?.[currentTargetIndex]?.length>1">
             <td class="feature-name">Similarity Score
               <el-tooltip content="The similarity score between the comparable and the subject." placement="right"
                 effect="dark" :show-after="0" trigger="hover" :hide-after="0">
