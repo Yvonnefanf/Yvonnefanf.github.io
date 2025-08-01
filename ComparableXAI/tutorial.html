@@ -1893,6 +1893,7 @@
     const initTab = Number(getParam('tab', 0));
     const initInstance = Number(getParam('instanceId', 0));
     const initStep = getParam('step', '0');
+    const initcurrentOpenComp = initStep==3?0:null;
 
 
     const { createApp } = Vue;
@@ -1912,7 +1913,7 @@
           unit_list: [],
           unit_list_header: [],
           categoryMappings: {},
-          currentOpenComp: 0,
+          currentOpenComp: initcurrentOpenComp,
           highlightedActualPrice: null,
           allAdjustedPricesHighlighted: false,
           allPredAndActualHighlighted: false,
