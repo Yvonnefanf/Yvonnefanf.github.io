@@ -1337,7 +1337,8 @@
               </td>
               <td class="right-align">{{Targets[domainIdx]?.[currentTargetIndex].feature_val[index]}}</td>
               <template v-for="(row, idx) in Comparables[domainIdx]?.[currentTargetIndex]" :key="row.id">
-                <td class="right-align">{{row.feature_val[index]}}</td>
+                <td class="right-align" :style="{ color: row.feature_val[index] ==
+                Targets[domainIdx]?.[currentTargetIndex].feature_val[index] ? '#ccc' : '#222' }">{{row.feature_val[index]}}</td>
               </template>
             </tr>
 
