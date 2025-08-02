@@ -1374,7 +1374,7 @@
                           <th style="padding:2px 0px; font-size: 12px; text-align:left;">Attribute</th>
                           <th style="padding:2px 0px; font-size: 12px; text-align:right;">Value</th>
                           <th style="padding:2px 0px; font-size: 12px; text-align:right;">Factors</th>
-                          <th style="padding:2px 0px; font-size: 12px; text-align:right;">Partial</th>
+                          <th style="width:80px;padding:2px 0px; font-size: 12px; text-align:right; color:#2e8113">Partial ({{unit_list_header[domainIdx]}})</th>
                         </tr>
                       </thead>
                       <tbody>
@@ -1385,39 +1385,34 @@
                               row.name }}</span></td>
                           <td style="padding:0; text-align:right;">{{ row.value }}</td>
                           <td style="padding:0 4px;text-align:right;">× <span
-                              style="display:inline-block; width: 40px;">{{ row.factor ==0? '': row.factor }} </span>
+                              style="display:inline-block; width: 40px;">{{ row.factor ==0? '0': row.factor }} </span>
                           </td>
-                          <td style="padding:0 4px;text-align:right;">= <span
-                              style="display:inline-block; width: 40px;">{{ row.partial }}</span></td>
+                          <td style="padding:0 4px;text-align:right;">= 
+                            <span
+                              style="display:inline-block; width: 40px; color:#2e8113" :style="{color: row.factor ==0 ? '#ddd' : '#2e8113'}">
+                              {{ row.factor ==0? '0': row.partial +  unit_list[domainIdx] }}</span>
+                            </td>
                         </tr>
 
-                        <tr style="font-weight:bold; color:#ddd;">
-                          <td colspan="2" style="padding:0px;">Basement</td>
-                          <td style="padding:0px 4px; text-align:right;">+
-                            <span style="display:inline-block; width: 40px;">{{
-                              Linear_reg[domainIdx][currentTargetIndex].intercept.toFixed(1) }}</span>
-                          </td>
+                        <tr style="font-weight:bold; color:#222; color:#2e8113">
+                          <td colspan="3" style="padding:0px;">Default Value ({{unit_list_header[domainIdx]}})</td>
+                       
                           <td style="padding:0px 4px; text-align:right;">= <span
                               style="display:inline-block; width: 40px;">
                               {{
-                              Linear_reg[domainIdx][currentTargetIndex].intercept.toFixed(1) }}
+                              Linear_reg[domainIdx][currentTargetIndex].intercept.toFixed(1) }}{{unit_list[domainIdx]}}
                             </span></td>
                         </tr>
-                        <!-- <tr style="border-top:2px solid #666; font-weight:bold;">
-                          <td colspan="2" style="padding:4px;">Sum</td>
-                          <td style="padding:4px; text-align:right;">=</td>
-                          <td style="padding:4px; text-align:right;">{{
-                            Linear_reg[domainIdx][currentTargetIndex].linear_pred.toFixed(2) }}</td>
-                        </tr> -->
+                      
                       </tbody>
                     </table>
                     <!-- 3. 加号与箭头指向 AI Explainer -->
                     <div style="display:flex; align-items:center;">
-                      <div style=" font-size:20px; margin-top:-4px; margin-left:10px;"> } </div>
-                      <div style="font-size:20px; margin-left:8px;">+</div>
-                      <div style="margin:0 8px; margin-top:-2px;font-size:14px;">→</div>
+                      <div style=" font-size:20px; margin-top:-4px; margin-left:10px; color:#2e8113"> } </div>
+                      <div style="font-size:20px; margin-left:8px; color:#2e8113">+</div>
+                      <div style="margin:0 8px; margin-top:-2px;font-size:14px; color:#2e8113">→</div>
                       <div style="width:60px; font-size:14px; color:#2e8113;">
-                        {{ Linear_reg[domainIdx][currentTargetIndex].linear_pred.toFixed(1) }}{{ unit_list[domainIdx] }}
+                        {{unit_list_header[domainIdx]}}{{ Linear_reg[domainIdx][currentTargetIndex].linear_pred.toFixed(1) }}{{ unit_list[domainIdx] }}
                         <br />
                       </div>
 

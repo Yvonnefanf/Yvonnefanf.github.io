@@ -1386,8 +1386,11 @@
                           <td style="padding:0 4px;text-align:right;">× <span
                               style="display:inline-block; width: 40px;">{{ row.factor ==0? '': row.factor }} </span>
                           </td>
-                          <td style="padding:0 4px;text-align:right;">= <span
-                              style="display:inline-block; width: 40px; color:#2e8113">{{ row.partial }}{{unit_list[domainIdx]}}</span></td>
+                          <td style="padding:0 4px;text-align:right;">= 
+                            <span
+                              style="display:inline-block; width: 40px; color:#2e8113" :style="{color: row.factor ==0 ? '#ddd' : '#2e8113'}">
+                              {{ row.factor ==0? '0': row.partial +  unit_list[domainIdx] }}</span>
+                            </td>
                         </tr>
 
                         <tr style="font-weight:bold; color:#222; color:#2e8113">
