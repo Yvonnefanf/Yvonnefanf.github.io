@@ -472,6 +472,9 @@
     .trace-border-left {
       border-left: 2px solid #36a341;
     }
+    u{
+      font-weight: 800;
+    }
   </style>
 </head>
 
@@ -536,7 +539,7 @@
                   <td class="right-align money highlight-green" style="cursor: pointer;">
                     <el-tooltip placement="right" effect="dark" :show-after="0"
                       trigger="hover" :hide-after="0">
-                      Answer: {{Targets[domainIdx]?.[currentTargetIndex].actual}}{{unit_list[domainIdx]}}
+                      <u>Answer: {{Targets[domainIdx]?.[currentTargetIndex].actual}}{{unit_list[domainIdx]}}</u>
                     </el-tooltip>
                   </td>
                 </tr>
@@ -746,7 +749,7 @@
                     <span style="color: #bd3030;">Estimation Error: {{getEstimationDifference(weightedAverageValue, Targets[domainIdx]?.[currentTargetIndex].actual)}}</span>
                     <br />
                   </template>
-                 Answer: {{Targets[domainIdx]?.[currentTargetIndex].actual}}{{unit_list[domainIdx]}}
+                 <u>Answer: {{Targets[domainIdx]?.[currentTargetIndex].actual}}{{unit_list[domainIdx]}}</u>
                 </el-tooltip>
 
                 </span>
@@ -952,7 +955,7 @@
                     ≈
                   </div>
                 </div> -->
-                Answer: {{Targets[domainIdx]?.[currentTargetIndex].actual}}{{unit_list[domainIdx]}}
+                <u>Answer: {{Targets[domainIdx]?.[currentTargetIndex].actual}}{{unit_list[domainIdx]}}</u>
 
               </el-tooltip>
             </td>
@@ -1169,18 +1172,16 @@
                   <template #content>
                     <span>Reconciled price (from adjusted comparables): {{weightedAverageValueLinearAdjustments}}{{unit_list[domainIdx]}} </span><br />
                     
-                    <br />
+                  
                     {{weightedAverageTooltipContentLinearAdjustments}}
+                    <br />
                     <span style="color: #bd3030;">
                       Estimation error: {{getEstimationDifference(weightedAverageValueLinearAdjustments, Targets[domainIdx][currentTargetIndex].actual)}}
                     </span>
                   </template>
                   <span style="cursor: pointer;">
-
-
-                    
                 
-                    {{Targets[domainIdx][currentTargetIndex].actual}}{{unit_list[domainIdx]}}
+                    <u>Answer: {{Targets[domainIdx][currentTargetIndex].actual}}{{unit_list[domainIdx]}}</u>
 
 
                   </span>
@@ -1416,7 +1417,7 @@
                 </template>
                 <span class="right-align money highlight-green" style="cursor: pointer; font-weight:500;">
                   
-                  Answer: {{Targets[domainIdx][currentTargetIndex].actual}}{{unit_list[domainIdx]}}
+                  <u>Answer: {{Targets[domainIdx][currentTargetIndex].actual}}{{unit_list[domainIdx]}}</u>
                 </span>
               </el-tooltip>
             </td>
