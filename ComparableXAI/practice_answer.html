@@ -814,7 +814,8 @@
               <br />
               <span style="line-height:32px;" @mouseenter="highlightAllAdjustedPrices()"
               @mouseleave="unhighlightAllAdjustedPrices()">Reconciled value
-                {{unit_list_header[domainIdx]?'('+unit_list_header[domainIdx]+')':''}} </span>
+                {{unit_list_header[domainIdx]?'('+unit_list_header[domainIdx]+')':''}} </span><div
+                class="approx-warning">≈</div>
               <!-- <br /><span class="error-info">Diff. from </span> <u class="answer" style="font-size: 12px;">Answer:
                 {{Targets[domainIdx][currentTargetIndex].actual}}{{unit_list[domainIdx]}}</u> -->
 
@@ -937,7 +938,7 @@
               <el-tooltip
                     :content="Targets[domainIdx]?.[currentTargetIndex].pred + unit_list[domainIdx] + ' is ' + getPredictionDifference(Targets[domainIdx]?.[currentTargetIndex]) + ' than the actual value of ' + Targets[domainIdx]?.[currentTargetIndex].actual + unit_list[domainIdx]"
                     placement="bottom" effect="dark" :show-after="0" trigger="hover" :hide-after="0">
-              <span class="pred-description error-info highlight-green"> {{getEstimationDifference(Targets[domainIdx]?.[currentTargetIndex].pred,
+              <span class="pred-description error-info highlight-green" style="padding-right: 6px;"> {{getEstimationDifference(Targets[domainIdx]?.[currentTargetIndex].pred,
                 Targets[domainIdx]?.[currentTargetIndex].actual)}} </span></el-tooltip>
             </td>
 
@@ -1117,17 +1118,7 @@
                   <i class="bi bi-exclamation-triangle"></i>
                 </span>
               </el-tooltip>
-              <!-- <br />
-              <span class="pred-description" @mouseenter="highlightAllPredAndActual()"
-                @mouseleave="unhighlightAllPredAndActual()">Prediction Error
-                <el-tooltip content="The difference between the actual value and the predicted value." placement="right"
-                  effect="dark" :show-after="0" trigger="hover" :hide-after="0">
-                  <span class="tooltip-icon">
              
-                    <i class="fa-regular fa-circle-question"></i>
-                  </span>
-                </el-tooltip>
-              </span> -->
             </td>
 
             <td class="right-align money">{{Targets[domainIdx]?.[currentTargetIndex].pred}}{{unit_list[domainIdx]}}
