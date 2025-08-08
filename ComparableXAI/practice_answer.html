@@ -472,8 +472,24 @@
     .trace-border-left {
       border-left: 2px solid #36a341;
     }
-    u{
+
+    u {
       font-weight: 800;
+    }
+
+    .error-info {
+      
+      color: #bd3030;
+      font-size: 12px;
+      display: inline-block;
+      width: 30px;
+      margin-left: 4px;
+      margin-top: 0px;
+      vertical-align: middle;
+      white-space: normal;
+    }
+    .answer{
+      color: #1b73e8;
     }
   </style>
 </head>
@@ -537,10 +553,11 @@
                     </el-tooltip>
                   </td>
                   <td class="right-align money highlight-green" style="cursor: pointer;">
-                    <el-tooltip placement="right" effect="dark" :show-after="0"
-                      trigger="hover" :hide-after="0">
-                      <u>Answer: {{Targets[domainIdx]?.[currentTargetIndex].actual}}{{unit_list[domainIdx]}}</u>
+                    <el-tooltip content="Answer" placement="right" effect="dark" :show-after="0" trigger="hover" :hide-after="0">
+                      <u class="answer">Answer: {{Targets[domainIdx]?.[currentTargetIndex].actual}}{{unit_list[domainIdx]}}</u>
                     </el-tooltip>
+
+
                   </td>
                 </tr>
               </table>
@@ -577,8 +594,18 @@
                   <i class="bi bi-exclamation-triangle"></i>
                 </span>
               </el-tooltip>
+              <br />
+              
             </td>
-            <td class="right-align money">{{Targets[domainIdx][currentTargetIndex].pred}}{{unit_list[domainIdx]}}
+            <td class="right-align money">
+              {{Targets[domainIdx][currentTargetIndex].pred}}{{unit_list[domainIdx]}}
+              <el-tooltip 
+              content="Difference between AI prediction and the actual value"
+              placement="right" effect="dark" :show-after="0" trigger="hover" :hide-after="0">
+              <span class="pred-description error-info">
+                {{getEstimationDifference(Targets[domainIdx]?.[currentTargetIndex].pred,
+                Targets[domainIdx]?.[currentTargetIndex].actual)}} </span>
+              </el-tooltip>
             </td>
           </tr>
         </tbody>
@@ -692,11 +719,12 @@
               </td>
               <td style="cursor: pointer;" class="comp1-header right-align money highlight-green2"
                 :class="{'gray-font': row.delta_y[index]==0, 'adj-price' : currentOpenComp==idx }">
-                <el-tooltip :content="getDeltayTooltip(row,index)" placement="top" effect="dark" :show-after="0" trigger="hover" :hide-after="0">
+                <el-tooltip :content="getDeltayTooltip(row,index)" placement="top" effect="dark" :show-after="0"
+                  trigger="hover" :hide-after="0">
                   {{row.delta_y[index]!==0? row.delta_y[index]+unit_list[domainIdx]:'0' }}
                 </el-tooltip>
-                  
-                
+
+
               </td>
               <template v-for="i in row.adjusted_step_number">
                 <td class="right-align adj-value" :class="{hidden: currentOpenComp!==idx }"
@@ -739,18 +767,17 @@
                 </span>
               </el-tooltip>
             </td>
-            <td class="right-align subject money highlight-green" @mouseenter="highlightAllAdjustedPrices()"
-              @mouseleave="unhighlightAllAdjustedPrices()">
+            <td class="right-align subject money highlight-green">
               <div style="cursor: pointer;">
 
                 <el-tooltip placement="top" effect="light" :show-after="0" trigger="hover" :hide-after="0">
                   <template #content>
-                    <span>Reconciled price (from adjusted Comparables): {{weightedAverageValue}}</span><br />
-                    <span style="color: #bd3030;">Estimation Error: {{getEstimationDifference(weightedAverageValue, Targets[domainIdx]?.[currentTargetIndex].actual)}}</span>
+                    Actual value of the Subject
                     <br />
                   </template>
-                 <u>Answer: {{Targets[domainIdx]?.[currentTargetIndex].actual}}{{unit_list[domainIdx]}}</u>
+                  <u class="answer">Answer: {{Targets[domainIdx]?.[currentTargetIndex].actual}}{{unit_list[domainIdx]}}</u>
                 </el-tooltip>
+
 
                 </span>
               </div>
@@ -776,26 +803,57 @@
             </template>
           </tr>
           <tr>
-            <td class="feature-name money border-top highlight-green2 ">{{Labels[domainIdx]?.[2] || ''}}
+            <td class="feature-name money border-top highlight-green2 ">
+              <span style="line-height:32px;">{{Labels[domainIdx]?.[2] || ''}}
               <el-tooltip :content="Labels_Descriptions[domainIdx][2]" placement="right" effect="dark" :show-after="0"
                 trigger="hover" :hide-after="0">
                 <span class="tooltip-icon">
                   <i class="fa-regular fa-circle-question"></i>
                 </span>
+              </el-tooltip></span>
+              <br />
+              <span style="line-height:32px;" @mouseenter="highlightAllAdjustedPrices()"
+              @mouseleave="unhighlightAllAdjustedPrices()">Reconciled value
+                {{unit_list_header[domainIdx]?'('+unit_list_header[domainIdx]+')':''}} </span>
+              <!-- <br /><span class="error-info">Diff. from </span> <u class="answer" style="font-size: 12px;">Answer:
+                {{Targets[domainIdx][currentTargetIndex].actual}}{{unit_list[domainIdx]}}</u> -->
+
+            </td>
+            <td class="right-align money subject highlight-green2 border-top">
+              <span style="line-height: 32px;">—</span>
+              <br />
+              <el-tooltip placement="bottom" effect="light" :show-after="0" trigger="hover" :hide-after="0">
+                <template #content>
+                  <span>Reconciled value (from adjusted Comparables): {{weightedAverageValue}}{{unit_list[domainIdx]}}</span><br />
+                  {{weightedAverageTooltipContent}}<br/>
+                  <span style="color: #bd3030;">Estimation Error: {{getEstimationDifference(weightedAverageValue,
+                    Targets[domainIdx]?.[currentTargetIndex].actual)}}</span>
+                  <br />
+                </template>
+                <span style="cursor: pointer;" @mouseenter="highlightAllAdjustedPrices()"
+                @mouseleave="unhighlightAllAdjustedPrices()">
+                <span style="line-height:32px;">{{weightedAverageValue}}{{unit_list[domainIdx]}} </span>
+                <span
+                  class="error-info">{{getEstimationDifference(weightedAverageValue,Targets[domainIdx][currentTargetIndex].actual)}}</span></span>
               </el-tooltip>
             </td>
-            <td class="right-align money subject highlight-green2 border-top">—</td>
+
             <template v-for="(row, idx) in Comparables[domainIdx]?.[currentTargetIndex]" :key="row.id">
               <td colspan="2" class="comp1-header right-align money border-top highlight-green2"
                 :class="{ 'adjusted-price-highlight': allAdjustedPricesHighlighted, 'trace-border-bottom': currentOpenComp===idx, 'trace-border-left': currentOpenComp===idx}"
                 style="position:relative;">
-                <span>{{row.adjusted_price[row.adjusted_step_number - 1]}}{{unit_list[domainIdx]}}
+                <span>{{row.adjusted_price[row.adjusted_step_number - 1]}}{{unit_list[domainIdx]}}  <span class="error-info">{{getEstimationDifference(row.adjusted_price[row.adjusted_step_number - 1],
+                  Targets[domainIdx][currentTargetIndex].actual)}}</span>
+
+                  <br><span style="line-height:32px; vertical-align:middle;">—</span>
+                 
               </td>
+
               <template v-for="(ele, i) in row.adjusted_price">
                 <td :colspan="2" class="right-align money comp-details border-top highlight-green2 trace-border-bottom"
                   :class="{hidden: currentOpenComp!==idx, 'trace-border-right': i === row.adjusted_price.length - 1}"
                   style="position:relative;">
-                  <span>{{ele}}{{unit_list[domainIdx]}}</span>
+                  <span>{{ele}}{{unit_list[domainIdx]}}</span><br/><span style="line-height: 32px;">—</span>
                 </td>
               </template>
             </template>
@@ -854,7 +912,7 @@
                   <i class="bi bi-exclamation-triangle"></i>
                 </span>
               </el-tooltip>
-              <br />
+              <!-- <br />
               <span class="pred-description" @mouseenter="highlightAllPredAndActual()"
                 @mouseleave="unhighlightAllPredAndActual()">Prediction Error
                 <el-tooltip content="The difference between the actual value and the predicted value." placement="right"
@@ -864,11 +922,16 @@
                   </span>
                 </el-tooltip>
 
-              </span>
+              </span> -->
             </td>
             <td class="right-align money subject ai-pred-bg">
-              {{Targets[domainIdx]?.[currentTargetIndex].pred}}{{unit_list[domainIdx]}} <br />
-              <span class="pred-description"> {{getEstimationDifference(Targets[domainIdx]?.[currentTargetIndex].pred, Targets[domainIdx]?.[currentTargetIndex].actual)}} </span>
+              {{Targets[domainIdx]?.[currentTargetIndex].pred}}{{unit_list[domainIdx]}}
+          
+              <el-tooltip
+                    :content="Targets[domainIdx]?.[currentTargetIndex].pred + unit_list[domainIdx] + ' is ' + getPredictionDifference(Targets[domainIdx]?.[currentTargetIndex]) + ' than the actual value of ' + Targets[domainIdx]?.[currentTargetIndex].actual + unit_list[domainIdx]"
+                    placement="bottom" effect="dark" :show-after="0" trigger="hover" :hide-after="0">
+              <span class="pred-description error-info highlight-green"> {{getEstimationDifference(Targets[domainIdx]?.[currentTargetIndex].pred,
+                Targets[domainIdx]?.[currentTargetIndex].actual)}} </span></el-tooltip>
             </td>
 
             <template v-for="(row, idx) in Comparables[domainIdx]?.[currentTargetIndex]" :key="row.id">
@@ -876,13 +939,13 @@
                 :class="{ 'pred-highlight': highlightedActualPrice === idx, 'all-pred-actual-highlight': allPredAndActualHighlighted }">
                 <span>
                   {{row.pred}}{{unit_list[domainIdx]}}
-                  <br />
-                  <el-tooltip
+             
+                  <!-- <el-tooltip
                     :content="row.pred + unit_list[domainIdx] + ' is ' + getPredictionDifference(row) + ' than the actual value of ' + row.actual + unit_list[domainIdx]"
                     placement="bottom" effect="dark" :show-after="0" trigger="hover" :hide-after="0">
-                    <span class="pred-description highlight-green" @mouseenter="highlightActualPrice(idx)"
+                    <span class="pred-description highlight-green error-info" @mouseenter="highlightActualPrice(idx)"
                       @mouseleave="unhighlightActualPrice(idx)">{{ getPredictionDifference(row) }}</span>
-                  </el-tooltip>
+                  </el-tooltip> -->
 
               </td>
               <td :colspan="row.adjusted_step_number*2" class="right-align ai-pred-bg"
@@ -924,44 +987,65 @@
               <td class="right-align">{{Targets[domainIdx]?.[currentTargetIndex].feature_val[index]}}</td>
               <template v-for="(row, idx) in Comparables[domainIdx]?.[currentTargetIndex]" :key="row.id">
                 <td class="right-align" :style="{ color: row.feature_val[index] ==
-                Targets[domainIdx]?.[currentTargetIndex].feature_val[index] ? '#ccc' : '#222' }">{{row.feature_val[index]}}</td>
+                Targets[domainIdx]?.[currentTargetIndex].feature_val[index] ? '#ccc' : '#222' }">
+                  {{row.feature_val[index]}}</td>
               </template>
             </tr>
 
           </template>
           <tr>
-            <td style="width: 140px;" class="feature-name money highlight-green">{{Labels[domainIdx]?.[0] || ''}}
+            <td style="width: 140px;" class="feature-name money highlight-green">
+              {{Labels[domainIdx]?.[0] || ''}}
               <el-tooltip :content="Labels_Descriptions[domainIdx][0]" placement="right" effect="dark" :show-after="0"
                 trigger="hover" :hide-after="0">
                 <span class="tooltip-icon">
                   <i class="fa-regular fa-circle-question"></i>
                 </span>
               </el-tooltip>
+
+              <br />
+              <span style="line-height:24px;">Reconciled value
+                {{unit_list_header[domainIdx]?'('+unit_list_header[domainIdx]+')':''}} </span>
+              <br /><span class="error-info">Diff. from </span> (<u>Answer:
+                {{Targets[domainIdx][currentTargetIndex].actual}}{{unit_list[domainIdx]}}</u>)
             </td>
 
             <td class="right-align money highlight-green" style="cursor: pointer;">
-              <el-tooltip placement="top" effect="light" :show-after="0" trigger="hover" :hide-after="0">
+
+              <span><u>Answer: {{Targets[domainIdx][currentTargetIndex].actual}}{{unit_list[domainIdx]}} </u></span>
+              <br />
+              <el-tooltip placement="bottom" effect="light" :show-after="0" trigger="hover" :hide-after="0">
                 <template #content>
-                  Estimated value based on {{Comparables[domainIdx]?.[currentTargetIndex]?.length}} Comparable{{Comparables[domainIdx]?.[currentTargetIndex]?.length>1?'s':''}}:<br />
+                  Estimated value based on {{Comparables[domainIdx]?.[currentTargetIndex]?.length}}
+                  Comparable{{Comparables[domainIdx]?.[currentTargetIndex]?.length>1?'s':''}}:<br />
                   {{weightedAverageTooltipContentForComparable}}<br />
-                  
+
                   <span style="width:60px;color:#bd3030; font-size:12px; font-weight:400; line-height:12px;">
-                    Estimation error: {{getEstimationDifference(weightedAverageValueForComparable, Targets[domainIdx]?.[currentTargetIndex].actual)}}
+                    Estimation error: {{getEstimationDifference(weightedAverageValueForComparable,
+                    Targets[domainIdx]?.[currentTargetIndex].actual)}}
                   </span>
 
                 </template>
-                <!-- <div>
-                  {{weightedAverageValueForComparable}}
-                  <div class="approx-warning">
-                    ≈
-                  </div>
-                </div> -->
-                <u>Answer: {{Targets[domainIdx]?.[currentTargetIndex].actual}}{{unit_list[domainIdx]}}</u>
+                <span>
+                  <span style="line-height: 24px;">{{weightedAverageValueForComparable}}{{unit_list[domainIdx]}} <div
+                      class="approx-warning">≈</div> </span>
 
+                  <br />
+                  <span class="error-info">{{getEstimationDifference(weightedAverageValueForComparable,
+                    Targets[domainIdx]?.[currentTargetIndex].actual)}}</span>
+                </span>
               </el-tooltip>
             </td>
             <template v-for="(row, idx) in Comparables[domainIdx]?.[currentTargetIndex]" :key="row.id">
-              <td class="right-align money highlight-green">{{row.actual}}{{unit_list[domainIdx]}}</td>
+              <td class="right-align money highlight-green">
+                {{row.actual}}{{unit_list[domainIdx]}}
+                <br>
+                <span style="line-height: 24px;">—</span>
+
+                <br>
+                <span class="error-info">{{getEstimationDifference(row.actual,
+                  Targets[domainIdx]?.[currentTargetIndex].actual)}}</span>
+              </td>
             </template>
           </tr>
 
@@ -1034,7 +1118,9 @@
             </td>
 
             <td class="right-align money">{{Targets[domainIdx]?.[currentTargetIndex].pred}}{{unit_list[domainIdx]}}
-              <br> <span style="color: #bd3030;">{{getEstimationDifference(Targets[domainIdx]?.[currentTargetIndex].pred, Targets[domainIdx]?.[currentTargetIndex].actual)}}</span>
+              <br> <span
+                class="error-info highlight-green">{{getEstimationDifference(Targets[domainIdx]?.[currentTargetIndex].pred,
+                Targets[domainIdx]?.[currentTargetIndex].actual)}}</span>
             </td>
             <template v-for="(row, idx) in Comparables[domainIdx]?.[currentTargetIndex]" :key="row.id">
               <td class="right-align money">{{row.pred}}{{unit_list[domainIdx]}}
@@ -1042,7 +1128,7 @@
                 <el-tooltip
                   :content="row.pred + unit_list[domainIdx] + ' is ' + getPredictionDifference(row) + ' than the actual value of ' + row.actual + unit_list[domainIdx]"
                   placement="bottom" effect="dark" :show-after="0" trigger="hover" :hide-after="0">
-                  <span class="pred-description highlight-green" @mouseenter="highlightActualPrice(idx)"
+                  <span class="error-info highlight-green" @mouseenter="highlightActualPrice(idx)"
                     @mouseleave="unhighlightActualPrice(idx)">{{ getPredictionDifference(row) }}</span>
                 </el-tooltip>
               </td>
@@ -1148,10 +1234,11 @@
               </td>
               <td style="cursor: pointer;" class="comp1-header right-align money highlight-green2"
                 :class="{'gray-font': row.delta_y[index]==0, 'adj-price' : currentOpenComp==idx }">
-                <el-tooltip :content="getDeltayTooltip(row,index)" placement="top" effect="dark" :show-after="0" trigger="hover" :hide-after="0">
+                <el-tooltip :content="getDeltayTooltip(row,index)" placement="top" effect="dark" :show-after="0"
+                  trigger="hover" :hide-after="0">
                   {{row.delta_y[index]!==0? row.delta_y[index]+unit_list[domainIdx]:'0' }}
                 </el-tooltip>
-                
+
               </td>
 
             </template>
@@ -1171,17 +1258,19 @@
 
                 <el-tooltip placement="top" effect="light" :show-after="0" trigger="hover" :hide-after="0">
                   <template #content>
-                    <span>Reconciled price (from adjusted comparables): {{weightedAverageValueLinearAdjustments}}{{unit_list[domainIdx]}} </span><br />
-                    
-                  
+                    <span>Reconciled value (from adjusted comparables):
+                      {{weightedAverageValueLinearAdjustments}}{{unit_list[domainIdx]}} </span><br />
+
+
                     {{weightedAverageTooltipContentLinearAdjustments}}
                     <br />
                     <span style="color: #bd3030;">
-                      Estimation error: {{getEstimationDifference(weightedAverageValueLinearAdjustments, Targets[domainIdx][currentTargetIndex].actual)}}
+                      Estimation error: {{getEstimationDifference(weightedAverageValueLinearAdjustments,
+                      Targets[domainIdx][currentTargetIndex].actual)}}
                     </span>
                   </template>
                   <span style="cursor: pointer;">
-                
+
                     <u>Answer: {{Targets[domainIdx][currentTargetIndex].actual}}{{unit_list[domainIdx]}}</u>
 
 
@@ -1282,7 +1371,9 @@
             </td>
             <td class="right-align money subject ai-pred-bg">
               {{Targets[domainIdx]?.[currentTargetIndex].pred}}{{unit_list[domainIdx]}} <br />
-              <span class="pred-description"> {{getEstimationDifference(Targets[domainIdx]?.[currentTargetIndex].pred,Targets[domainIdx]?.[currentTargetIndex].actual)}} </span>
+              <span class="pred-description">
+                {{getEstimationDifference(Targets[domainIdx]?.[currentTargetIndex].pred,Targets[domainIdx]?.[currentTargetIndex].actual)}}
+              </span>
             </td>
 
             <template v-for="(row, idx) in LinearAdjustments[domainIdx]?.[currentTargetIndex]" :key="row.id">
@@ -1334,7 +1425,8 @@
               <td class="right-align">{{Targets[domainIdx]?.[currentTargetIndex].feature_val[index]}}</td>
               <template v-for="(row, idx) in Comparables[domainIdx]?.[currentTargetIndex]" :key="row.id">
                 <td class="right-align" :style="{ color: row.feature_val[index] ==
-                Targets[domainIdx]?.[currentTargetIndex].feature_val[index] ? '#ccc' : '#222' }">{{row.feature_val[index]}}</td>
+                Targets[domainIdx]?.[currentTargetIndex].feature_val[index] ? '#ccc' : '#222' }">
+                  {{row.feature_val[index]}}</td>
               </template>
             </tr>
 
@@ -1346,7 +1438,7 @@
                 <span class="tooltip-icon">
                   <i class="fa-regular fa-circle-question"></i>
                 </span>
-              </el-tooltip>
+              </el-tooltip><br> Linear Regression Prediction
             </td>
 
             <td class="right-align money highlight-green" style="cursor: pointer;">
@@ -1354,13 +1446,15 @@
                 <template #content>
                   <!-- 1. 描述文字 -->
                   <div style="font-size:12px; font-weight:500; margin:10px 0;">
-                  
+
                     Based on Comparables, the adjustment factors for each attribute are:
                     {{ Linear_reg[domainIdx]?.[currentTargetIndex]?.linear_pred.toFixed(1) }}{{ unit_list[domainIdx] }}
                     <br />
                     <span style="width:60px;color:#bd3030; font-size:12px; font-weight:400; line-height:12px;">
                       <!-- {{warningContent}} -->
-                      Estimation error: {{getEstimationDifference(Linear_reg[domainIdx]?.[currentTargetIndex]?.linear_pred.toFixed(1), Targets[domainIdx][currentTargetIndex].actual)}}
+                      Estimation error:
+                      {{getEstimationDifference(Linear_reg[domainIdx]?.[currentTargetIndex]?.linear_pred.toFixed(1),
+                      Targets[domainIdx][currentTargetIndex].actual)}}
                     </span>
                   </div>
                   <div style="display: flex;">
@@ -1371,7 +1465,8 @@
                           <th style="padding:2px 0px; font-size: 12px; text-align:left;">Attribute</th>
                           <th style="padding:2px 0px; font-size: 12px; text-align:right;">Value</th>
                           <th style="padding:2px 0px; font-size: 12px; text-align:right;">Factors</th>
-                          <th style="width:80px;padding:2px 0px; font-size: 12px; text-align:right; color:#2e8113">Partial ({{unit_list_header[domainIdx]}})</th>
+                          <th style="width:80px;padding:2px 0px; font-size: 12px; text-align:right; color:#2e8113">
+                            Partial ({{unit_list_header[domainIdx]}})</th>
                         </tr>
                       </thead>
                       <tbody>
@@ -1384,23 +1479,23 @@
                           <td style="padding:0 4px;text-align:right;">× <span
                               style="display:inline-block; width: 40px;">{{ row.factor ==0? '': row.factor }} </span>
                           </td>
-                          <td style="padding:0 4px;text-align:right;">= 
-                            <span
-                              style="display:inline-block; width: 40px; color:#2e8113" :style="{color: row.factor ==0 ? '#ddd' : '#2e8113'}">
-                              {{ row.factor ==0? '0': row.partial +  unit_list[domainIdx] }}</span>
-                            </td>
+                          <td style="padding:0 4px;text-align:right;">=
+                            <span style="display:inline-block; width: 40px; color:#2e8113"
+                              :style="{color: row.factor ==0 ? '#ddd' : '#2e8113'}">
+                              {{ row.factor ==0? '0': row.partial + unit_list[domainIdx] }}</span>
+                          </td>
                         </tr>
 
                         <tr style="font-weight:bold; color:#222; color:#2e8113">
                           <td colspan="3" style="padding:0px;">Default Value ({{unit_list_header[domainIdx]}})</td>
-                       
+
                           <td style="padding:0px 4px; text-align:right;">= <span
                               style="display:inline-block; width: 40px;">
                               {{
                               Linear_reg[domainIdx][currentTargetIndex].intercept.toFixed(1) }}{{unit_list[domainIdx]}}
                             </span></td>
                         </tr>
-                      
+
                       </tbody>
                     </table>
                     <!-- 3. 加号与箭头指向 AI Explainer -->
@@ -1409,8 +1504,9 @@
                       <div style="font-size:20px; margin-left:8px; color:#2e8113">+</div>
                       <div style="margin:0 8px; margin-top:-2px;font-size:14px; color:#2e8113">→</div>
                       <div style="width:60px; font-size:14px; color:#2e8113;">
-                        {{unit_list_header[domainIdx]}}{{ Linear_reg[domainIdx][currentTargetIndex].linear_pred.toFixed(1) }}{{ unit_list[domainIdx] }}
-                        <br />
+                        {{unit_list_header[domainIdx]}}{{
+                        Linear_reg[domainIdx][currentTargetIndex].linear_pred.toFixed(1) }}{{ unit_list[domainIdx] }}
+                        <br>
                       </div>
 
                     </div>
@@ -1418,8 +1514,11 @@
 
                 </template>
                 <span class="right-align money highlight-green" style="cursor: pointer; font-weight:500;">
-                  
-                  <u>Answer: {{Targets[domainIdx][currentTargetIndex].actual}}{{unit_list[domainIdx]}}</u>
+
+                  <u class="answer">Answer: {{Targets[domainIdx][currentTargetIndex].actual}}{{unit_list[domainIdx]}}</u>
+                  <br> {{Linear_reg[domainIdx][currentTargetIndex].linear_pred.toFixed(1)}}{{unit_list[domainIdx]}}
+                  <span class="error-info">
+                    {{getEstimationDifference(Linear_reg[domainIdx][currentTargetIndex].linear_pred, Targets[domainIdx][currentTargetIndex].actual)}}</span>
                 </span>
               </el-tooltip>
             </td>
@@ -1499,7 +1598,8 @@
 
             <td class="right-align money">{{Targets[domainIdx]?.[currentTargetIndex].pred}}{{unit_list[domainIdx]}}
               <br> <span style="color: #bd3030;">
-                {{getEstimationDifference(Targets[domainIdx]?.[currentTargetIndex].pred, Targets[domainIdx]?.[currentTargetIndex].actual)}}
+                {{getEstimationDifference(Targets[domainIdx]?.[currentTargetIndex].pred,
+                Targets[domainIdx]?.[currentTargetIndex].actual)}}
               </span>
             </td>
             <template v-for="(row, idx) in Comparables[domainIdx]?.[currentTargetIndex]" :key="row.id">
@@ -1837,15 +1937,15 @@
         }
       },
       methods: {
-        getDeltayTooltip(row,index){
+        getDeltayTooltip(row, index) {
           const featureName = this.Features[this.domainIdx][index];
           const featureVal = row.feature_val[index];
           const targetVal = this.Targets[this.domainIdx]?.[this.currentTargetIndex].feature_val[index];
           const deltaY = row.delta_y[index];
-          if(deltaY ==0){
+          if (deltaY == 0) {
             return 'This attribute is same as the Subject, no adjustment needed'
           }
-          const val = Number(deltaY)>0? '+'+ deltaY :deltaY 
+          const val = Number(deltaY) > 0 ? '+' + deltaY : deltaY
           return `Change ${featureName} from ${featureVal} to ${targetVal} will adjust ${val}${this.unit_list[this.domainIdx]}`;
         },
         async loadCSV(filename) {
@@ -2197,7 +2297,7 @@
               }
             }
           }
-         
+
         },
         // New helper: build rows for tooltip table
         getLinearTooltipRows(domainIdx, instanceIdx) {
