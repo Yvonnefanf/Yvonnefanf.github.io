@@ -689,12 +689,13 @@
               </td>
               <td style="cursor: pointer;" class="comp1-header right-align money highlight-green2"
                 :class="{'gray-font': row.delta_y[index]==0, 'adj-price' : currentOpenComp==idx }">
-                <el-tooltip :content="getDeltayTooltip(row,index)" placement="top" effect="dark" :show-after="0" trigger="hover" :hide-after="0">
+                <el-tooltip :content="getDeltayTooltip(row,index)" placement="top" effect="dark" :show-after="0"
+                  trigger="hover" :hide-after="0">
                   {{row.delta_y[index]!=0? row.delta_y[index]+unit_list[domainIdx]:'—' }}
                 </el-tooltip>
-                
+
               </td>
-              
+
               <template v-for="i in row.adjusted_step_number">
                 <td class="right-align adj-value" :class="{hidden: currentOpenComp!==idx }"
                   :style="{ color: index == row.adjusted_order[i-1] ? '#222' : '#bcbcbc', cursor: index == row.adjusted_order[i-1] ? 'pointer' : 'default' }">
@@ -928,8 +929,9 @@
               </td>
               <td class="right-align">{{Targets[domainIdx]?.[currentTargetIndex].feature_val[index]}}</td>
               <template v-for="(row, idx) in Comparables[domainIdx]?.[currentTargetIndex]" :key="row.id">
-                <td class="right-align":style="{ color: row.feature_val[index] ==
-                Targets[domainIdx]?.[currentTargetIndex].feature_val[index] ? '#ccc' : '#222' }" >{{row.feature_val[index]}}</td>
+                <td class="right-align" :style="{ color: row.feature_val[index] ==
+                Targets[domainIdx]?.[currentTargetIndex].feature_val[index] ? '#ccc' : '#222' }">
+                  {{row.feature_val[index]}}</td>
               </template>
             </tr>
 
@@ -947,9 +949,10 @@
             <td class="right-align money highlight-green" style="cursor: pointer;">
               <el-tooltip placement="top" effect="light" :show-after="0" trigger="hover" :hide-after="0">
                 <template #content>
-                  Estimated value based on {{Comparables[domainIdx]?.[currentTargetIndex]?.length}} Comparable{{Comparables[domainIdx]?.[currentTargetIndex]?.length>1?'s':''}}:<br />
+                  Estimated value based on {{Comparables[domainIdx]?.[currentTargetIndex]?.length}}
+                  Comparable{{Comparables[domainIdx]?.[currentTargetIndex]?.length>1?'s':''}}:<br />
                   {{weightedAverageTooltipContentForComparable}}<br />
-                  
+
                   <span style="width:60px;color:#bd3030; font-size:12px; font-weight:400; line-height:12px;">
                     <!-- {{warningContent}} -->
                     <span style="font-weight: 800;">Warning: </span> this is an estimate so it may be inaccurate.
@@ -1153,7 +1156,8 @@
               </td>
               <td style="cursor: pointer;" class="comp1-header right-align money highlight-green2"
                 :class="{'gray-font': row.delta_y[index]==0, 'adj-price' : currentOpenComp==idx }">
-                <el-tooltip :content="getDeltayTooltip(row,index)" placement="top" effect="dark" :show-after="0" trigger="hover" :hide-after="0">
+                <el-tooltip :content="getDeltayTooltip(row,index)" placement="top" effect="dark" :show-after="0"
+                  trigger="hover" :hide-after="0">
                   {{row.delta_y[index]!==0? row.delta_y[index]+unit_list[domainIdx]:'0' }}
                 </el-tooltip>
               </td>
@@ -1340,7 +1344,8 @@
               <td class="right-align">{{Targets[domainIdx]?.[currentTargetIndex].feature_val[index]}}</td>
               <template v-for="(row, idx) in Comparables[domainIdx]?.[currentTargetIndex]" :key="row.id">
                 <td class="right-align" :style="{ color: row.feature_val[index] ==
-                Targets[domainIdx]?.[currentTargetIndex].feature_val[index] ? '#ccc' : '#222' }">{{row.feature_val[index]}}</td>
+                Targets[domainIdx]?.[currentTargetIndex].feature_val[index] ? '#ccc' : '#222' }">
+                  {{row.feature_val[index]}}</td>
               </template>
             </tr>
 
@@ -1376,7 +1381,8 @@
                           <th style="padding:2px 0px; font-size: 12px; text-align:left;">Attribute</th>
                           <th style="padding:2px 0px; font-size: 12px; text-align:right;">Value</th>
                           <th style="padding:2px 0px; font-size: 12px; text-align:right;">Factors</th>
-                          <th style="width:80px;padding:2px 0px; font-size: 12px; text-align:right; color:#2e8113">Partial ({{unit_list_header[domainIdx]}})</th>
+                          <th style="width:80px;padding:2px 0px; font-size: 12px; text-align:right; color:#2e8113">
+                            Partial ({{unit_list_header[domainIdx]}})</th>
                         </tr>
                       </thead>
                       <tbody>
@@ -1389,23 +1395,23 @@
                           <td style="padding:0 4px;text-align:right;">× <span
                               style="display:inline-block; width: 40px;">{{ row.factor ==0? '0': row.factor }} </span>
                           </td>
-                          <td style="padding:0 4px;text-align:right;">= 
-                            <span
-                              style="display:inline-block; width: 40px; color:#2e8113" :style="{color: row.factor ==0 ? '#ddd' : '#2e8113'}">
-                              {{ row.factor ==0? '0': row.partial +  unit_list[domainIdx] }}</span>
-                            </td>
+                          <td style="padding:0 4px;text-align:right;">=
+                            <span style="display:inline-block; width: 40px; color:#2e8113"
+                              :style="{color: row.factor ==0 ? '#ddd' : '#2e8113'}">
+                              {{ row.factor ==0? '0': row.partial + unit_list[domainIdx] }}</span>
+                          </td>
                         </tr>
 
                         <tr style="font-weight:bold; color:#222; color:#2e8113">
-                          <td colspan="3" style="padding:0px;">Default Value ({{unit_list_header[domainIdx]}})</td>
-                       
+                          <td colspan="3" style="padding:0px;">Adjustment ({{unit_list_header[domainIdx]}})</td>
+
                           <td style="padding:0px 4px; text-align:right;">= <span
                               style="display:inline-block; width: 40px;">
                               {{
                               Linear_reg[domainIdx][currentTargetIndex].intercept.toFixed(1) }}{{unit_list[domainIdx]}}
                             </span></td>
                         </tr>
-                      
+
                       </tbody>
                     </table>
                     <!-- 3. 加号与箭头指向 AI Explainer -->
@@ -1414,7 +1420,8 @@
                       <div style="font-size:20px; margin-left:8px; color:#2e8113">+</div>
                       <div style="margin:0 8px; margin-top:-2px;font-size:14px; color:#2e8113">→</div>
                       <div style="width:60px; font-size:14px; color:#2e8113;">
-                        {{unit_list_header[domainIdx]}}{{ Linear_reg[domainIdx][currentTargetIndex].linear_pred.toFixed(1) }}{{ unit_list[domainIdx] }}
+                        {{unit_list_header[domainIdx]}}{{
+                        Linear_reg[domainIdx][currentTargetIndex].linear_pred.toFixed(1) }}{{ unit_list[domainIdx] }}
                         <br />
                       </div>
 
@@ -1527,18 +1534,17 @@
       </table>
     </div>
     <div v-if="internalTesting"
-      style="margin-top: 20px; padding: 15px; background: #f8f9fa; border-radius: 6px; border: 1px solid #e9ecef; width: 300px;">
-      <div style="display: flex; align-items: center; gap: 10px; cursor: pointer;" @click="toggleAnswer">
-        <span style="font-weight: 500; color: #495057;">Check the Answer <span
+      style="margin-top: 0px; padding: 5px; background: #f8f9fa; border-radius: 6px; border: 1px solid #e9ecef; width: 300px;">
+      <span style="display: flex; align-items: center; gap: 10px; cursor: pointer;" @click="toggleAnswer">
+        <span style="font-weight: 500; color: #495057;"> <span
             style="font-size: 12px; color: #6c757d;">(For internal testing)</span></span>
         <i :class="showAnswer ? 'fa-solid fa-eye-slash' : 'fa-solid fa-eye'" style="color: #6c757d;"></i>
-      </div>
-      <div v-if="showAnswer"
-        style="margin-top: 10px; padding: 10px; background: #e4fcdc; border-radius: 4px; border-left: 4px solid #28a745;">
-        <span style="font-weight: 500; color: #155724;">Subject Actual Value: </span>
-        <span class="money" style="font-size: 16px; font-weight: bold;">{{ subjectActualValue }}{{ subjectActualValue
-          !== '-' ? 'K' : '' }}</span>
-      </div>
+        <span v-if="showAnswer"
+        style="font-size:12px;">
+        {{ subjectActualValue }}
+        </span>
+        </span>
+      
     </div>
 
   </div>
@@ -1619,7 +1625,7 @@
           highlightedActualPrice: null,
           allAdjustedPricesHighlighted: false,
           allPredAndActualHighlighted: false,
-          showAnswer: false,
+          showAnswer: true,
           slider_ranges: [
             { min: 200, max: 500 }, // domain 0
             { min: 30, max: 200 }   // domain 1
@@ -1693,7 +1699,7 @@
             totalWeight += weight;
           }
           if (totalWeight === 0) return formula;
-          const avg = (sum / totalWeight).toFixed(1);
+          const avg = (sum / totalWeight).toFixed();
           return `${avg}${this.unit_list[this.domainIdx]} = ${formula}`;
         },
         weightedAverageValueLinearAdjustments() {
@@ -1704,7 +1710,7 @@
           for (let idx = 0; idx < comparables.length; idx++) {
             const weight = this.similarityScores[idx] || 0;
             const price = comparables[idx].adjusted_price
-            console.log("comparables[idx].adjusted_price")
+            console.log("comparables[idx].adjusted_price", comparables[idx])
             sum += weight * price;
             totalWeight += weight;
           }
@@ -1746,7 +1752,7 @@
           if (totalWeight === 0) return '-';
           return (sum / totalWeight).toFixed(1);
         },
-        similarityScores() {
+        /*similarityScores() {
           const targets = this.Targets[this.domainIdx];
           const comparables = this.Comparables[this.domainIdx][this.currentTargetIndex];
 
@@ -1779,6 +1785,75 @@
 
           const total = scores.reduce((a, b) => a + b, 0);
           return scores.map(s => total ? Math.round((s / total) * 100) : 0);
+        },*/
+        similarityScores() {
+          const targets = this.Targets[this.domainIdx];
+          const comparables = this.Comparables[this.domainIdx][this.currentTargetIndex];
+          
+          if (!Array.isArray(targets) || !targets[this.currentTargetIndex] || !Array.isArray(comparables)) {
+            return [];
+          }
+          
+          const subject = targets[this.currentTargetIndex];
+          
+          // Calculate feature scales (standard deviation) for numerical features
+          const featureScales = [];
+          for (let i = 0; i < subject.feature_val.length; i++) {
+            if (this.numberical_feature[this.domainIdx][i]) {
+              // Calculate std dev for this numerical feature across all comparables
+              const values = comparables
+                .map(comp => Number(comp.feature_val[i]))
+                .filter(val => !isNaN(val));
+              
+              if (values.length > 1) {
+                const mean = values.reduce((a, b) => a + b, 0) / values.length;
+                const variance = values.reduce((a, b) => a + Math.pow(b - mean, 2), 0) / values.length;
+                featureScales[i] = Math.sqrt(variance);
+              } else {
+                featureScales[i] = 1.0;
+              }
+            } else {
+              featureScales[i] = null; // Categorical feature
+            }
+          }
+          
+          // Calculate similarity scores using inverse distance (matching Python logic)
+          const similarities = comparables.map(comp => {
+            let totalAdjustX = 0;
+            
+            for (let i = 0; i < comp.feature_val.length; i++) {
+              const subjVal = subject.feature_val[i];
+              const compVal = comp.feature_val[i];
+              
+              if (this.numberical_feature[this.domainIdx][i]) {
+                // Numerical feature
+                const subjNum = Number(subjVal);
+                const compNum = Number(compVal);
+                
+                if (!isNaN(subjNum) && !isNaN(compNum)) {
+                  const deltaX = Math.abs(subjNum - compNum);
+                  const scale = featureScales[i] || 1.0;
+                  const normDeltaX = deltaX / (scale + 1e-8);
+                  totalAdjustX += normDeltaX;
+                }
+              } else {
+                // Categorical feature: 0 if equal, 1 if different
+                const deltaX = subjVal === compVal ? 0 : 1;
+                totalAdjustX += deltaX;
+              }
+            }
+            
+            // Calculate similarity as inverse of total adjusted distance
+            const similarity = 1.0 / (totalAdjustX + 1e-5);
+            return similarity;
+          });
+          
+          // Calculate weights (normalized similarities that sum to 1)
+          const totalSimilarity = similarities.reduce((a, b) => a + b, 0);
+          const weights = similarities.map(s => totalSimilarity > 0 ? s / totalSimilarity : 0);
+          
+          // Convert to percentages that sum to 100%
+          return weights.map(w => Math.round(w * 100));
         },
         currentSliderRange() {
           return this.slider_ranges[this.domainIdx];
@@ -1844,15 +1919,15 @@
         }
       },
       methods: {
-        getDeltayTooltip(row,index){
+        getDeltayTooltip(row, index) {
           const featureName = this.Features[this.domainIdx][index];
           const featureVal = row.feature_val[index];
           const targetVal = this.Targets[this.domainIdx]?.[this.currentTargetIndex].feature_val[index];
           const deltaY = row.delta_y[index];
-          if(deltaY ==0){
+          if (deltaY == 0) {
             return 'This attribute is same as the Subject, no adjustment needed'
           }
-          const val = Number(deltaY)>0? '+'+ deltaY :deltaY 
+          const val = Number(deltaY) > 0 ? '+' + deltaY : deltaY
           return `Change ${featureName} from ${featureVal} to ${targetVal} will adjust ${val}${this.unit_list[this.domainIdx]}`;
         },
         async loadCSV(filename) {
@@ -1878,12 +1953,14 @@
             const [domainMetadata, metadata, subjects, comparables, linear_reg, linear_adjustments] = await Promise.all([
               this.loadCSV('./data/domain_metadata.csv'),
               this.loadCSV('./data/metadata.csv'),
-              this.loadCSV('./data/subject.csv'),
-              this.loadCSV('./data/comparables.csv'),
-              this.loadCSV('./data/linear_reg.csv'),
-              this.loadCSV('./data/linear_adjustments.csv')
+              //this.loadCSV('./data/subject.csv'),
+              // this.loadCSV('./data/comparables.csv'),
+              this.loadCSV('./data/Final/subject.csv'),
+              this.loadCSV('./data/Final/trace_adjustments.csv'),
+              this.loadCSV('./data/Final/linear_reg.csv'),
+              this.loadCSV('./data/Final/linear_adjustments.csv')
             ]);
-            console.log('loaded');
+            console.log('loaded123');
 
             // Process domain metadata
             this.processDomainMetadata(domainMetadata);
@@ -2017,7 +2094,7 @@
 
               const dxVal = Number(dx);
               const dyVal = Number(dy);
-              deltaX.push(!isNaN(dxVal) ? dxVal.toFixed(1) : '0.0');
+              deltaX.push(!isNaN(dxVal) ? dxVal.toFixed(2) : '0.0');
               deltaY.push(!isNaN(dyVal) ? dyVal.toFixed(1) : '0.0');
             }
 
@@ -2166,7 +2243,7 @@
               delta_y: deltaY,
               pred: Number(row.pred).toFixed(1),
               actual: Number(row.actual).toFixed(1),
-              adjusted_price: Number(row.adjusted_price).toFixed(1)
+              adjusted_price: Number(row.last_adjusted).toFixed(1)
             };
           });
 
@@ -2204,7 +2281,7 @@
               }
             }
           }
-         
+
         },
         // New helper: build rows for tooltip table
         getLinearTooltipRows(domainIdx, instanceIdx) {
