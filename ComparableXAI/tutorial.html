@@ -859,7 +859,7 @@
       <div style="position: absolute;  padding:0 10px; width:400px; top:400px; line-height:18px;">
         <div style="margin: 0 auto;" class="annotation">3a</div>
         <div
-          style="padding:10px; margin-top:10px; width:400px; line-height:18px; border:2px solid #005fa3;">
+          style="padding:10px; margin-top:10px; width:430px; line-height:18px; border:2px solid #005fa3;">
           <!-- 1. 描述文字 -->
 
           <div style="font-size:12px; font-weight:500; margin:10px 0;">
@@ -883,7 +883,7 @@
                   <th style="padding:2px 0px; font-size: 12px; text-align:right;">Value</th>
                   <th style="padding:2px 0px; font-size: 12px; text-align:right;">Factors</th>
                   <th style="width:80px;padding:2px 0px; font-size: 12px; text-align:right; color:#2e8113">Partial
-                    ({{unit_list_header[domainIdx]}})</th>
+                    {{domainIdx != 1 ? '('+unit_list_header[domainIdx]+')':''}}</th>
                 </tr>
               </thead>
               <tbody>
@@ -892,7 +892,12 @@
                   <td style="padding:0; height:16px;"><span
                       style="overflow: hidden; display:inline-block;width:100px; text-overflow:ellipsis;">{{
                       row.name }}</span></td>
-                  <td style="padding:0; text-align:right;">{{ row.value }}</td>
+                  <td style="padding:0; text-align:right;">
+                    <el-tooltip :content="row.value"
+                    placement="right" effect="dark" :show-after="0" trigger="hover" :hide-after="0">
+                      <span style="display: inline-block; width:60px; overflow:hidden;text-overflow:ellipsis; cursor:pointer;">{{ row.value }}</span>
+                    </el-tooltip>
+                    </td>
                   <td style="padding:0 4px;text-align:right;">× <span style="display:inline-block; width: 40px;">{{
                       row.factor ==0? '': row.factor }} </span>
                   </td>
@@ -961,7 +966,7 @@
         <tbody>
           <template v-for="(feature, index) in Features[domainIdx]">
             <tr>
-              <td class="feature-name">
+              <td class="feature-name" style="width:320px;">
                 {{feature}}
                 <el-tooltip :content="FeatureDescriptions[domainIdx][index]" placement="right" effect="dark"
                   :show-after="0">
@@ -970,7 +975,14 @@
                   </span>
                 </el-tooltip>
               </td>
-              <td class="right-align">{{Targets[domainIdx]?.[currentTargetIndex].feature_val[index]}}</td>
+              <td class="right-align">
+                <el-tooltip :content="Targets[domainIdx]?.[currentTargetIndex].feature_val[index]" placement="right" effect="dark"
+                  :show-after="0">
+                <span style="width: 90px; display:inline-block; overflow:hidden; text-overflow:ellipsis; cursor:pointer;">
+                  {{Targets[domainIdx]?.[currentTargetIndex].feature_val[index]}}
+                </span></el-tooltip>
+                
+              </td>
               <template v-for="(row, idx) in Comparables[domainIdx][currentTargetIndex]" :key="row.id">
                 <td class="right-align annotation-border-left annotation-border-right"
                   :class="{'annotation-border-btm': index == Features[domainIdx].length -1 }" :style="{ color: row.feature_val[index] ==
@@ -1003,7 +1015,7 @@
 
                   <!-- Subject 值 -->
                   <td class="right-align money highlight-green"
-                    style="cursor: pointer; width:88px; position:relative; border:2px solid #2874c1; overflow:visible; position:relative;">
+                    style="cursor: pointer; width:100px; position:relative; border:2px solid #2874c1; overflow:visible; position:relative;">
                     <div class="annotation" style="position: absolute; top:0; left:0px;">3a</div>
 
                     <el-tooltip placement="right" effect="light" :show-after="0" :visible="True">
@@ -1029,7 +1041,7 @@
                                 <th style="padding:2px 0px; font-size: 12px; text-align:right;">Factors</th>
                                 <th
                                   style="width:80px;padding:2px 0px; font-size: 12px; text-align:right; color:#2e8113">
-                                  Partial ({{unit_list_header[domainIdx]}})</th>
+                                  Partial {{domainIdx!=1? '(' + unit_list_header[domainIdx] + ')':''}}</th>
                               </tr>
                             </thead>
                             <tbody>
@@ -1039,7 +1051,14 @@
                                 <td style="padding:0; height:16px;"><span
                                     style="overflow: hidden; display:inline-block;width:100px; text-overflow:ellipsis;">{{
                                     row.name }}</span></td>
-                                <td style="padding:0; text-align:right;">{{ row.value }}</td>
+                                <td style="padding:0; text-align:right;">
+                                  <el-tooltip placement="right" effect="dark" :show-after="0" :visible="True" :content="row.value">
+                                    <span style="cursor: pointer;display:inline-block; width:100px;overflow:hidden;text-overflow:ellipsis;">
+                                      {{ row.value }}
+                                    </span>
+                                  </el-tooltip>
+                                  
+                                  </td>
                                 <td style="padding:0 4px;text-align:right;">× <span
                                     style="display:inline-block; width: 40px;">{{ row.factor ==0? '': row.factor }}
                                   </span>
@@ -1051,7 +1070,7 @@
                               </tr>
 
                               <tr style="font-weight:bold; color:#222; color:#2e8113">
-                                <td colspan="3" style="padding:0px;">Adjustment ({{unit_list_header[domainIdx]}})
+                                <td colspan="3" style="padding:0px;">Adjustment {{domainIdx!=1? '('+unit_list_header[domainIdx]+')':''}}
                                 </td>
 
                                 <td style="padding:0px 4px; text-align:right;">= <span
@@ -2512,14 +2531,21 @@
             const i = Number(row.instanceId);
             if (!grouped[d]) grouped[d] = {};
             // Collect intercept and coefficients
-            const coefs = [
+            let coefs = []
+            if(this.domainIdx==1){coefs = [
               Number(row.coef_0), Number(row.coef_1), Number(row.coef_2),
-              Number(row.coef_3), Number(row.coef_4), Number(row.coef_5)
+              Number(row.coef_3), Number(row.coef_4)
             ];
+            }else{
+              coefs = [
+              Number(row.coef_0), Number(row.coef_1), Number(row.coef_2),
+              Number(row.coef_3), Number(row.coef_4), Number(row.coef_5)];
+            }
+            
             const features_val = Array.from({ length: 6 }, (_, k) =>
               Number(row[`feature${k}`])
             );
-            console.log("processing linear", row)
+            
             grouped[d][i] = {
               intercept: Number(row.intercept.toFixed(1)),
               coefs,
@@ -2540,7 +2566,6 @@
               this.Linear_reg[d][idx] = insts[idx] || null;
             }
           });
-          console.log("this.Linear_reg", this.Linear_reg)
         },
         getLinearTooltipRows(domainIdx, instanceIdx) {
           const lr = this.Linear_reg[domainIdx]?.[instanceIdx];
@@ -2556,7 +2581,12 @@
 
             const name = names[j] || `x${j}`;
             const val = values[j];
-            const factor = `${coef.toFixed(1)}`;
+            let factor = `${coef.toFixed(3)}`;
+            if(domainIdx==0){
+              factor = `${coef.toFixed(1)}`;
+            }
+      
+            
             const partial = (coef * Number(cal_values[j])).toFixed(1);
 
             return { name, value: val, factor, partial };
@@ -2573,7 +2603,7 @@
             const fname = featureNames[j] ?? `x${j}`;
             const fval = featureVals[j] ?? '';
             if (coef != 0) {
-              coef = coef.toFixed(1)
+              coef = coef.toFixed(4)
               terms.push(`${String(coef)}×${fname}(${String(fval)})`);
             }
 
