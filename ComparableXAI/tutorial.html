@@ -839,8 +839,11 @@
 
           <div style="font-size:12px; font-weight:500; margin:10px 0;">
 
-            Based on Comparables, the adjustment factors for each attribute are:
+            Based on the Linear Regression model trained on {{Comparables[domainIdx]?.[currentTargetIndex]?.length}} comparables, 
+                    the factors for each attribute are:
             <br />
+            Positive means a positive influence, and a larger absolute value means greater importance.
+            <br/>
             <span style="width:60px;color:#bd3030; font-size:12px; font-weight:400; line-height:12px;">
               <!-- {{warningContent}} -->
               <span style="font-weight: 800;">Warning: </span> this is an estimate so it may be inaccurate.
@@ -874,7 +877,7 @@
                 </tr>
 
                 <tr style="font-weight:bold; color:#222; color:#2e8113">
-                  <td colspan="3" style="padding:0px;">Default Value ({{unit_list_header[domainIdx]}})</td>
+                  <td colspan="3" style="padding:0px;">Adjustment ({{unit_list_header[domainIdx]}})</td>
 
                   <td style="padding:0px 4px; text-align:right;">= <span style="display:inline-block; width: 40px;">
                       {{
@@ -1023,7 +1026,7 @@
                               </tr>
 
                               <tr style="font-weight:bold; color:#222; color:#2e8113">
-                                <td colspan="3" style="padding:0px;">Default Value ({{unit_list_header[domainIdx]}})
+                                <td colspan="3" style="padding:0px;">Adjustment ({{unit_list_header[domainIdx]}})
                                 </td>
 
                                 <td style="padding:0px 4px; text-align:right;">= <span
