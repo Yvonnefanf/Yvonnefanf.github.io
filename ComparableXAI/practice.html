@@ -472,6 +472,13 @@
     .trace-border-left {
       border-left: 2px solid #36a341;
     }
+    .feature-val{
+      width: 100px; 
+      display:inline-block;
+      overflow:hidden;
+      text-overflow:ellipsis;
+      cursor: pointer;
+    }
   </style>
 </head>
 
@@ -1336,10 +1343,24 @@
                   </span>
                 </el-tooltip>
               </td>
-              <td class="right-align">{{Targets[domainIdx]?.[currentTargetIndex].feature_val[index]}}</td>
+              <td class="right-align">
+                <el-tooltip :content="Targets[domainIdx]?.[currentTargetIndex].feature_val[index]" placement="right" effect="dark"
+                  :show-after="0">
+                <span class="feature-val">
+                  {{Targets[domainIdx]?.[currentTargetIndex].feature_val[index]}}
+                </span>
+                </el-tooltip>
+                
+              </td>
               <template v-for="(row, idx) in Comparables[domainIdx]?.[currentTargetIndex]" :key="row.id">
                 <td class="right-align" :style="{ color: row.feature_val[index] ==
-                Targets[domainIdx]?.[currentTargetIndex].feature_val[index] ? '#ccc' : '#222' }">{{row.feature_val[index]}}</td>
+                Targets[domainIdx]?.[currentTargetIndex].feature_val[index] ? '#ccc' : '#222' }">
+                <el-tooltip :content="Targets[domainIdx]?.[currentTargetIndex].feature_val[index]" placement="right" effect="dark"
+                :show-after="0">
+                <span class="feature-val">
+                  {{row.feature_val[index]}}
+                </span></el-tooltip>
+                </td>
               </template>
             </tr>
 
@@ -1402,7 +1423,7 @@
                           <td style="padding:0px 4px; text-align:right;">= <span
                               style="display:inline-block; width: 40px;">
                               {{
-                              Linear_reg[domainIdx][currentTargetIndex].intercept.toFixed(1) }}{{unit_list[domainIdx]}}
+                              Linear_reg[domainIdx][currentTargetIndex].intercept }}{{unit_list[domainIdx]}}
                             </span></td>
                         </tr>
                       
@@ -1414,7 +1435,7 @@
                       <div style="font-size:20px; margin-left:8px; color:#2e8113">+</div>
                       <div style="margin:0 8px; margin-top:-2px;font-size:14px; color:#2e8113">→</div>
                       <div style="width:60px; font-size:14px; color:#2e8113;">
-                        {{unit_list_header[domainIdx]}}{{ Linear_reg[domainIdx][currentTargetIndex].linear_pred.toFixed(1) }}{{ unit_list[domainIdx] }}
+                        {{unit_list_header[domainIdx]}}{{ Linear_reg[domainIdx][currentTargetIndex].linear_pred }}{{ unit_list[domainIdx] }}
                         <br />
                       </div>
 
@@ -1423,7 +1444,7 @@
 
                 </template>
                 <span class="right-align money highlight-green" style="cursor: pointer; font-weight:500;">
-                  {{ Linear_reg[domainIdx]?.[currentTargetIndex]?.linear_pred.toFixed(1) }}{{ unit_list[domainIdx] }}
+                  {{ Linear_reg[domainIdx]?.[currentTargetIndex]?.linear_pred }}{{ unit_list[domainIdx] }}
                   <div class="approx-warning">
                     <!-- <i class="fa-solid fa-exclamation"></i> -->
                     ≈
@@ -1606,27 +1627,13 @@
           LinearAdjustments: [],
           categoryMappings: {},
 
-
-
           currentOpenComp: null,
-          // Slider data
-          slider_min: 200,
-          slider_max: 500,
-          minSliderValue: 350,
-          maxSliderValue: 450,
           draggingHandle: null,
           isDragging: false,
           highlightedActualPrice: null,
           allAdjustedPricesHighlighted: false,
           allPredAndActualHighlighted: false,
           showAnswer: false,
-          slider_ranges: [
-            { min: 200, max: 500 }, // domain 0
-            { min: 30, max: 200 }   // domain 1
-          ],
-
-
-
         }
       },
       computed: {
@@ -1780,17 +1787,7 @@
           const total = scores.reduce((a, b) => a + b, 0);
           return scores.map(s => total ? Math.round((s / total) * 100) : 0);
         },
-        currentSliderRange() {
-          return this.slider_ranges[this.domainIdx];
-        },
-        minSliderPercent() {
-          const range = this.currentSliderRange;
-          return ((this.minSliderValue - range.min) / (range.max - range.min)) * 100;
-        },
-        maxSliderPercent() {
-          const range = this.currentSliderRange;
-          return ((this.maxSliderValue - range.min) / (range.max - range.min)) * 100;
-        },
+        
         currentComparableFinalPrices() {
 
           if (!Array.isArray(!this.Comparables[this.domainIdx]) || comparables.length === 0) return [];
@@ -1828,9 +1825,6 @@
           "2": map2
         }
         this.loadCSVData()
-
-
-
       },
       watch: {
         domain() {
@@ -1886,325 +1880,19 @@
             console.log('loaded');
 
             // Process domain metadata
-            this.processDomainMetadata(domainMetadata);
-
+            processDomainMetadata(domainMetadata,this);
             // Process feature metadata
-            this.processFeatureMetadata(metadata);
+            processFeatureMetadata(metadata,this);
             // Process subjects (Targets)
-            this.processSubjects(subjects);
+            processSubjects(subjects,this);
             // Process comparables
-            this.processComparables(comparables);
-            this.processLinearReg(linear_reg);
-            this.processLinearAdjustments(linear_adjustments);
-
-
+            processComparables(comparables,this);
+            processLinearReg(linear_reg,this);
+            processLinearAdjustments(linear_adjustments,this);
           } catch (error) {
             console.error('Error loading CSV data:', error);
           }
 
-        },
-        processDomainMetadata(data) {
-          // Initialize arrays with correct size
-          const domainCount = Math.max(...data.map(row => row.domainId)) + 1;
-
-          this.domain_list = new Array(domainCount);
-          this.unit_list = new Array(domainCount);
-          this.unit_list_header = new Array(domainCount);
-          this.warning = new Array(domainCount);
-          this.Labels = new Array(domainCount).fill(null).map(() => []);
-          this.Labels_Descriptions = new Array(domainCount).fill(null).map(() => []);
-
-          data.forEach(row => {
-            const idx = row.domainId;
-            this.domain_list[idx] = row.domainName;
-            this.unit_list[idx] = row.unit;
-
-            this.unit_list_header[idx] = row.unitHeader;
-            this.warning[idx] = row.warning;
-            this.Labels[idx] = [row.labelActual, row.labelPrediction, row.labelAdjusted];
-            this.Labels_Descriptions[idx] = [row.descriptionActual, row.descriptionPrediction, row.descriptionAdjusted];
-          });
-          console.log("finished process domain metadata")
-        },
-        processFeatureMetadata(data) {
-          // Group by domainId
-          const grouped = {};
-          data.forEach(row => {
-            if (!grouped[row.domainId]) {
-              grouped[row.domainId] = [];
-            }
-            grouped[row.domainId].push(row);
-          });
-
-          // Initialize arrays
-          const domainCount = Math.max(...Object.keys(grouped).map(Number)) + 1;
-          this.Features = new Array(domainCount).fill(null).map(() => []);
-          this.FeatureDescriptions = new Array(domainCount).fill(null).map(() => []);
-          this.numberical_feature = new Array(domainCount).fill(null).map(() => []);
-
-          // Fill arrays
-          Object.keys(grouped).forEach(domainId => {
-            const domainIdx = Number(domainId);
-            const features = grouped[domainId].sort((a, b) => a.featureId - b.featureId);
-
-            this.Features[domainIdx] = features.map(f => f.featureName);
-            this.FeatureDescriptions[domainIdx] = features.map(f => f.featureDescription);
-            this.numberical_feature[domainIdx] = features.map(f => f.isNumerical);
-
-          });
-          console.log("finished process feature metadata")
-        },
-        processSubjects(data) {
-          // Group by domainId and instanceId
-          const grouped = {};
-          data.forEach(row => {
-            if (!grouped[row.domainId]) {
-              grouped[row.domainId] = {};
-            }
-            const domainId = row.domainId;
-            const numFlags = this.numberical_feature?.[domainId] || [];  // e.g. [true, false, ...]
-            // Extract feature values
-            const featureVals = extract_features(row, domainId, numFlags, this)
-
-            grouped[row.domainId][row.instanceId] = {
-              feature_val: featureVals,
-              pred: row.pred,
-              actual: row.actual
-            };
-          });
-
-          // Convert to array format
-          const domainCount = Math.max(...Object.keys(grouped).map(Number)) + 1;
-          this.Targets = new Array(domainCount).fill(null).map(() => []);
-
-          Object.keys(grouped).forEach(domainId => {
-            const domainIdx = Number(domainId);
-            const instances = grouped[domainId];
-            const maxInstance = Math.max(...Object.keys(instances).map(Number));
-
-            for (let i = 0; i <= maxInstance; i++) {
-              this.Targets[domainIdx][i] = instances[i] || null;
-            }
-          });
-          console.log("finished process subject")
-        },
-        processComparables(data) {
-
-          // Group by domainId, instanceId, and comparableId
-          const grouped = {};
-
-          data.forEach(row => {
-            if (!grouped[row.domainId]) {
-              grouped[row.domainId] = {};
-            }
-            if (!grouped[row.domainId][row.instanceId]) {
-              grouped[row.domainId][row.instanceId] = {};
-            }
-            const domainId = row.domainId;
-            const numFlags = this.numberical_feature?.[domainId] || [];  // e.g. [true, false, ...]
-
-
-            // Extract feature values and deltas
-
-            const deltaX = [];
-            const deltaY = [];
-            const featureVals = extract_features(row, domainId, numFlags, this)
-            for (let i = 0; i < 6; i++) {
-              const val = row[`feature${i}`];
-
-              const dx = row[`delta_x${i}`];
-              const dy = row[`delta_y${i}`];
-
-              const dxVal = Number(dx);
-              const dyVal = Number(dy);
-              deltaX.push(!isNaN(dxVal) ? dxVal.toFixed(1) : '0.0');
-              deltaY.push(!isNaN(dyVal) ? dyVal.toFixed(1) : '0.0');
-            }
-
-            // Parse adjusted_order and adjusted_price arrays
-            let adjustedOrder = [];
-            let adjustedPrice = [];
-
-            // Handle adjusted_order - could be string, array, or null
-            if (row.adjusted_order) {
-              if (typeof row.adjusted_order === 'string') {
-                adjustedOrder = row.adjusted_order.split(',').map(Number);
-              } else if (Array.isArray(row.adjusted_order)) {
-                adjustedOrder = row.adjusted_order.map(Number);
-              } else {
-                adjustedOrder = [row.adjusted_order].map(Number);
-              }
-            }
-
-            // Handle adjusted_price - could be string, array, or null
-            if (row.adjusted_price) {
-              if (typeof row.adjusted_price === 'string') {
-                adjustedPrice = row.adjusted_price.split(',').map(Number);
-              } else if (Array.isArray(row.adjusted_price)) {
-                adjustedPrice = row.adjusted_price.map(Number);
-              } else {
-                adjustedPrice = [row.adjusted_price].map(Number);
-              }
-            }
-
-            grouped[row.domainId][row.instanceId][row.comparableId] = {
-              id: row.comparableId,
-              feature_val: featureVals,
-              delta_x: deltaX,
-              delta_y: deltaY,
-              pred: row.pred,
-              actual: row.actual,
-              adjusted_step_number: row.adjusted_step_number,
-              adjusted_order: adjustedOrder,
-              adjusted_price: adjustedPrice,
-              final_adjusted_price: adjustedPrice[adjustedPrice.length - 1] || 0
-            };
-          });
-
-          // Convert to array format
-          const domainCount = Math.max(...Object.keys(grouped).map(Number)) + 1;
-          this.Comparables = new Array(domainCount).fill(null).map(() => []);
-
-          Object.keys(grouped).forEach(domainId => {
-            const domainIdx = Number(domainId);
-            const instances = grouped[domainId];
-
-            Object.keys(instances).forEach(instanceId => {
-              const instanceIdx = Number(instanceId);
-              if (!this.Comparables[domainIdx][instanceIdx]) {
-                this.Comparables[domainIdx][instanceIdx] = [];
-              }
-
-              const comparables = instances[instanceId];
-              Object.keys(comparables).sort((a, b) => Number(a) - Number(b)).forEach(comparableId => {
-                this.Comparables[domainIdx][instanceIdx].push(comparables[comparableId]);
-              });
-            });
-          });
-
-          // Ensure all instances have a Comparables array, even if empty
-          for (let domainIdx = 0; domainIdx < this.Targets.length; domainIdx++) {
-            const instances = this.Targets[domainIdx] || [];
-            for (let instanceIdx = 0; instanceIdx < instances.length; instanceIdx++) {
-              if (!this.Comparables[domainIdx]) {
-                this.Comparables[domainIdx] = [];
-              }
-              if (!this.Comparables[domainIdx][instanceIdx]) {
-
-                this.Comparables[domainIdx][instanceIdx] = [];
-              }
-            }
-          }
-        },
-        processLinearReg(data) {
-          const grouped = {};
-          data.forEach(row => {
-            const d = Number(row.domainId);
-            const i = Number(row.instanceId);
-            if (!grouped[d]) grouped[d] = {};
-            // Collect intercept and coefficients
-            const coefs = [
-              Number(row.coef_0), Number(row.coef_1), Number(row.coef_2),
-              Number(row.coef_3), Number(row.coef_4), Number(row.coef_5)
-            ];
-            const features_val = Array.from({ length: 6 }, (_, k) =>
-              Number(row[`feature${k}`])
-            );
-            grouped[d][i] = {
-              intercept: Number(row.intercept.toFixed(1)),
-              coefs,
-              features_val,
-              linear_pred: Number(row.linear_pred.toFixed(1))
-            };
-          });
-
-          // Prepare the Linear_reg array with correct dimensions
-          const maxDomain = Math.max(...data.map(r => Number(r.domainId)));
-          this.Linear_reg = Array.from({ length: maxDomain + 1 }, () => []);
-
-          // Fill in the regression info, leaving gaps as null
-          Object.entries(grouped).forEach(([domainKey, insts]) => {
-            const d = Number(domainKey);
-            const maxInst = Math.max(...Object.keys(insts).map(n => Number(n)));
-            for (let idx = 0; idx <= maxInst; idx++) {
-              this.Linear_reg[d][idx] = insts[idx] || null;
-            }
-          });
-        },
-        processLinearAdjustments(data) {
-          // Group by domainId, instanceId, and comparableId
-          const grouped = {};
-
-          data.forEach(row => {
-            if (!grouped[row.domainId]) {
-              grouped[row.domainId] = {};
-            }
-            if (!grouped[row.domainId][row.instanceId]) {
-              grouped[row.domainId][row.instanceId] = {};
-            }
-            const domainId = row.domainId;
-            const numFlags = this.numberical_feature?.[domainId] || [];  // e.g. [true, false, ...]
-            // Extract feature values and deltas
-            const deltaX = [];
-            const deltaY = [];
-            const featureVals = extract_features(row, domainId, numFlags, this)
-            for (let i = 0; i < 6; i++) {
-              const val = row[`feature${i}`];
-
-              const dx = row[`delta_x${i}`];
-              const dy = row[`delta_y${i}`];
-
-              const dxVal = Number(dx);
-              const dyVal = Number(dy);
-              deltaX.push(!isNaN(dxVal) ? dxVal.toFixed(1) : '0.0');
-              deltaY.push(!isNaN(dyVal) ? dyVal.toFixed(1) : '0.0');
-            }
-            grouped[row.domainId][row.instanceId][row.comparableId] = {
-              id: row.comparableId,
-              feature_val: featureVals,
-              delta_x: deltaX,
-              delta_y: deltaY,
-              pred: Number(row.pred).toFixed(1),
-              actual: Number(row.actual).toFixed(1),
-              adjusted_price: Number(row.last_adjusted).toFixed(1)
-            };
-          });
-
-          // Convert to array format
-          const domainCount = Math.max(...Object.keys(grouped).map(Number)) + 1;
-          this.LinearAdjustments = new Array(domainCount).fill(null).map(() => []);
-
-          Object.keys(grouped).forEach(domainId => {
-            const domainIdx = Number(domainId);
-            const instances = grouped[domainId];
-
-            Object.keys(instances).forEach(instanceId => {
-              const instanceIdx = Number(instanceId);
-              if (!this.LinearAdjustments[domainIdx][instanceIdx]) {
-                this.LinearAdjustments[domainIdx][instanceIdx] = [];
-              }
-
-              const comparables = instances[instanceId];
-              Object.keys(comparables).sort((a, b) => Number(a) - Number(b)).forEach(comparableId => {
-                this.LinearAdjustments[domainIdx][instanceIdx].push(comparables[comparableId]);
-              });
-            });
-          });
-
-          // Ensure all instances have a linear_adjustments array, even if empty
-          for (let domainIdx = 0; domainIdx < this.Targets.length; domainIdx++) {
-            const instances = this.Targets[domainIdx] || [];
-            for (let instanceIdx = 0; instanceIdx < instances.length; instanceIdx++) {
-              if (!this.LinearAdjustments[domainIdx]) {
-                this.LinearAdjustments[domainIdx] = [];
-              }
-              if (!this.LinearAdjustments[domainIdx][instanceIdx]) {
-
-                this.LinearAdjustments[domainIdx][instanceIdx] = [];
-              }
-            }
-          }
-         
         },
         // New helper: build rows for tooltip table
         getLinearTooltipRows(domainIdx, instanceIdx) {
@@ -2221,30 +1909,18 @@
 
             const name = names[j] || `x${j}`;
             const val = values[j];
-            const factor = `${coef.toFixed(1)}`;
-            const partial = (coef * Number(cal_values[j])).toFixed(1);
+            let factor = `${coef.toFixed(1)}`;
+            if (this.domainIdx!=0){
+              factor = `${coef.toFixed(2)}`;
+            }
+            
+           
+            let partial = (coef * Number(cal_values[j])).toFixed(1);
+            if (this.domainIdx!=0){
+              partial = (coef * Number(cal_values[j])).toFixed(2);
+            }
             return { name, value: val, factor, partial };
           });
-        },
-        computeLinearTooltip(domainIdx, instanceIdx) {
-          const lr = this.Linear_reg[domainIdx]?.[instanceIdx];
-          const target = this.Targets[domainIdx]?.[instanceIdx];
-          if (!lr || !target) return '';
-          const featureNames = this.Features[domainIdx] || [];
-          const featureVals = target.feature_val || [];
-          const terms = [String(lr.intercept.toFixed(1))];
-          lr.coefs.forEach((coef, j) => {
-            const fname = featureNames[j] ?? `x${j}`;
-            const fval = featureVals[j] ?? '';
-            if (coef != 0) {
-              coef = coef.toFixed(1)
-              terms.push(`${String(coef)}×${fname}(${String(fval)})`);
-            }
-
-          });
-          const formula = terms.join(' + ');
-
-          return `${formula} = ${String(lr.linear_pred.toFixed(1))}`;
         },
         highlightActualPrice(idx) {
           this.highlightedActualPrice = idx;
@@ -2302,43 +1978,6 @@
             return `${roundedPercentage}% Lower`;
           } else {
             return "0% (Same)";
-          }
-        },
-        startHandleDrag(handle, event) {
-          event.preventDefault();
-          this.draggingHandle = handle;
-          this.isDragging = true;
-        },
-        startSliderDrag(event) {
-          if (!this.isDragging) {
-            this.updateSliderValue(event);
-          }
-        },
-        onSliderDrag(event) {
-          if (this.isDragging) {
-            this.updateSliderValue(event);
-          }
-        },
-        stopSliderDrag() {
-          this.isDragging = false;
-          this.draggingHandle = null;
-        },
-        updateSliderValue(event) {
-          const rect = event.currentTarget.getBoundingClientRect();
-          const x = event.clientX - rect.left;
-          const percent = Math.max(0, Math.min(100, (x / rect.width) * 100));
-          const range = this.currentSliderRange;
-          const value = Math.round(range.min + (percent / 100) * (range.max - range.min));
-
-          if (this.draggingHandle === 'min') {
-            this.minSliderValue = Math.min(value, this.maxSliderValue - 10);
-          } else if (this.draggingHandle === 'max') {
-            this.maxSliderValue = Math.max(value, this.minSliderValue + 10);
-          } else {
-            // Click on track - move both handles
-            const currentRange = this.maxSliderValue - this.minSliderValue;
-            this.minSliderValue = Math.max(range.min, value - currentRange / 2);
-            this.maxSliderValue = Math.min(range.max, this.minSliderValue + currentRange);
           }
         }
       }
