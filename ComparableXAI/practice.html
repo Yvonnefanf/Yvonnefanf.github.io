@@ -1755,37 +1755,90 @@
         },
         similarityScores() {
           const targets = this.Targets[this.domainIdx];
-          const comparables = this.Comparables[this.domainIdx][this.currentTargetIndex];
-
-          if (!Array.isArray(targets) || !targets[this.currentTargetIndex] || !Array.isArray(comparables)) {
+          const compsByTarget = this.Comparables[this.domainIdx];
+        
+          if (!Array.isArray(targets) || !targets[this.currentTargetIndex] || !Array.isArray(compsByTarget)) {
             return [];
           }
+        
           const subject = targets[this.currentTargetIndex];
-
-          const scores = comparables.map(comp => {
-            let score = 0;
+        
+          // 1) 取该 domain 下“所有 comparables”来计算尺度（std）
+          //    兼容结构：可能是二维 [targetIdx][rows]，也可能已是一维 [rows]
+          const allComparables = Array.isArray(compsByTarget[0])
+            ? compsByTarget.flat()
+            : compsByTarget;
+        
+          // 2) 计算数值特征的标准差（全域尺度）
+          const eps = 1e-8;
+          const featureScales = [];
+          for (let i = 0; i < subject.feature_val.length; i++) {
+            if (this.numberical_feature[this.domainIdx][i]) {
+              const values = allComparables
+                .map(row => Number(row?.feature_val?.[i]))
+                .filter(v => Number.isFinite(v));
+        
+              if (values.length > 1) {
+                const mean = values.reduce((a, b) => a + b, 0) / values.length;
+                const variance = values.reduce((a, b) => a + (b - mean) * (b - mean), 0) / values.length;
+                const std = Math.sqrt(variance);
+                // 防止尺度过小导致放大
+                featureScales[i] = Math.max(std, eps);
+              } else {
+                featureScales[i] = 1.0; // 数据不足时回退
+              }
+            } else {
+              featureScales[i] = null; // 类别特征
+            }
+          }
+        
+          // 3) 取当前 target 的 comparables 来计算相似度
+          const comparables = compsByTarget[this.currentTargetIndex] || [];
+          const similarities = comparables.map(comp => {
+            let total = 0;
+            let used = 0;
+        
             for (let i = 0; i < comp.feature_val.length; i++) {
               const subjVal = subject.feature_val[i];
               const compVal = comp.feature_val[i];
+        
               if (this.numberical_feature[this.domainIdx][i]) {
-                // 只在都能转成数字时才加分
-                const subjNum = Number(subjVal);
-                const compNum = Number(compVal);
-                if (!isNaN(subjNum) && !isNaN(compNum)) {
-                  const diff = Math.abs(subjNum - compNum);
-                  score += 1 / (1 + diff);
+                const s = Number(subjVal), c = Number(compVal);
+                if (Number.isFinite(s) && Number.isFinite(c)) {
+                  const nd = Math.abs(s - c) / featureScales[i]; // 归一化 L1 距离
+                  total += nd;
+                  used++;
                 }
-                // 否则不给分
               } else {
-                // Categorical: 1 if equal, 0 if not
-                score += subjVal === compVal ? 1 : 0;
+          
+                if (subjVal != null && compVal != null) {
+                  total += (subjVal === compVal) ? 0 : 1;
+                  used++;
+                }
               }
             }
-            return score;
+            const dist = used ? (total / used) : Number.POSITIVE_INFINITY;
+            return 1 / (1 + dist);
           });
+        
+        
+          const sumSim = similarities.reduce((a, b) => a + b, 0);
+          if (!(sumSim > 0)) return comparables.map(() => 0);
+        
+          const rawWeights = similarities.map(s => s / sumSim);
+        
 
-          const total = scores.reduce((a, b) => a + b, 0);
-          return scores.map(s => total ? Math.round((s / total) * 100) : 0);
+          const withFrac = rawWeights.map(w => ({val: w * 100, floor: Math.floor(w * 100)}));
+          let sumFloor = withFrac.reduce((a, x) => a + x.floor, 0);
+          const deficit = 100 - sumFloor;
+        
+      
+          withFrac
+            .sort((a, b) => (b.val - b.floor) - (a.val - a.floor))
+            .forEach((x, idx) => { if (idx < deficit) x.floor += 1; });
+        
+        
+          return withFrac.map(x => x.floor);
         },
         
         currentComparableFinalPrices() {

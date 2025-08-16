@@ -810,8 +810,13 @@
 
           <tr v-if="Comparables[domainIdx]?.[currentTargetIndex]?.length>1">
             <td class="feature-name">Similarity Score
-              <el-tooltip content="The similarity score between the comparable and the subject." placement="right"
+              <el-tooltip placement="right"
                 effect="dark" :show-after="0" trigger="hover" :hide-after="0">
+                <template #content>
+                  The similarity score measures how close each Comparable is to the Subject. <br/>
+                  It is calculated based on the attribute distance between the comparable and the subject.<br/>
+                  Higher scores mean greater similarity, and the scores add up to 100%.
+                </template>
                 <span class="tooltip-icon">
                   <i class="fa-regular fa-circle-question"></i>
                 </span>
@@ -975,8 +980,13 @@
 
           <tr v-if="Comparables[domainIdx]?.[currentTargetIndex]?.length>1">
             <td class="feature-name">Similarity Score
-              <el-tooltip content="The similarity score between the comparable and the subject." placement="right"
+              <el-tooltip placement="right"
                 effect="dark" :show-after="0" trigger="hover" :hide-after="0">
+                <template #content>
+                  The similarity score measures how close each Comparable is to the Subject. <br/>
+                  It is calculated based on the attribute distance between the comparable and the subject.<br/>
+                  Higher scores mean greater similarity, and the scores add up to 100%.
+                </template>
                 <span class="tooltip-icon">
                   <i class="fa-regular fa-circle-question"></i>
                 </span>
@@ -1235,8 +1245,13 @@
 
           <tr v-if="Comparables[domainIdx]?.[currentTargetIndex]?.length>1">
             <td class="feature-name">Similarity Score
-              <el-tooltip content="The similarity score between the comparable and the subject." placement="right"
+              <el-tooltip placement="right"
                 effect="dark" :show-after="0" trigger="hover" :hide-after="0">
+                <template #content>
+                  The similarity score measures how close each Comparable is to the Subject. <br/>
+                  It is calculated based on the attribute distance between the comparable and the subject.<br/>
+                  Higher scores mean greater similarity, and the scores add up to 100%.
+                </template>
                 <span class="tooltip-icon">
                   <i class="fa-regular fa-circle-question"></i>
                 </span>
@@ -1374,24 +1389,28 @@
                       <span style="font-weight: 800;">Warning: </span> this is an estimate so it may be inaccurate.
                     </span>
                   </div>
-                  <div style="display: flex;">
+                  <div style="display: flex; width:500px;" >
                     <!-- 2. 系数表格 -->
-                    <table style="border-collapse: collapse; font-size: 12px; width:100%; margin-left:30px;">
+                    <table style="border-collapse: collapse; font-size: 12px;margin-left:30px;">
                       <thead>
                         <tr>
-                          <th style="padding:2px 0px; font-size: 12px; text-align:left;">Attribute</th>
-                          <th style="padding:2px 0px; font-size: 12px; text-align:right;">Value</th>
-                          <th style="padding:2px 0px; font-size: 12px; text-align:right;">Factors</th>
-                          <th style="width:80px;padding:2px 0px; font-size: 12px; text-align:right; color:#2e8113">
-                            Partial ({{unit_list_header[domainIdx]}})</th>
+                          <th style="padding:2px 0px; font-size: 12px; text-align:left; width:90px;">Attribute</th>
+                          <th style="padding:2px 0px; font-size: 12px; text-align:right; width:90px;">Value</th>
+                          <th style="padding:2px 0px; font-size: 12px; text-align:right; width:80px;">Factors</th>
+                          <th style="width:80px;padding:2px 0px; font-size: 12px; text-align:right; color:#2e8113; width:80px;">
+                            Partial {{domainIdx == 1?'': '(' + unit_list_header[domainIdx]+')'}}</th>
                         </tr>
                       </thead>
                       <tbody>
                         <tr v-for="(row,i) in getLinearTooltipRows(domainIdx, currentTargetIndex)" :key="i" :style="{ color: row.factor ==
                         0 ? '#ddd' : '#222' }">
-                          <td style="padding:0; height:16px;"><span
-                              style="overflow: hidden; display:inline-block;width:100px; text-overflow:ellipsis;">{{
-                              row.name }}</span></td>
+                          <td style="padding:0; height:16px;">
+                            <el-tooltip  placement="right" effect="light" :show-after="0" :content="row.name">
+                              <span
+                              style="cursor:pointer; overflow: hidden; display:inline-block; width:90px;text-overflow:ellipsis;">{{
+                              row.name }}</span>
+                            </el-tooltip>
+                            </td>
                           <td style="padding:0; text-align:right;">{{ row.value }}</td>
                           <td style="padding:0 4px;text-align:right;">× <span
                               style="display:inline-block; width: 40px;">{{ row.factor ==0? '0': row.factor }} </span>
@@ -1417,9 +1436,9 @@
                     </table>
                     <!-- 3. 加号与箭头指向 AI Explainer -->
                     <div style="display:flex; align-items:center;">
-                      <div style=" font-size:20px; margin-top:-4px; margin-left:10px; color:#2e8113"> } </div>
-                      <div style="font-size:20px; margin-left:8px; color:#2e8113">+</div>
-                      <div style="margin:0 8px; margin-top:-2px;font-size:14px; color:#2e8113">→</div>
+                      <div style=" font-size:20px; margin-top:-4px; margin-left:4px; color:#2e8113"> } </div>
+                      <div style="font-size:20px; margin-left:4px; color:#2e8113">+</div>
+                      <div style="margin:0 4px; margin-top:-2px;font-size:14px; color:#2e8113">=</div>
                       <div style="width:60px; font-size:14px; color:#2e8113;">
                         {{unit_list_header[domainIdx]}}{{
                         Linear_reg[domainIdx][currentTargetIndex].linear_pred.toFixed(1) }}{{ unit_list[domainIdx] }}
@@ -1448,8 +1467,13 @@
 
           <tr v-if="Comparables[domainIdx]?.[currentTargetIndex]?.length>1">
             <td class="feature-name">Similarity Score
-              <el-tooltip content="The similarity score between the comparable and the subject." placement="right"
+              <el-tooltip placement="right"
                 effect="dark" :show-after="0" trigger="hover" :hide-after="0">
+                <template #content>
+                  The similarity score measures how close each Comparable is to the Subject. <br/>
+                  It is calculated based on the attribute distance between the comparable and the subject.<br/>
+                  Higher scores mean greater similarity, and the scores add up to 100%.
+                </template>
                 <span class="tooltip-icon">
                   <i class="fa-regular fa-circle-question"></i>
                 </span>
@@ -1789,73 +1813,92 @@
         },*/
         similarityScores() {
           const targets = this.Targets[this.domainIdx];
-          const comparables = this.Comparables[this.domainIdx][this.currentTargetIndex];
-          
-          if (!Array.isArray(targets) || !targets[this.currentTargetIndex] || !Array.isArray(comparables)) {
+          const compsByTarget = this.Comparables[this.domainIdx];
+        
+          if (!Array.isArray(targets) || !targets[this.currentTargetIndex] || !Array.isArray(compsByTarget)) {
             return [];
           }
-          
+        
           const subject = targets[this.currentTargetIndex];
-          
-          // Calculate feature scales (standard deviation) for numerical features
+        
+          // 1) 取该 domain 下“所有 comparables”来计算尺度（std）
+          //    兼容结构：可能是二维 [targetIdx][rows]，也可能已是一维 [rows]
+          const allComparables = Array.isArray(compsByTarget[0])
+            ? compsByTarget.flat()
+            : compsByTarget;
+        
+          // 2) 计算数值特征的标准差（全域尺度）
+          const eps = 1e-8;
           const featureScales = [];
           for (let i = 0; i < subject.feature_val.length; i++) {
             if (this.numberical_feature[this.domainIdx][i]) {
-              // Calculate std dev for this numerical feature across all comparables
-              const values = comparables
-                .map(comp => Number(comp.feature_val[i]))
-                .filter(val => !isNaN(val));
-              
+              const values = allComparables
+                .map(row => Number(row?.feature_val?.[i]))
+                .filter(v => Number.isFinite(v));
+        
               if (values.length > 1) {
                 const mean = values.reduce((a, b) => a + b, 0) / values.length;
-                const variance = values.reduce((a, b) => a + Math.pow(b - mean, 2), 0) / values.length;
-                featureScales[i] = Math.sqrt(variance);
+                const variance = values.reduce((a, b) => a + (b - mean) * (b - mean), 0) / values.length;
+                const std = Math.sqrt(variance);
+                // 防止尺度过小导致放大
+                featureScales[i] = Math.max(std, eps);
               } else {
-                featureScales[i] = 1.0;
+                featureScales[i] = 1.0; // 数据不足时回退
               }
             } else {
-              featureScales[i] = null; // Categorical feature
+              featureScales[i] = null; // 类别特征
             }
           }
-          
-          // Calculate similarity scores using inverse distance (matching Python logic)
+        
+          // 3) 取当前 target 的 comparables 来计算相似度
+          const comparables = compsByTarget[this.currentTargetIndex] || [];
           const similarities = comparables.map(comp => {
-            let totalAdjustX = 0;
-            
+            let total = 0;
+            let used = 0;
+        
             for (let i = 0; i < comp.feature_val.length; i++) {
               const subjVal = subject.feature_val[i];
               const compVal = comp.feature_val[i];
-              
+        
               if (this.numberical_feature[this.domainIdx][i]) {
-                // Numerical feature
-                const subjNum = Number(subjVal);
-                const compNum = Number(compVal);
-                
-                if (!isNaN(subjNum) && !isNaN(compNum)) {
-                  const deltaX = Math.abs(subjNum - compNum);
-                  const scale = featureScales[i] || 1.0;
-                  const normDeltaX = deltaX / (scale + 1e-8);
-                  totalAdjustX += normDeltaX;
+                const s = Number(subjVal), c = Number(compVal);
+                if (Number.isFinite(s) && Number.isFinite(c)) {
+                  const nd = Math.abs(s - c) / featureScales[i]; // 归一化 L1 距离
+                  total += nd;
+                  used++;
                 }
               } else {
-                // Categorical feature: 0 if equal, 1 if different
-                const deltaX = subjVal === compVal ? 0 : 1;
-                totalAdjustX += deltaX;
+          
+                if (subjVal != null && compVal != null) {
+                  total += (subjVal === compVal) ? 0 : 1;
+                  used++;
+                }
               }
             }
-            
-            // Calculate similarity as inverse of total adjusted distance
-            const similarity = 1.0 / (totalAdjustX + 1e-5);
-            return similarity;
+            const dist = used ? (total / used) : Number.POSITIVE_INFINITY;
+            return 1 / (1 + dist);
           });
-          
-          // Calculate weights (normalized similarities that sum to 1)
-          const totalSimilarity = similarities.reduce((a, b) => a + b, 0);
-          const weights = similarities.map(s => totalSimilarity > 0 ? s / totalSimilarity : 0);
-          
-          // Convert to percentages that sum to 100%
-          return weights.map(w => Math.round(w * 100));
+        
+        
+          const sumSim = similarities.reduce((a, b) => a + b, 0);
+          if (!(sumSim > 0)) return comparables.map(() => 0);
+        
+          const rawWeights = similarities.map(s => s / sumSim);
+        
+
+          const withFrac = rawWeights.map(w => ({val: w * 100, floor: Math.floor(w * 100)}));
+          let sumFloor = withFrac.reduce((a, x) => a + x.floor, 0);
+          const deficit = 100 - sumFloor;
+        
+      
+          withFrac
+            .sort((a, b) => (b.val - b.floor) - (a.val - a.floor))
+            .forEach((x, idx) => { if (idx < deficit) x.floor += 1; });
+        
+        
+          return withFrac.map(x => x.floor);
         },
+        
         currentSliderRange() {
           return this.slider_ranges[this.domainIdx];
         },
@@ -1963,324 +2006,21 @@
             ]);
             console.log('loaded123');
 
-            // Process domain metadata
-            this.processDomainMetadata(domainMetadata);
-
-            // Process feature metadata
-            this.processFeatureMetadata(metadata);
-            // Process subjects (Targets)
-            this.processSubjects(subjects);
-            // Process comparables
-            this.processComparables(comparables);
-            this.processLinearReg(linear_reg);
-            this.processLinearAdjustments(linear_adjustments);
+       
+              // Process domain metadata
+              processDomainMetadata(domainMetadata,this);
+              // Process feature metadata
+              processFeatureMetadata(metadata,this);
+              // Process subjects (Targets)
+              processSubjects(subjects,this);
+              // Process comparables
+              processComparables(comparables,this);
+              processLinearReg(linear_reg,this);
+              processLinearAdjustments(linear_adjustments,this);
 
 
           } catch (error) {
             console.error('Error loading CSV data:', error);
-          }
-
-        },
-        processDomainMetadata(data) {
-          // Initialize arrays with correct size
-          const domainCount = Math.max(...data.map(row => row.domainId)) + 1;
-
-          this.domain_list = new Array(domainCount);
-          this.unit_list = new Array(domainCount);
-          this.unit_list_header = new Array(domainCount);
-          this.warning = new Array(domainCount);
-          this.Labels = new Array(domainCount).fill(null).map(() => []);
-          this.Labels_Descriptions = new Array(domainCount).fill(null).map(() => []);
-
-          data.forEach(row => {
-            const idx = row.domainId;
-            this.domain_list[idx] = row.domainName;
-            this.unit_list[idx] = row.unit;
-
-            this.unit_list_header[idx] = row.unitHeader;
-            this.warning[idx] = row.warning;
-            this.Labels[idx] = [row.labelActual, row.labelPrediction, row.labelAdjusted];
-            this.Labels_Descriptions[idx] = [row.descriptionActual, row.descriptionPrediction, row.descriptionAdjusted];
-          });
-          console.log("finished process domain metadata")
-        },
-        processFeatureMetadata(data) {
-          // Group by domainId
-          const grouped = {};
-          data.forEach(row => {
-            if (!grouped[row.domainId]) {
-              grouped[row.domainId] = [];
-            }
-            grouped[row.domainId].push(row);
-          });
-
-          // Initialize arrays
-          const domainCount = Math.max(...Object.keys(grouped).map(Number)) + 1;
-          this.Features = new Array(domainCount).fill(null).map(() => []);
-          this.FeatureDescriptions = new Array(domainCount).fill(null).map(() => []);
-          this.numberical_feature = new Array(domainCount).fill(null).map(() => []);
-
-          // Fill arrays
-          Object.keys(grouped).forEach(domainId => {
-            const domainIdx = Number(domainId);
-            const features = grouped[domainId].sort((a, b) => a.featureId - b.featureId);
-
-            this.Features[domainIdx] = features.map(f => f.featureName);
-            this.FeatureDescriptions[domainIdx] = features.map(f => f.featureDescription);
-            this.numberical_feature[domainIdx] = features.map(f => f.isNumerical);
-
-          });
-          console.log("finished process feature metadata")
-        },
-        processSubjects(data) {
-          // Group by domainId and instanceId
-          const grouped = {};
-          data.forEach(row => {
-            if (!grouped[row.domainId]) {
-              grouped[row.domainId] = {};
-            }
-            const domainId = row.domainId;
-            const numFlags = this.numberical_feature?.[domainId] || [];  // e.g. [true, false, ...]
-            // Extract feature values
-            const featureVals = extract_features(row, domainId, numFlags, this)
-
-            grouped[row.domainId][row.instanceId] = {
-              feature_val: featureVals,
-              pred: row.pred,
-              actual: row.actual
-            };
-          });
-
-          // Convert to array format
-          const domainCount = Math.max(...Object.keys(grouped).map(Number)) + 1;
-          this.Targets = new Array(domainCount).fill(null).map(() => []);
-
-          Object.keys(grouped).forEach(domainId => {
-            const domainIdx = Number(domainId);
-            const instances = grouped[domainId];
-            const maxInstance = Math.max(...Object.keys(instances).map(Number));
-
-            for (let i = 0; i <= maxInstance; i++) {
-              this.Targets[domainIdx][i] = instances[i] || null;
-            }
-          });
-          console.log("finished process subject")
-        },
-        processComparables(data) {
-
-          // Group by domainId, instanceId, and comparableId
-          const grouped = {};
-
-          data.forEach(row => {
-            if (!grouped[row.domainId]) {
-              grouped[row.domainId] = {};
-            }
-            if (!grouped[row.domainId][row.instanceId]) {
-              grouped[row.domainId][row.instanceId] = {};
-            }
-            const domainId = row.domainId;
-            const numFlags = this.numberical_feature?.[domainId] || [];  // e.g. [true, false, ...]
-
-
-            // Extract feature values and deltas
-
-            const deltaX = [];
-            const deltaY = [];
-            const featureVals = extract_features(row, domainId, numFlags, this)
-            for (let i = 0; i < 6; i++) {
-              const val = row[`feature${i}`];
-
-              const dx = row[`delta_x${i}`];
-              const dy = row[`delta_y${i}`];
-
-              const dxVal = Number(dx);
-              const dyVal = Number(dy);
-              deltaX.push(!isNaN(dxVal) ? dxVal.toFixed(2) : '0.0');
-              deltaY.push(!isNaN(dyVal) ? dyVal.toFixed(1) : '0.0');
-            }
-
-            // Parse adjusted_order and adjusted_price arrays
-            let adjustedOrder = [];
-            let adjustedPrice = [];
-
-            // Handle adjusted_order - could be string, array, or null
-            if (row.adjusted_order) {
-              if (typeof row.adjusted_order === 'string') {
-                adjustedOrder = row.adjusted_order.split(',').map(Number);
-              } else if (Array.isArray(row.adjusted_order)) {
-                adjustedOrder = row.adjusted_order.map(Number);
-              } else {
-                adjustedOrder = [row.adjusted_order].map(Number);
-              }
-            }
-
-            // Handle adjusted_price - could be string, array, or null
-            if (row.adjusted_price) {
-              if (typeof row.adjusted_price === 'string') {
-                adjustedPrice = row.adjusted_price.split(',').map(Number);
-              } else if (Array.isArray(row.adjusted_price)) {
-                adjustedPrice = row.adjusted_price.map(Number);
-              } else {
-                adjustedPrice = [row.adjusted_price].map(Number);
-              }
-            }
-
-            grouped[row.domainId][row.instanceId][row.comparableId] = {
-              id: row.comparableId,
-              feature_val: featureVals,
-              delta_x: deltaX,
-              delta_y: deltaY,
-              pred: row.pred,
-              actual: row.actual,
-              adjusted_step_number: row.adjusted_step_number,
-              adjusted_order: adjustedOrder,
-              adjusted_price: adjustedPrice,
-              final_adjusted_price: adjustedPrice[adjustedPrice.length - 1] || 0
-            };
-          });
-
-          // Convert to array format
-          const domainCount = Math.max(...Object.keys(grouped).map(Number)) + 1;
-          this.Comparables = new Array(domainCount).fill(null).map(() => []);
-
-          Object.keys(grouped).forEach(domainId => {
-            const domainIdx = Number(domainId);
-            const instances = grouped[domainId];
-
-            Object.keys(instances).forEach(instanceId => {
-              const instanceIdx = Number(instanceId);
-              if (!this.Comparables[domainIdx][instanceIdx]) {
-                this.Comparables[domainIdx][instanceIdx] = [];
-              }
-
-              const comparables = instances[instanceId];
-              Object.keys(comparables).sort((a, b) => Number(a) - Number(b)).forEach(comparableId => {
-                this.Comparables[domainIdx][instanceIdx].push(comparables[comparableId]);
-              });
-            });
-          });
-
-          // Ensure all instances have a Comparables array, even if empty
-          for (let domainIdx = 0; domainIdx < this.Targets.length; domainIdx++) {
-            const instances = this.Targets[domainIdx] || [];
-            for (let instanceIdx = 0; instanceIdx < instances.length; instanceIdx++) {
-              if (!this.Comparables[domainIdx]) {
-                this.Comparables[domainIdx] = [];
-              }
-              if (!this.Comparables[domainIdx][instanceIdx]) {
-
-                this.Comparables[domainIdx][instanceIdx] = [];
-              }
-            }
-          }
-        },
-        processLinearReg(data) {
-          const grouped = {};
-          data.forEach(row => {
-            const d = Number(row.domainId);
-            const i = Number(row.instanceId);
-            if (!grouped[d]) grouped[d] = {};
-            // Collect intercept and coefficients
-            const coefs = [
-              Number(row.coef_0), Number(row.coef_1), Number(row.coef_2),
-              Number(row.coef_3), Number(row.coef_4), Number(row.coef_5)
-            ];
-            const features_val = Array.from({ length: 6 }, (_, k) =>
-              Number(row[`feature${k}`])
-            );
-            grouped[d][i] = {
-              intercept: Number(row.intercept.toFixed(1)),
-              coefs,
-              features_val,
-              linear_pred: Number(row.linear_pred.toFixed(1))
-            };
-          });
-
-          // Prepare the Linear_reg array with correct dimensions
-          const maxDomain = Math.max(...data.map(r => Number(r.domainId)));
-          this.Linear_reg = Array.from({ length: maxDomain + 1 }, () => []);
-
-          // Fill in the regression info, leaving gaps as null
-          Object.entries(grouped).forEach(([domainKey, insts]) => {
-            const d = Number(domainKey);
-            const maxInst = Math.max(...Object.keys(insts).map(n => Number(n)));
-            for (let idx = 0; idx <= maxInst; idx++) {
-              this.Linear_reg[d][idx] = insts[idx] || null;
-            }
-          });
-        },
-        processLinearAdjustments(data) {
-          // Group by domainId, instanceId, and comparableId
-          const grouped = {};
-
-          data.forEach(row => {
-            if (!grouped[row.domainId]) {
-              grouped[row.domainId] = {};
-            }
-            if (!grouped[row.domainId][row.instanceId]) {
-              grouped[row.domainId][row.instanceId] = {};
-            }
-            const domainId = row.domainId;
-            const numFlags = this.numberical_feature?.[domainId] || [];  // e.g. [true, false, ...]
-            // Extract feature values and deltas
-            const deltaX = [];
-            const deltaY = [];
-            const featureVals = extract_features(row, domainId, numFlags, this)
-            for (let i = 0; i < 6; i++) {
-              const val = row[`feature${i}`];
-
-              const dx = row[`delta_x${i}`];
-              const dy = row[`delta_y${i}`];
-
-              const dxVal = Number(dx);
-              const dyVal = Number(dy);
-              deltaX.push(!isNaN(dxVal) ? dxVal.toFixed(1) : '0.0');
-              deltaY.push(!isNaN(dyVal) ? dyVal.toFixed(1) : '0.0');
-            }
-            grouped[row.domainId][row.instanceId][row.comparableId] = {
-              id: row.comparableId,
-              feature_val: featureVals,
-              delta_x: deltaX,
-              delta_y: deltaY,
-              pred: Number(row.pred).toFixed(1),
-              actual: Number(row.actual).toFixed(1),
-              adjusted_price: Number(row.last_adjusted).toFixed(1)
-            };
-          });
-
-          // Convert to array format
-          const domainCount = Math.max(...Object.keys(grouped).map(Number)) + 1;
-          this.LinearAdjustments = new Array(domainCount).fill(null).map(() => []);
-
-          Object.keys(grouped).forEach(domainId => {
-            const domainIdx = Number(domainId);
-            const instances = grouped[domainId];
-
-            Object.keys(instances).forEach(instanceId => {
-              const instanceIdx = Number(instanceId);
-              if (!this.LinearAdjustments[domainIdx][instanceIdx]) {
-                this.LinearAdjustments[domainIdx][instanceIdx] = [];
-              }
-
-              const comparables = instances[instanceId];
-              Object.keys(comparables).sort((a, b) => Number(a) - Number(b)).forEach(comparableId => {
-                this.LinearAdjustments[domainIdx][instanceIdx].push(comparables[comparableId]);
-              });
-            });
-          });
-
-          // Ensure all instances have a linear_adjustments array, even if empty
-          for (let domainIdx = 0; domainIdx < this.Targets.length; domainIdx++) {
-            const instances = this.Targets[domainIdx] || [];
-            for (let instanceIdx = 0; instanceIdx < instances.length; instanceIdx++) {
-              if (!this.LinearAdjustments[domainIdx]) {
-                this.LinearAdjustments[domainIdx] = [];
-              }
-              if (!this.LinearAdjustments[domainIdx][instanceIdx]) {
-
-                this.LinearAdjustments[domainIdx][instanceIdx] = [];
-              }
-            }
           }
 
         },
