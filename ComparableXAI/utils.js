@@ -17,7 +17,14 @@ function extract_features(row, domainId, numFlags, vm) {
 
                     // “2¼” or “2” if no fraction
                     featureVals.push(char ? `${whole}${char}` : `${whole}`);
-                } else {
+                } else if(featName === 'Living Area (ksqft)' || featName === 'Distance to Downtown (miles)'){
+                    const numVal = Number(val).toFixed(2);
+                    featureVals.push(!isNaN(numVal) ? numVal : '');
+                } else if(featName === 'Condition' || featName === 'Grade' || featName === 'Age (years)' ){
+                    const numVal = Number(val).toFixed(0);
+                    featureVals.push(!isNaN(numVal) ? numVal : '');
+                } 
+                else {
                     // 其他数值一位小数
                     const numVal = Number(val).toFixed(1);
                     featureVals.push(!isNaN(numVal) ? numVal : '');
@@ -350,3 +357,4 @@ function processLinearReg(data, vm) {
         }
     });
 }
+
