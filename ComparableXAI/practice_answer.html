@@ -237,6 +237,14 @@
 
       font-family: sans-serif;
     }
+    .feature-val{
+      width: 100px; 
+      display:inline-block;
+      overflow:hidden;
+      text-overflow:ellipsis;
+      cursor: pointer;
+    }
+
 
     .right-align {
       text-align: right;
@@ -942,11 +950,23 @@
                   </span>
                 </el-tooltip>
               </td>
-              <td class="right-align">{{Targets[domainIdx]?.[currentTargetIndex].feature_val[index]}}</td>
+              <td class="right-align">
+                 <el-tooltip :content="Targets[domainIdx]?.[currentTargetIndex].feature_val[index]" placement="right" effect="dark"
+                  :show-after="0">
+                  <span class="feature-val">
+                    {{Targets[domainIdx]?.[currentTargetIndex].feature_val[index]}}
+                  </span>
+                </el-tooltip>
+              </td>
               <template v-for="(row, idx) in Comparables[domainIdx]?.[currentTargetIndex]" :key="row.id">
                 <td class="right-align" :style="{ color: row.feature_val[index] ==
                 Targets[domainIdx]?.[currentTargetIndex].feature_val[index] ? '#ccc' : '#222' }">
-                  {{row.feature_val[index]}}</td>
+                <el-tooltip :content="row.feature_val[index]" placement="right" effect="dark"
+                  :show-after="0">
+                <span class="feature-val">
+                  {{row.feature_val[index]}}
+                </span>  </el-tooltip>
+               </td>
               </template>
             </tr>
 

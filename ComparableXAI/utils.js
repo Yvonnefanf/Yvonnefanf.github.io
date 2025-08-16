@@ -23,6 +23,9 @@ function extract_features(row, domainId, numFlags, vm) {
                 } else if(featName === 'Condition' || featName === 'Grade' || featName === 'Age (years)' ){
                     const numVal = Number(val).toFixed(0);
                     featureVals.push(!isNaN(numVal) ? numVal : '');
+                } else if(featName === 'Hour of the Day'){
+                    const numVal = Number(val).toFixed(0);
+                    featureVals.push(!isNaN(numVal) ? numVal+':00' : '');
                 } 
                 else {
                     // 其他数值一位小数
@@ -165,8 +168,8 @@ function processComparables(data, vm) {
 
             const dxVal = Number(dx);
             const dyVal = Number(dy);
-            deltaX.push(!isNaN(dxVal) ? dxVal.toFixed(1) : '0.0');
-            deltaY.push(!isNaN(dyVal) ? dyVal.toFixed(1) : '0.0');
+            deltaX.push(!isNaN(dxVal) ? dxVal.toFixed(2) : '0.0');
+            deltaY.push(!isNaN(dyVal) ? dyVal.toFixed(2) : '0.0');
         }
 
         // Parse adjusted_order and adjusted_price arrays
@@ -271,8 +274,8 @@ function processLinearAdjustments(data, vm) {
 
             const dxVal = Number(dx);
             const dyVal = Number(dy);
-            deltaX.push(!isNaN(dxVal) ? dxVal.toFixed(1) : '0.0');
-            deltaY.push(!isNaN(dyVal) ? dyVal.toFixed(1) : '0.0');
+            deltaX.push(!isNaN(dxVal) ? dxVal.toFixed(3) : '0.0');
+            deltaY.push(!isNaN(dyVal) ? dyVal.toFixed(3) : '0.0');
         }
         grouped[row.domainId][row.instanceId][row.comparableId] = {
             id: row.comparableId,
