@@ -1355,7 +1355,7 @@
               <template v-for="(row, idx) in Comparables[domainIdx]?.[currentTargetIndex]" :key="row.id">
                 <td class="right-align" :style="{ color: row.feature_val[index] ==
                 Targets[domainIdx]?.[currentTargetIndex].feature_val[index] ? '#ccc' : '#222' }">
-                <el-tooltip :content="Targets[domainIdx]?.[currentTargetIndex].feature_val[index]" placement="right" effect="dark"
+                <el-tooltip :content="row.feature_val[index]" placement="right" effect="dark"
                 :show-after="0">
                 <span class="feature-val">
                   {{row.feature_val[index]}}
