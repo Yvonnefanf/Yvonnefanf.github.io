@@ -15,7 +15,7 @@
   </style>
 </head>
 <body>
-  <h1>Comparable XAI Launcher</h1>
+  <!-- <h1>Comparable XAI Launcher</h1> -->
   <div class="control">
     <label for="domain">Domain:</label>
     <select id="domain">
@@ -27,8 +27,9 @@
     <select id="xaiType">
       <option value="noXAI">No XAI</option>
       <option value="comparable">Example based XAI</option>
-      <option value="comparableXAI">Comparable XAI</option>
-      <option value="trace">Trace</option>
+      <option value="linear_reg">Linear Regression</option>
+      <option value="linear_adjustments">Linear Adjustments</option>
+      <option value="trace">Trace Adjustments</option>
     </select>
     <label for="instance">Instance:</label>
     <input id="instance" type="number" value="0" min="0" />
@@ -39,24 +40,61 @@
     <a id="frameUrlLink" href="iframe.html?domain=house&tab=0&instance=0" target="_blank">
       https://yvonnefanf.github.io/ComparableXAI/iframe.html?domain=house&tab=0&instance=0</a>
   </div>
+<div style="display:flex;">    
+  
+  <iframe style="height: 450px;" id="xaiFrame" src="iframe.html?domain=house&tab=0&instanceId=0" width="40%" height="450" frameborder="0"></iframe>
+  <iframe id="xaiFrame3" src="iframe.html?domain=house&tab=0&instanceId=0" width="60%" height="450" frameborder="0"></iframe>
 
-  <iframe id="xaiFrame" src="iframe.html?domain=house&tab=0&instance=0" width="100%" height="800" frameborder="0"></iframe>
+</div>
+<div style="display:flex;">
+  <iframe id="xaiFrame2" src="iframe.html?domain=house&tab=0&instanceId=0" width="40%" height="450" frameborder="0"></iframe>
+  <iframe id="xaiFrame4" src="iframe.html?domain=house&tab=0&instanceId=0" width="60%" height="450" frameborder="0"></iframe>
+</div>
+
+  
+
 
 
 
   <script>
+        // parse query params
+        function getParam(key, defaultValue) {
+          const params = new URLSearchParams(window.location.search);
+          return params.has(key) ? params.get(key) : defaultValue;
+        }
+
+    const initInstance = Number(getParam('instanceId', 0));
     // const domainMap = { house: 0, salary: 1, energy: 2 };
+    document.getElementById('instance').value = initInstance
+
+    const initDomain = getParam('domain', 'house');
+    // const domainMap = { house: 0, salary: 1, energy: 2 };
+    document.getElementById('domain').value = initDomain
 
     function updateFrame() {
+      
       const d = document.getElementById('domain').value; // now a string
       const x = document.getElementById('xaiType').value;
       const i = document.getElementById('instance').value;
-      const url = `https://yvonnefanf.github.io/ComparableXAI/iframe.html?domain=${d}&xaiType=${x}&instance=${i}`;
+      history.replaceState(null, '', `?instanceId=${i}&domain=${d}`);
+      const url = `iframe.html?domain=${d}&xaiType=comparable&instanceId=${i}&testing=true`;
       const frame = document.getElementById('xaiFrame');
       frame.src = url;
       const link = document.getElementById('frameUrlLink');
       link.textContent = url;
       link.href = url;
+
+      const url2 = `iframe.html?domain=${d}&xaiType=linear_reg&instanceId=${i}`;
+      const frame2 = document.getElementById('xaiFrame2');
+      frame2.src = url2;
+
+      const url3 = `iframe.html?domain=${d}&xaiType=linear_adjustments&instanceId=${i}`;
+      const frame3 = document.getElementById('xaiFrame3');
+      frame3.src = url3;
+
+      const url4 = `iframe.html?domain=${d}&xaiType=trace&instanceId=${i}`;
+      const frame4 = document.getElementById('xaiFrame4');
+      frame4.src = url4;
     }
 
     // Initialize display on load
