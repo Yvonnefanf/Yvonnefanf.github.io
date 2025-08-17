@@ -2032,7 +2032,7 @@
     const initDomain = getParam('domain', 'house');
     const initTab = Number(getParam('tab', 0));
     const initInstance = Number(getParam('instanceId', 0));
-    const initStep = getParam('step', '0');
+    const initStep = Number(getParam('step', 0));
     const initcurrentOpenComp = initStep == 3 ? 0 : null;
     const initRec = getParam('hidrec', 1);
 
