@@ -517,7 +517,7 @@
 <body>
 
   <div id="app">
-    <div class="tab-content" v-if="currentTutStep==0">
+    <div class="tab-content" v-if="currentTutStep=='noxai'">
 
       <table class="plain-xai-table" style="border-collapse: separate; border-spacing: 4px 0;">
         <thead>
@@ -2032,7 +2032,7 @@
     const initDomain = getParam('domain', 'house');
     const initTab = Number(getParam('tab', 0));
     const initInstance = Number(getParam('instanceId', 0));
-    const initStep = getParam('step', '0');
+    const initStep = getParam('step', 'noxai');
     const initcurrentOpenComp = initStep == 3 ? 0 : null;
     const initRec = getParam('hidrec', 1);
 
