@@ -730,7 +730,7 @@
                     <div class="annotation" style="position: absolute; top: 0; left: 0px;" id="reconciledAnnotation" v-if="nohiddenrec == 1">3a</div>
                     <div style="cursor: pointer;" id="reconciledContent" v-if="nohiddenrec == 0">TBD</div>
                     <div style="cursor: pointer;" id="reconciledContent" v-if="nohiddenrec == 1">
-                      <el-tooltip placement="top" effect="light" :show-after="0" trigger="hover" :hide-after="0">
+                      <el-tooltip manual :visible="true" placement="top" effect="light" :show-after="0" trigger="hover" :hide-after="0">
                         <template #content>
                           Estimated value based on {{Comparables[domainIdx]?.[currentTargetIndex]?.length}}
                           Comparable{{Comparables[domainIdx]?.[currentTargetIndex]?.length>1?'s':''}}:<br />
