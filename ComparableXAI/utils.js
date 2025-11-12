@@ -168,8 +168,8 @@ function processComparables(data, vm) {
 
             const dxVal = Number(dx);
             const dyVal = Number(dy);
-            deltaX.push(!isNaN(dxVal) ? vm.domainIdx==1?dyVal.toFixed(3):dyVal.toFixed(2) : '0.0');
-            deltaY.push(!isNaN(dyVal) ? vm.domainIdx==1?dyVal.toFixed(3):dyVal.toFixed(1) : '0.0');
+            deltaX.push(!isNaN(dxVal) ? vm.domainIdx==1?dyVal.toFixed(2):dyVal.toFixed(2) : '0.0');
+            deltaY.push(!isNaN(dyVal) ? vm.domainIdx==1?dyVal.toFixed(2):dyVal.toFixed(1) : '0.0');
         }
 
         // Parse adjusted_order and adjusted_price arrays
