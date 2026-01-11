@@ -217,6 +217,15 @@
         .publications-list {
             list-style: none;
         }
+        .news-list{
+            list-style: none;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            background: var(--bg-secondary);
+            border-radius: 12px;
+            border-left: 4px solid var(--primary-color);
+            transition: var(--transition);
+        }
         
         .publication-item {
             padding: 1.5rem;
@@ -419,16 +428,14 @@
         
         <!-- Publications Section -->
          <section class="section">
-            <h2>News 🔥</h2>
-            <ul class="news-list" style="margin-left: 24px; margin-bottom: 10px;">
+            <h2>🔥 News</h2>
+            <ul class="news-list" style="margin-bottom: 20px;">
                
                 <li class="news-item">
                     <div class="news-title">Sep. 2025: 🎉 One paper was accepted by ASE'25. Congrats to Xinyue!</div>
                 </li>
             </ul>
-         </section>
-        <section class="section">
-            <h2>Selected Publications 📝</h2>
+            <h2 style="margin-top: 20px;">📝 Selected Publications</h2>
             <!-- <div style="margin-bottom: 10px; color:#8b5cf6;">
                 <sup>*</sup> co-first author, <sup>†</sup> corresponding author
             </div> -->
@@ -475,10 +482,70 @@
                     </div>
                 </li> -->
             </ul>
-        </section>
+            <h2 style="margin-top: 20px;">🎓 Teaching</h2>
+            <ul class="teaching-list">
+                <li class="teaching-item">
+                    <div class="course-name">CS3244 Machine Learning</div>
+                    <div class="course-details">Teaching Assistant @ National University of Singapore | Sem 1 AY2024/2025, Sem 1 AY2025/2026</div>
+                </li>
+                <li class="teaching-item">
+                    <div class="course-name">CS3213 Foundations of Software Engineering</div>
+                    <div class="course-details">Teaching Assistant @ National University of Singapore | Sem 2 AY2025/2026</div>
+                </li>
+            </ul>
+         </section>
+        <!-- <section class="section">
+            <h2>Selected Publications 📝</h2> -->
+            <!-- <div style="margin-bottom: 10px; color:#8b5cf6;">
+                <sup>*</sup> co-first author, <sup>†</sup> corresponding author
+            </div> -->
+            <!-- <ul class="publications-list">
+               
+                <li class="publication-item">
+                    <div class="publication-title">PAT-Agent: Autoformalization for Model Checking. <span class="publication-venue">ASE'25</span></div>
+                    <div class="publication-authors">
+                        <span style="font-size: 0.9rem;">Xinyue Zuo, <span class="highlight">Yifan Zhang</span>, Hongshu Wang, Yufan Cai, Zhe Hou, Jun Sun, Jing Sun and Jin Song Dong.</span>
+                    </div>
+                    <div class="publication-links">
+                        <a href="https://arxiv.org/pdf/2509.23675" target="_blank">
+                            <img src="https://img.shields.io/badge/ASE'25-Paper-green?style=social&logo=Files" alt="Paper">
+                        </a>
+                    </div>
+                </li> -->
+                
+                <!-- <li class="publication-item">
+                    <div class="publication-title">DeepDebugger: An Interactive Time-Travelling Debugging Approach for Deep Classifiers.</div>
+                    <div class="publication-venue">FSE'23</div>
+                    <div class="publication-authors">
+                        <span style="font-size: 0.9rem;">Xianglin Yang, Yun Lin, <span class="highlight">Yifan Zhang</span>, Linpeng Huang, Jin Song Dong and Hong Mei.</span>
+                    </div>
+                    <div class="publication-links">
+                        <a href="">
+                            <img src="https://img.shields.io/badge/FSE'23-Paper-green?style=social&logo=Files" alt="Paper">
+                        </a>
+                        <a href="https://www.youtube.com/watch?v=JvrMMzK3UuM&t=74s" target="_blank">
+                            <img src="https://img.shields.io/badge/YouTube-Tool-red?style=social&logo=youtube" alt="YouTube">
+                        </a>
+                    </div>
+                </li> -->
+                
+                <!-- <li class="publication-item">
+                    <div class="publication-title">Knowledge Expansion and Counterfactual Interaction for Reference-Based Phishing Detection.</div>
+                    <div class="publication-venue">USENIX'23</div>
+                    <div class="publication-authors">
+                        <span style="font-size: 0.9rem;">Ruofan Liu, Yun Lin, <span class="highlight">Yifan Zhang</span>, Penn Han Lee, and Jin Song Dong.</span>
+                    </div>
+                    <div class="publication-links">
+                        <a href="https://www.usenix.org/system/files/usenixsecurity23-liu-ruofan.pdf" target="_blank">
+                            <img src="https://img.shields.io/badge/USENIX'23-Paper-green?style=social&logo=Files" alt="Paper">
+                        </a>
+                    </div>
+                </li> -->
+            <!-- </ul>
+        </section> -->
         
         <!-- Teaching Section -->
-        <section class="section">
+        <!-- <section class="section">
             <h2>Teaching 🎓</h2>
             <ul class="teaching-list">
                 <li class="teaching-item">
@@ -490,7 +557,7 @@
                     <div class="course-details">Teaching Assistant @ National University of Singapore | Sem 2 AY2025/2026</div>
                 </li>
             </ul>
-        </section>
+        </section> -->
         
         <!-- Footer -->
         <footer class="footer">
