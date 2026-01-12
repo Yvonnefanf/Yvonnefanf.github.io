@@ -177,6 +177,8 @@
             display: flex;
             gap: 1rem;
             flex-wrap: wrap;
+            margin-left: 16px;
+            margin-top: 20px;
     
         }
         
@@ -326,7 +328,7 @@
         .footer {
             text-align: center;
             padding: 2rem;
-            color: #ddd;
+            color: #f1f1f1;
             font-size: 0.875rem;
             font-family: 'Stanberry', monospace;
         }
@@ -398,20 +400,27 @@
         <header class="header">
             <div class="profile-content">
                 <div class="profile-image-wrapper">
-                    <img src="imgs/ava.jpeg" alt="Yifan Zhang" class="profile-image">
+                    <img src="imgs/ava.jpg" alt="Yifan Zhang" class="profile-image">
                 </div>
-                <h1>YIFAN ZHANG</h1>
-                <div class="social-links">
+                <!-- <h1>YIFAN ZHANG</h1> -->
+               <div class="social-links">
                     <a href="https://github.com/Yvonnefanf" target="_blank" aria-label="GitHub">
-                        <img src="https://img.shields.io/badge/GitHub--green?style=social&logo=github" alt="GitHub">
+                        <!-- <img src="https://img.shields.io/badge/GitHub--green?style=social&logo=github" alt="GitHub"> -->
+                         <img src="imgs/github.png" style="width: 30px; height: 30px; vertical-align: middle;"></img>
                     </a>
                     <a href="https://scholar.google.com/citations?user=pQ1qtUYAAAAJ" target="_blank" aria-label="Google Scholar">
-                        <img src="https://img.shields.io/badge/Google%20Scholar--green?style=social&logo=GoogleScholar" alt="Google Scholar">
+                        <!-- <img src="https://img.shields.io/badge/Google%20Scholar--green?style=social&logo=GoogleScholar" alt="Google Scholar"> -->
+                        <img src="imgs/google-scholar.png" style="width: 32px; height: 32px; vertical-align: middle;"></img>
                     </a>
-                    <!-- <a href="https://www.linkedin.com/in/yifan-zhang-163409226/" target="_blank" aria-label="LinkedIn">
-                        <img src="https://img.shields.io/badge/LinkedIn--green?style=social&logo=Linkedin" alt="LinkedIn">
-                    </a> -->
+                    <a href="https://www.linkedin.com/in/yifan-zhang-163409226/" target="_blank" aria-label="LinkedIn">
+                        <img src="imgs/linkedin.png" style="width: 30px; height: 30px; vertical-align: middle;"></img>
+                    </a>
+                    <a href="mailto:yifan.zhang_@u.nus.edu" target="_blank" aria-label="Email">
+                        <img src="imgs/email.png" style="width: 30px; height: 30px; vertical-align: middle;"></img>
+                    </a>
                 </div>
+                <!-- <span style="font-size: 12px; color: var(--text-secondary);"> Email: yifan.zhang_@u.nus.edu</span>
+                 -->
             </div>
             
             
@@ -466,6 +475,18 @@
                 <sup>*</sup> co-first author, <sup>†</sup> corresponding author
             </div> -->
             <ul class="publications-list">
+                <li class="publication-item">
+                    <div class="publication-title">Transferable XAI: Relating Understanding Across Domains with Explanation
+                        Transfer. <span class="publication-venue">IUI'26</span></div>
+                    <div class="publication-authors">
+                        <span style="font-size: 0.9rem;">Fei Wang, <span class="highlight_2">Yifan Zhang</span> and Brian Y. Lim.</span>
+                    </div>
+                    <div class="publication-links">
+                        <a href="https://arxiv.org/pdf/2509.23675" target="_blank">
+                            <img src="https://img.shields.io/badge/IUI'26-Paper-green?style=social&logo=Files" alt="Paper">
+                        </a>
+                    </div>
+                </li>
                
                 <li class="publication-item">
                     <div class="publication-title">PAT-Agent: Autoformalization for Model Checking. <span class="publication-venue">ASE'25</span></div>
@@ -591,7 +612,7 @@
         
         <!-- Footer -->
         <footer class="footer">
-            Last Updated: <span style="font-family: monospace;">2025-09</span>
+            Last Updated: <span style="font-family: monospace;">2026-01</span>
         </footer>
     </div>
     
