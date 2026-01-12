@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!DCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -59,8 +59,8 @@
         }
         
         body {
-            font-family: 'Mulish', 'Raleway', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-            font-size: 16px;
+            font-family: Didot, serif;
+            font-size: 1rem;
             line-height: 1.7;
             color: var(--text-primary);
             background: var(--bg-secondary);
@@ -218,6 +218,7 @@
             list-style: none;
         }
         .news-list{
+            color: var(--text-secondary);
             list-style: none;
             padding: 1.5rem;
             margin-bottom: 1.5rem;
@@ -266,6 +267,9 @@
             color: var(--primary-color);
             font-weight: 500;
         }
+        a{
+            color: var(--primary-color);
+        }
         
         .publication-links {
             display: flex;
@@ -313,7 +317,11 @@
             font-size: 0.9rem;
             color: var(--text-secondary);
         }
-        
+        .time{
+            color: var(--primary-color);
+            font-weight: 500;
+            margin-right: 0.5rem;
+        }
         /* Footer */
         .footer {
             text-align: center;
@@ -362,6 +370,11 @@
         ::-webkit-scrollbar {
             width: 10px;
         }
+        .highlight_2{
+            font-weight: 700;
+            padding: 0 2px;
+            background-color: #dccdf6;
+        }
         
         ::-webkit-scrollbar-track {
             background: var(--bg-secondary);
@@ -404,14 +417,16 @@
             
             <div class="profile-content">
                 <p>
-                    I am Yifan ZHANG. I am currently a ph.D. student at SoC, National University of Singapore <img src="imgs/NUS.jpg" style="width: 20px; height: 20px; vertical-align: middle;"></img>, working in the <a href="https://ubiquitous.comp.nus.edu.sg/" target="_blank">UbiComp Lab</a> under the supervision of <a href="https://www.brianlim.net/" target="_blank">Prof. Brian Y. Lim.</a>
+                    I am <span class="highlight_2">Yifan ZHANG</span>. I am currently a <span class="highlight_2">PhD student</span> at SoC, National University of Singapore <img src="imgs/NUS.jpg" style="width: 20px; height: 20px; vertical-align: middle;"></img>, working in the <a href="https://ubiquitous.comp.nus.edu.sg/" target="_blank">UbiComp Lab</a> under the supervision of <a href="https://www.brianlim.net/" target="_blank">Prof. Brian Y. Lim.</a>
                     
                     <br/>
                     I completed my Master’s degree and Bachelor’s degree in Computer Science and Visual Communication Design at Donghua University <img src="imgs/Donghua_University_logo.png" style="width: 20px; height: 20px; vertical-align: middle;"></img>.
                 </p>
                 <p>
-                    My research interests include Explainable Artificial Intelligence (XAI) and Human-Computer Interaction (HCI). Specifically, I focus on designing and developing interpretable machine learning (ML) models and explainable AI techniques to enhance the transparency of complex decision-making and prediction processes. By applying human-centered principles, I strive to provide explanations that are cognitively friendly, thereby improving overall interpretability.
-                </p>
+                    My research interests include <span class="highlight_2">Explainable Artificial Intelligence (XAI)</span> and <span class="highlight_2">Human-Computer Interaction (HCI)</span>. 
+                    Specifically, I focus on designing and developing explainable AI techniques to improve the transparency of complex AI model decision-making processes. 
+                    Guided by human-centered principles, my work aims to provide cognitively accessible explanations that enhance overall interpretability.
+                    </p>
                 <!-- <div class="social-links">
                     <a href="https://github.com/Yvonnefanf" target="_blank" aria-label="GitHub">
                         <img src="https://img.shields.io/badge/GitHub--green?style=social&logo=github" alt="GitHub">
@@ -430,9 +445,20 @@
          <section class="section">
             <h2>🔥 News</h2>
             <ul class="news-list" style="margin-bottom: 20px;">
-               
                 <li class="news-item">
-                    <div class="news-title">Sep. 2025: 🎉 One paper was accepted by ASE'25. Congrats to Xinyue!</div>
+                    <div class="news-title"><span class="time">Jan. 2026: </span> 🎉  One paper was accepted by <a href="https://iui.acm.org/2026/" target="_blank">IUI'26</a>. Congrats to <a href="https://legionking.github.io/" target="_blank">Fei</a>! </div>
+                </li>
+                <li class="news-item">
+                    <div class="news-title"><span class="time">Nov. 2025: </span> ✈️ I attended the <a class="highlight" href="https://conf.researchr.org/home/ase-2025" target="_blank">ASE'25</a> in Seoul, South Korea 🇰🇷. </div>
+                </li>
+                <li class="news-item">
+                    <div class="news-title"><span class="time">Sep. 2025: </span> 🎉 One paper was accepted by <a class="highlight" href="https://conf.researchr.org/home/ase-2025" target="_blank">ASE'25</a>. Congrats to Xinyue!</div>
+                </li>
+                <li class="news-item">
+                    <div class="news-title"><span class="time">Jun. 2025: </span> 🥳 I passed my QE, now I am a Ph.D. candidate!</div>
+                </li>
+                <li class="news-item">
+                    <div class="news-title"><span class="time">May. 2024: </span> 😊 I joint <a class="highlight" href="https://ubiquitous.comp.nus.edu.sg/" target="_blank">NUS Ubicomp lab</a>!</div>
                 </li>
             </ul>
             <h2 style="margin-top: 20px;">📝 Selected Publications</h2>
@@ -444,7 +470,7 @@
                 <li class="publication-item">
                     <div class="publication-title">PAT-Agent: Autoformalization for Model Checking. <span class="publication-venue">ASE'25</span></div>
                     <div class="publication-authors">
-                        <span style="font-size: 0.9rem;">Xinyue Zuo, <span class="highlight">Yifan Zhang</span>, Hongshu Wang, Yufan Cai, Zhe Hou, Jun Sun, Jing Sun and Jin Song Dong.</span>
+                        <span style="font-size: 0.9rem;">Xinyue Zuo, <span class="highlight_2">Yifan Zhang</span>, Hongshu Wang, Yufan Cai, Zhe Hou, Jun Sun, Jing Sun and Jin Song Dong.</span>
                     </div>
                     <div class="publication-links">
                         <a href="https://arxiv.org/pdf/2509.23675" target="_blank">
@@ -482,6 +508,10 @@
                     </div>
                 </li> -->
             </ul>
+            <!-- <h2 style="margin-top: 20px;">Service</h2>
+            <ul>
+
+            </ul> -->
             <h2 style="margin-top: 20px;">🎓 Teaching</h2>
             <ul class="teaching-list">
                 <li class="teaching-item">
@@ -566,8 +596,8 @@
     </div>
     
     <script>
-        // Initialize Particles.js
-        particlesJS("particles-js", {
+        // 正常配置
+        var normalConfig = {
             "particles": {
                 "number": {
                     "value": 80,
@@ -610,8 +640,7 @@
             "interactivity": {
                 "events": {
                     "onhover": {
-                        "enable": true,
-                        "mode": "repulse"
+                        "enable": false
                     },
                     "onclick": {
                         "enable": true,
@@ -630,7 +659,125 @@
                 }
             },
             "retina_detect": true
-        });
+        };
+        
+        // 下雪效果配置
+        var snowConfig = {
+            "particles": {
+                "number": {
+                    "value": 250,
+                    "density": {
+                        "enable": true,
+                        "value_area": 300
+                    }
+                },
+                "color": {
+                    "value": "#ffffff"
+                },
+                "shape": {
+                    "type": "circle",
+                    "stroke": {
+                        "width": 0,
+                        "color": "#000000"
+                    }
+                },
+                "opacity": {
+                    "value": 0.6,
+                    "random": true
+                },
+                "size": {
+                    "value": 5,
+                    "random": true
+                },
+                "line_linked": {
+                    "enable": false
+                },
+                "move": {
+                    "enable": true,
+                    "speed": 4,
+                    "direction": "bottom",
+                    "random": true,
+                    "straight": false,
+                    "out_mode": "out",
+                    "bounce": false
+                }
+            },
+            "interactivity": {
+                "events": {
+                    "onhover": {
+                        "enable": false
+                    },
+                    "onclick": {
+                        "enable": true,
+                        "mode": "push"
+                    },
+                    "resize": true
+                },
+                "modes": {
+                    "repulse": {
+                        "distance": 100,
+                        "duration": 0.4
+                    },
+                    "push": {
+                        "particles_nb": 4
+                    }
+                }
+            },
+            "retina_detect": true
+        };
+        
+        // 初始化particles
+        var pJSDom = particlesJS("particles-js", normalConfig);
+        
+        // 获取particles实例 - 兼容不同的API格式
+        var pJS = null;
+        if (pJSDom) {
+            if (Array.isArray(pJSDom) && pJSDom[0] && pJSDom[0].pJS) {
+                pJS = pJSDom[0].pJS;
+            } else if (pJSDom.pJS) {
+                pJS = pJSDom.pJS;
+            }
+        }
+        
+        // 监听头像hover事件
+        var profileImageWrapper = document.querySelector('.profile-image-wrapper');
+        if (profileImageWrapper && pJS) {
+            profileImageWrapper.addEventListener('mouseenter', function() {
+                // 切换到下雪效果
+                try {
+                    pJS.particles.number.value = 250;
+                    pJS.particles.number.density.value_area = 300;
+                    pJS.particles.opacity.value = 0.6;
+                    pJS.particles.opacity.random = true;
+                    pJS.particles.size.value = 5;
+                    pJS.particles.move.speed = 4;
+                    pJS.particles.move.random = true;
+                    if (pJS.fn && pJS.fn.particlesRefresh) {
+                        pJS.fn.particlesRefresh();
+                    }
+                } catch(e) {
+                    console.log('Error updating particles:', e);
+                }
+            });
+            
+            profileImageWrapper.addEventListener('mouseleave', function() {
+                // 恢复原样
+                try {
+                    pJS.particles.number.value = 80;
+                    pJS.particles.number.density.value_area = 800;
+                    pJS.particles.opacity.value = 0.3;
+                    pJS.particles.opacity.random = false;
+                    pJS.particles.size.value = 3;
+                    pJS.particles.move.speed = 1;
+                    pJS.particles.move.random = false;
+                    if (pJS.fn && pJS.fn.particlesRefresh) {
+                        pJS.fn.particlesRefresh();
+                    }
+                } catch(e) {
+                    console.log('Error updating particles:', e);
+                }
+            });
+        }
     </script>
 </body>
 </html>
